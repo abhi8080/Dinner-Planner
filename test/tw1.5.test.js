@@ -159,7 +159,7 @@ describe("TW1.5 Array rendering", function() {
         expect(window.lastJSXRender.props.dishes).to.deep.equal(dishes);
     });
 
-    it("Vue Sidebar presenter passes two dish-related custom event handlers: ome removes dish, the other sets currentDish", function(){
+    it("Vue Sidebar presenter passes two dish-related custom event handlers: one removes dish, the other sets currentDish", function(){
         installOwnCreateElement();
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
         const model= new DinnerModel(3, dishes);
