@@ -40,7 +40,7 @@ module.exports = {
         
         new HtmlWebpackPlugin({    // the test.html for tests, see the test entry above
             filename: "test.html",
-            template: './test/index.html',
+            template: './test/'+prefix+'index.html',
             chunks: ["test"],
         }),
         new webpack.SourceMapDevToolPlugin(    // the source map plugin, specifying "Debug here!" in the browser Devtools (chrome)
