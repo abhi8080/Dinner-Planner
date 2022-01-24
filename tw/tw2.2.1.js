@@ -1,6 +1,5 @@
 import dishesConst from "/test/dishesConst.js";
 import render from "./teacherRender.js";
-const VueRoot=require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").default;
 
 const X= TEST_PREFIX;
 let searchDishes;
@@ -11,16 +10,22 @@ try{
     render(<div>Please write /src/dishSource.js and export searchDishes</div>,  document.getElementById('root'));
 }
 if(searchDishes){
-    
+    render(
+        <div>Wait...</div>,
+        document.getElementById('root')
+    );
     searchDishes({query:"pizza", type:"main course"}).then(
         function testACB(results){
             render(
                 <ol>{
                     results.map(function eachResultCB(dishResult){
-                        return <li>{JSON.stringify(dishResult)}</li>;
+                        return <li key={dishResult.id}>{JSON.stringify(dishResult)}</li>;
                     })
                 }</ol>,
                 document.getElementById('root')
             );
-        });
+        }).catch(function errorACB(err){
+            render(<div>{err}</div>,document.getElementById('root'));
+        });;
+
 }
