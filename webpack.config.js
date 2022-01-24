@@ -2,6 +2,8 @@ const fs=  require("fs");
 const path = require('path');
 const webpack= require("webpack");
 
+const prefix=  fs.existsSync("./src/solved-utilities.js")?"solved-":"";
+
 // we will make a webpack entry out of every tw/tw*.js file
 const tws= fs.readdirSync("./tw").filter(function(file){return path.parse(file).ext===".js" && path.parse(file).name.startsWith("tw");});
 
@@ -14,10 +16,11 @@ function makeEntryCB(acc, file){   // reducer for making a large object. entry  
 function makeHtmlCB(file){
     return new HtmlWebpackPlugin({
         filename: path.parse(file).name+".html",
-        template: './src/index.html',
+        template: './src/'+prefix+'index.html',
         chunks: [path.parse(file).name],
     });
 }
+
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -49,7 +52,7 @@ module.exports = {
         new webpack.DefinePlugin({           // globals neeeded by Vue
             __VUE_OPTIONS_API__:true,
             __VUE_PROD_DEVTOOLS__:true,
-            TEST_PREFIX: fs.existsSync("./src/solved-utilities.js")?"\'solved-\'":"\'\'"
+            TEST_PREFIX:"\'"+prefix+"\'"
 //            TEST_PREFIX: "\'\'"
         })      
     ],
