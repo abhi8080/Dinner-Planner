@@ -1,19 +1,22 @@
 const { assert, expect } = require("chai");
 
-let dishSource;
+let searchDishes;
 const X=TEST_PREFIX;
 try {
-    dishSource = require("../src/" + X + "dishSource.js").default;
+    const dishSource = require("../src/" + X + "dishSource.js");
+    if(dishSource.searchDishes)
+        searchDishes= dishSource.searchDishes;
+    else
+        searchDishes= dishSource.default.searchDishes;
 } catch(e) {};
 
-const { searchDishes } = dishSource;
 
 describe("TW2.2 searchDishes", function() {
     this.timeout(200000);
 
     before(function(){
-        if(!dishSource) this.skip();
-    })
+        if(!searchDishes) this.skip();
+    });
 
     function testPromise(text, p, expectedResult) {
         it(text, async() => {
@@ -21,9 +24,8 @@ describe("TW2.2 searchDishes", function() {
             let dishes = await p();
             let finish = new Date();
             expect(finish-start, "promise searchDishes should take minimum 2 ms").to.be.above(2);
-            console.log(dishes);
             expect(JSON.stringify(dishes)).to.equal(JSON.stringify(expectedResult));
-        }).timeout(2000);
+        }).timeout(4000);
     }
 
     testPromise("searchDishes promise #1", ()=>searchDishes({query: "pizza", type: "main course"}),[
