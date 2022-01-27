@@ -7,6 +7,7 @@ let getDishDetails;
 
 try{
     getDishDetails= require("/src/"+X+"dishSource.js").getDishDetails;
+    if(!getDishDetails) throw "no getDihDetails defined";
 }catch(e){
     render(<div>Please write /src/dishSource.js and export getDishDetails</div>,  document.getElementById('root'));
 }

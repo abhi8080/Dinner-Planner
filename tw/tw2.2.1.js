@@ -1,11 +1,11 @@
-import dishesConst from "/test/dishesConst.js";
 import render from "./teacherRender.js";
 
 const X= TEST_PREFIX;
 let searchDishes;
 
 try{
-   searchDishes= require("/src/"+X+"dishSource.js").searchDishes;
+    searchDishes= require("/src/"+X+"dishSource.js").searchDishes;
+    if(!searchDishes)throw "searchDishes not defined";
 }catch(e){
     render(<div>Please write /src/dishSource.js and export searchDishes</div>,  document.getElementById('root'));
 }
@@ -26,6 +26,6 @@ if(searchDishes){
             );
         }).catch(function errorACB(err){
             render(<div>{err}</div>,document.getElementById('root'));
-        });;
+        });
 
 }
