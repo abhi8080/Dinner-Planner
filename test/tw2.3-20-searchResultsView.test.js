@@ -49,6 +49,12 @@ describe("TW2.3 SearchResultsView", function() {
     SearchResultsView({searchResults: searchResults});
   }
 
+  it("SearchResultsView renders div", function() {
+    setUpView()
+    assert(window.lastJSXRender.tag)
+    expect(window.lastJSXRender.tag).to.equal("div");
+  });
+
   it("SearchResultsView renders span for each search result", function() {
     setUpView()
     assert(window.lastJSXRender.children)
