@@ -40,6 +40,8 @@ To build your Docker image (see the file `Dockerfile`), run once:
 docker build . -t dh2642
 ```
 
+Also it is a good idea to remove the `node_modules` directory before starting the server for the first time.
+
 Then every time you want to run the development server:
 
 ```
