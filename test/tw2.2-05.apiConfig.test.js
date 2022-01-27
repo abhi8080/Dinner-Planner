@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-let apiConfig = '';
+let apiConfig;
 const X = TEST_PREFIX;
 try {
   apiConfig = require('../src/' + X + 'apiConfig.js');
