@@ -383,20 +383,35 @@ try {
 } catch(e) {};
 
 const { render, h } = require("vue");
-window.React = { createElement: h };
+
 
 describe("TW2.3 DetailsView", function() {
   this.timeout(200000);
 
+  let div, divChildren;
+  let guests = 3;
+
   before(function() {
-    if (!DetailsView) this.skip();
+      if (!DetailsView) this.skip();
+      else{
+          div= createUI();
+          window.React = { createElement: h };
+          render(
+                <DetailsView
+                  dishData={dishInformation}
+                  guests={guests}
+                  isDishInMenu={true}
+                />,
+                div);
+          divChildren = allChildren(div);
+      }
   });
 
   function allChildren(node) {
     let children = [node];
     node.childNodes.forEach(childNode => {
       children = children.concat(allChildren(childNode));
-    })
+    });
     return children;
   }
 
@@ -413,18 +428,6 @@ describe("TW2.3 DetailsView", function() {
   function ceilAndFloor(num) {
     return [Math.floor(num), Math.ceil(num)];
   }
-
-  let div = createUI();
-  let guests = 3;
-  render(
-    <DetailsView
-      dishData={dishInformation}
-      guests={guests}
-      isDishInMenu={true}
-    />,
-    div
-  );
-  let divChildren = allChildren(div);
 
   it("DetailsView renders dish price", function() {
     assert(
