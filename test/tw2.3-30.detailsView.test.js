@@ -400,10 +400,15 @@ describe("TW2.3 DetailsView", function() {
     return children;
   }
 
-  // Returns true if there is a node in nodes which contain a query from queries.
-  function searchTextContent(nodes, queries) {
-    return nodes.some(node => node.textContent && queries.some(query => node.textContent.toLowerCase().includes(query)));
+  // Returns true if there is a node in nodes whose property property
+  // which contain a query from queries.
+  function searchProperty(nodes, property, queries, strictEqual=false) {
+    if (!strictEqual)
+      return nodes.some(node => node[property] && queries.some(query => node[property].toLowerCase().includes(query.toString().toLowerCase())));
+    else
+      return nodes.some(node => node[property] && queries.some(query => node[property] === query.toString()));
   }
+
 
   function ceilAndFloor(num) {
     return [Math.floor(num), Math.ceil(num)];
@@ -423,30 +428,68 @@ describe("TW2.3 DetailsView", function() {
 
   it("DetailsView renders dish price", function() {
     assert(
-      searchTextContent(divChildren, ceilAndFloor(dishInformation["pricePerServing"])), 
+      searchProperty(divChildren, "textContent", ceilAndFloor(dishInformation["pricePerServing"])), 
       `price not found`
-      );
+    );
   });
 
   it("DetailsView renders correct total price for all guests", function() {
     assert(
-      searchTextContent(divChildren, ceilAndFloor(dishInformation["pricePerServing"]*guests)),
+      searchProperty(divChildren, "textContent", ceilAndFloor(dishInformation["pricePerServing"]*guests)),
       "total not found"
-      );
+    );
   });
 
   it("DetailsView renders all ingredients (name and amount)", function() {
     dishInformation["extendedIngredients"].forEach(ingredient => {
       assert(
-        searchTextContent(divChildren, [ingredient["name"]]), 
+        searchProperty(divChildren, "textContent", [ingredient["name"]]), 
         `ingredient name ${ingredient["name"]} not found`
-        );
+      );
 
       assert(
-        searchTextContent(divChildren, [ingredient["amount"], ingredient["amount"].toFixed(2)]), 
+        searchProperty(divChildren, "textContent", [ingredient["amount"], ingredient["amount"].toFixed(2)]), 
         `ingredient amount ${ingredient["amount"]} for ${ingredient["name"]} not found. `
-        );
+      );
     });
+  });
+
+  console.log(divChildren);
+
+  it("DetailsView renders instruction", function() {
+    console.log()
+    assert(
+      searchProperty(divChildren, "textContent", [dishInformation["instructions"].slice(0, 30)]),
+      "instructions not found"
+    );
+  });
+
+
+  it("DetailsView has link to recipe", function() {
+    assert(
+      searchProperty(divChildren, "href", [dishInformation["sourceUrl"]], true),
+      "link to original recipe not found"
+    );
+  });
+
+  it("DetailsView renders dish image", function() {
+    let dishImage;
+    div.querySelectorAll("img").forEach(img => {
+      if (img.src && img.src === dishInformation["image"]) {
+        dishImage = img
+      }
+    });
+    expect(dishImage, "dish image not found").to.not.be.undefined;
+  });
+
+  it("DetailsView has button to add to menu", function() {
+    let addToMenuButton;
+    div.querySelectorAll("button").forEach(button => {
+      if (button.textContent && (button.textContent.toLowerCase().includes("add") || button.textContent.toLowerCase().includes("menu"))) {
+        addToMenuButton = button;
+      }
+    });
+    expect(addToMenuButton, "add to menu button not found").to.not.be.undefined;
   });
 })
 
