@@ -390,6 +390,7 @@ describe("TW2.3 DetailsView", function() {
 
   let div, divChildren;
   let guests = 3;
+  let disabled=true;  
 
   before(function() {
       if (!DetailsView) this.skip();
@@ -400,7 +401,7 @@ describe("TW2.3 DetailsView", function() {
                 <DetailsView
                   dishData={dishInformation}
                   guests={guests}
-                  isDishInMenu={true}
+                  isDishInMenu={disabled}
                 />,
                 div);
           divChildren = allChildren(div);
@@ -443,7 +444,7 @@ describe("TW2.3 DetailsView", function() {
     );
   });
 
-  it("DetailsView renders all ingredients (name and amount)", function() {
+  it("DetailsView renders all ingredients (name, amount, measurement unit)", function() {
     dishInformation["extendedIngredients"].forEach(ingredient => {
       assert(
         searchProperty(divChildren, "textContent", [ingredient["name"]]), 
@@ -454,13 +455,16 @@ describe("TW2.3 DetailsView", function() {
         searchProperty(divChildren, "textContent", [ingredient["amount"], ingredient["amount"].toFixed(2)]), 
         `ingredient amount ${ingredient["amount"]} for ${ingredient["name"]} not found. `
       );
+
+      assert(
+        searchProperty(divChildren, "textContent", [ingredient["unit"]]), 
+        `ingredient unit ${ingredient["unit"]} not found`
+      );
+
     });
   });
 
-  console.log(divChildren);
-
   it("DetailsView renders instruction", function() {
-    console.log()
     assert(
       searchProperty(divChildren, "textContent", [dishInformation["instructions"].slice(0, 30)]),
       "instructions not found"
@@ -485,7 +489,7 @@ describe("TW2.3 DetailsView", function() {
     expect(dishImage, "dish image not found").to.not.be.undefined;
   });
 
-  it("DetailsView has button to add to menu", function() {
+  it("DetailsView has button to add to menu, disabled if dish is in menu", function() {
     let addToMenuButton;
     div.querySelectorAll("button").forEach(button => {
       if (button.textContent && (button.textContent.toLowerCase().includes("add") || button.textContent.toLowerCase().includes("menu"))) {
@@ -493,6 +497,7 @@ describe("TW2.3 DetailsView", function() {
       }
     });
     expect(addToMenuButton, "add to menu button not found").to.not.be.undefined;
+      expect(addToMenuButton.disabled).to.equal(disabled, "button must be disabled if the dish is already in the menu");  
   });
 })
 
