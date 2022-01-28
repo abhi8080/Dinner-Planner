@@ -25,9 +25,9 @@ if(getDishDetails && DetailsView){
                 ]).then(
                     function testACB([dish1, dish2]){
                         render(
-                            <div>
-                              <div style={{float:"left",width:"50%"}}><DetailsView dishData={dish1} isDishInMenu={true} guests={7}/></div>
-                              <div style={{float:"right",width:"50%"}}><DetailsView dishData={dish2} isDishInMenu={false} guests={3}/></div>
+                            <div style={{display:"flex", "flex-direction":"row"}}>
+                              <div style={{flex:"0.5", padding:"20px"}}><DetailsView dishData={dish1} isDishInMenu={true} guests={7}/></div>
+                              <div style={{flex:"0.5", padding:"20px"}}><DetailsView dishData={dish2} isDishInMenu={false} guests={3}/></div>
                             </div>
                             , document.getElementById('root')
                         );
