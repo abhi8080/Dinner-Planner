@@ -17,7 +17,7 @@ const VueRoot={
     } ,
     render(){
         return <div>
-                 current dish promise state: {JSON.stringify(this.rootModel.currentDishAsync)}
+                 current dish promise state: {JSON.stringify(this.rootModel.currentDishPromiseState)}
                </div>;
     },
     created(){

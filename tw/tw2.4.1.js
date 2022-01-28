@@ -19,11 +19,11 @@ if(DinnerModel.prototype.doSearch){
             return {rootModel: new DinnerModel()} ;
         } ,
         render(){
-            if(!this.rootModel.searchResultsAsync)
+            if(!this.rootModel.searchResultsPromiseState)
                 this.rootModel.doSearch();
 
             return <div>
-                   search results promise state: {JSON.stringify(this.rootModel.searchResultsAsync)}
+                   search results promise state: {JSON.stringify(this.rootModel.searchResultsPromiseState)}
                </div>;
         },
     };

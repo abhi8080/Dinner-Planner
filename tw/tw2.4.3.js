@@ -21,12 +21,12 @@ if(promiseNoData && DinnerModel.prototype.doSearch){
             return {rootModel: new DinnerModel()} ;
         } ,
         render(){
-            if(!this.rootModel.searchResultsAsync)
+            if(!this.rootModel.searchResultsPromiseState)
                 this.rootModel.doSearch();
 
-            return promiseNoData(this.rootModel.searchResultsAsync)||
+            return promiseNoData(this.rootModel.searchResultsPromiseState)||
                 <ol>{
-                        this.rootModel.searchResultsAsync.data.map(function eachResultCB(dishResult){
+                        this.rootModel.searchResultsPromiseState.data.map(function eachResultCB(dishResult){
                         return <li key={dishResult.id}>{JSON.stringify(dishResult)}</li>;
                     })
                 }</ol>;
