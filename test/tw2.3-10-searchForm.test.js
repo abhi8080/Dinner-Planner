@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
 import createUI from './createUI.js';
 
 let SearchFormView;
@@ -49,7 +49,7 @@ describe('TW2.3 SearchFormView', function () {
       div.querySelectorAll('option')[3].firstChild.textContent,
       'dessert'
     );
-    assert.equal(div.querySelectorAll('button').length, 1); // one button for search
+    expect(div.querySelectorAll('button').length).to.be.gte(1, "there should be at least one button"); 
     assert.equal(
       div.querySelectorAll('button')[0].firstChild.textContent,
       'Search!'
