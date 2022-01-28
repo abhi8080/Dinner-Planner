@@ -84,9 +84,8 @@ describe("TW1.4 Model-View-Presenter", function() {
     });
 
     it("Integration test: pressing UI buttons changes number in Model", async function(){
-        window.React={createElement:h};
-
         let div= createUI();
+        window.React={createElement:h};
 
         render(<VueRoot />,div);
         let myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;

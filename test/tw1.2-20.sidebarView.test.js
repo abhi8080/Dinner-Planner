@@ -9,7 +9,6 @@ try{
 }catch(e){};
 
 const {render, h}= require("vue");
-window.React={createElement:h};
 
 describe("TW1.2 SidebarView", function() {
     this.timeout(200000);  // increase to allow debugging during the test run
@@ -20,6 +19,7 @@ describe("TW1.2 SidebarView", function() {
 
     it("SidebarView shows its number prop", function(){
         let div= createUI();
+        window.React={createElement:h};
         render(<SidebarView number={4} dishes={[]}/>, div);
         assert.equal(div.querySelectorAll("button").length, 2);
         assert.equal(div.querySelectorAll("button")[0].firstChild.textContent, "-");
@@ -29,6 +29,7 @@ describe("TW1.2 SidebarView", function() {
     });
     it("SidebarView minus button should be disabled if number prop is 1", function(){
         let div= createUI();
+        window.React={createElement:h};
         render(<SidebarView number={1} dishes={[]}/>, div);
         assert.equal(div.querySelectorAll("button").length, 2);
         assert.equal(div.querySelectorAll("button")[0].firstChild.textContent, "-");

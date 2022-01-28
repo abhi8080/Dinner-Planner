@@ -8,7 +8,6 @@ try {
 } catch (e) {}
 
 const { render, h } = require('vue');
-window.React = { createElement: h };
 
 describe('TW2.3 SearchFormView', function () {
   this.timeout(200000); // increase to allow debugging during the test run
@@ -19,6 +18,7 @@ describe('TW2.3 SearchFormView', function () {
 
   it('SearchFormView renders required DOM tree with dishTypeOptions props', function () {
     let div = createUI();
+    window.React = { createElement: h };
     render(
       <SearchFormView
         dishTypeOptions={['starter', 'main course', 'dessert']}
