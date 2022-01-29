@@ -12,7 +12,7 @@ try{
 // promissify setTimeout
 function sleep(ms){ return new Promise(function(resolve, reject){ setTimeout(resolve, ms); });}
 if(!resolvePromise){
-    render("Please define /src/resolvePromise.js", document.getElementById('root'));
+    render(<div>Please define /src/resolvePromise.js</div>, document.getElementById('root'));
 }else{
     const VueRoot={
         data(){
