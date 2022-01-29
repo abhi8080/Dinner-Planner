@@ -7,7 +7,7 @@ try {
   DinnerModel = require("../src/" + X + "DinnerModel.js").default;
 } catch(e) {};
 
-describe("TW2.4 current dish Promise State", function() {
+describe("TW2.4 Current dish Promise State", function() {
   this.timeout(200000);
 
   before(function(){
@@ -51,4 +51,4 @@ describe("TW2.4 current dish Promise State", function() {
     expect(model).to.have.property("currentDishPromiseState");
     expect(JSON.stringify(model.currentDishPromiseState)).to.equal(JSON.stringify({}));
   });
-})
+});
