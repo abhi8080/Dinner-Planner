@@ -21,7 +21,9 @@ if(searchDishes && SearchResultsView){
     searchDishes({query:"pizza", type:"main course"}).then(
         function testACB(results){
             render(
-                <SearchResultsView searchResults={results}/>
+                <SearchResultsView searchResults={results}
+                                   FIXMEcustomEvent3={function resultChosenACB(searchResult){ console.log("user chose searchResult: ", JSON.stringify(searchResult)); }}
+                />
                 , document.getElementById('root')
             );
         });

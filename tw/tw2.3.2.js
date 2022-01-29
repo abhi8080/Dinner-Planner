@@ -21,13 +21,27 @@ if(getDishDetails && DetailsView){
         <div>Wait...</div>,
         document.getElementById('root')
     );
+
+    function addToMenuACB(){ console.log("user wants to add the displayed dish to the menu!"); }
     Promise.all([getDishDetails(AA), getDishDetails(BB)
                 ]).then(
                     function testACB([dish1, dish2]){
                         render(
                             <div style={{display:"flex", "flex-direction":"row"}}>
-                              <div style={{flex:"0.5", padding:"20px"}}><DetailsView dishData={dish1} isDishInMenu={true} guests={7}/></div>
-                              <div style={{flex:"0.5", padding:"20px"}}><DetailsView dishData={dish2} isDishInMenu={false} guests={3}/></div>
+                              <div style={{flex:"0.5", padding:"20px"}}>
+                                <DetailsView dishData={dish1}
+                                             isDishInMenu={true}
+                                             guests={7}
+                                             FIXMEcustomEvent={addToMenuACB}
+                                />
+                              </div>
+                              <div style={{flex:"0.5", padding:"20px"}}>
+                                <DetailsView dishData={dish2}
+                                             isDishInMenu={false}
+                                             guests={3}
+                                             FIXMEcustomEvent={addToMenuACB}
+                                />
+                              </div>
                             </div>
                             , document.getElementById('root')
                         );
