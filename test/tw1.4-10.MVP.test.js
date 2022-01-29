@@ -75,12 +75,13 @@ describe("TW1.4 Model-View-Presenter", function() {
         App({model: new DinnerModel()});
         expect(window.lastJSXRender.tag).to.equal("div");
 
-        const components= traverseJSX().filter(function keepFunctionalComponents({tag, props}){
-            return typeof(tag)=="function";
+        const components= traverseJSX().filter(function keepComponents({tag, props}){
+            return typeof(tag)=="function" || typeof(tag)=="object";
         });
         expect(components.length).to.be.gte(2);
+        
         expect(components[0].tag.name).to.equal(Sidebar.name);
-        expect(components[1].tag.name).to.equal(Summary.name);
+        expect(components.find(function checkSummaryCB(x){ return x.tag.name===Summary.name;}), "Summary must be rendered after Sidebar");
     });
 
     it("Integration test: pressing UI buttons changes number in Model", async function(){

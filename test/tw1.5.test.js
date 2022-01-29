@@ -203,14 +203,18 @@ describe("TW1.5 Array rendering", function() {
         myModel.setNumberOfGuests(5);
 
         await new Promise(resolve => setTimeout(resolve));  // need to wait a bit for UI to update...
-        
-        expect(div.querySelectorAll("button").length).to.equal(5, "There should be 5 buttons: +, - and 3 X for dishes");
-        div.querySelectorAll("button")[4].click();
+
+        const buttons= div.querySelectorAll("button");
+        expect(buttons.length).to.be.gte(5, "There should be at least 5 buttons: +, - and 3 X for dishes");
+        expect(buttons[0].textContent).to.equal("-", "first button must be minus");
+        const sidear= buttons[0].parentElement;
+        expect(sidear.querySelectorAll("button").length).to.equal(5, "There should be 5 buttons in sidebar: +, - and 3 X for dishes");
+        buttons[4].click();
         expect(myModel.dishes.length).to.equal(2);
         expect(myModel.dishes).to.not.include(getDishDetails(200));
 
         await new Promise(resolve => setTimeout(resolve));  // need to wait a bit for UI to update...
-        expect(div.querySelectorAll("button").length).to.equal(4, "There should be 4 buttons after deletion: +, - and 2 X for dishes");
+        expect(sidear.querySelectorAll("button").length).to.equal(4, "There should be 4 buttons after deletion: +, - and 2 X for dishes");
     });
 
     it("Integration test: clicking on dish names sets model.currentDish", async function(){
