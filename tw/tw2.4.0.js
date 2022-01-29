@@ -24,15 +24,26 @@ if(!resolvePromise){
                    </div>;
         },
         created(){
-            const component=this;
-            function returnDataACB(){
-                return "dummy promise result";
-            }
-            function laterACB(){
-                resolvePromise(sleep(2000).then(returnDataACB), component.promiseState);
+            // this. is not accessible to callbacks, so we provide what the callbacks need into a const
+            const promiseState= this.promiseState;
+
+            // function that returns a callack!
+            function makeCallback(ms){
+                function returnDataACB(){
+                    return "resolved after "+ms;
+                }
+                function laterACB(){
+                    const promise= sleep(2000).then(returnDataACB);
+                    promise.name="promiseToResolveAfter_"+ms;
+                    resolvePromise(promise, promiseState);
+                }
+                return laterACB;
             }
             
-            sleep(1000).then(laterACB);
+            sleep(1000).then(makeCallback(2000));
+            sleep(5000).then(makeCallback(1000));
+            sleep(8000).then(makeCallback(3000));
+            sleep(10000).then(makeCallback(500));
         },
     };
     
