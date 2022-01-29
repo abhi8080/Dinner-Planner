@@ -14,7 +14,7 @@ try{
 if(promiseNoData){
     const VueRoot={
         data(){
-            return { successPromiseStatus: null, errorPromiseStatus:null};
+            return { successPromiseStatus: {}, errorPromiseStatus:{}};
         } ,
         render(){
             return <div>{
@@ -28,8 +28,8 @@ if(promiseNoData){
         created(){
             const thisObj=this;
             setTimeout(function initializePromiseStatusACB(){
-                thisObj.successPromiseStatus={};
-                thisObj.errorPromiseStatus={};
+                thisObj.successPromiseStatus.promise="dummyPromise";
+                thisObj.errorPromiseStatus.promise="dummyPromise";
             }, 1000);
             setTimeout(function setDataACB(){
                 thisObj.successPromiseStatus.data="dummy promise result";

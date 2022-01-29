@@ -21,7 +21,7 @@ if(promiseNoData && DinnerModel.prototype.doSearch){
             return {rootModel: new DinnerModel()} ;
         } ,
         render(){
-            if(!this.rootModel.searchResultsPromiseState)
+            if(!this.rootModel.searchResultsPromiseState.promise)
                 this.rootModel.doSearch();
 
             return promiseNoData(this.rootModel.searchResultsPromiseState)||

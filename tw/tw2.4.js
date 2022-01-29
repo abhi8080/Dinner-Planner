@@ -32,3 +32,5 @@ render(
 
 proxyModel.setCurrentDish(BB);
 
+setTimeout(function laterACB(){proxyModel.setCurrentDish(AA);}, 10000);
+
