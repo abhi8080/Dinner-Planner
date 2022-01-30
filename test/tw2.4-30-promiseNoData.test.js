@@ -1,4 +1,6 @@
 import { expect } from 'chai';
+import installOwnCreateElement from "./jsxCreateElement";
+
 
 let promiseNoData;
 const X = TEST_PREFIX;
@@ -10,48 +12,36 @@ describe('TW2.4 promiseNoData', function () {
   this.timeout(200000);
 
   before(function () {
+    installOwnCreateElement();
     if (!promiseNoData) this.skip();
   });
 
-  it('promiseNoData returns "no data" when promise is null', async function () {
-    const response = promiseNoData(null);
+  it('promiseNoData returns a DIV with "no data" content when promise in the promise state is falsy', async function () {
+    const response = promiseNoData({promise:null});
 
-    expect(response.type).to.be.equal('div');
-    expect(response.children).to.be.equal('no data');
+    expect(response.tag).to.be.equal('div');
+    expect(response.children.length).to.equal(1);
+    expect(response.children[0]).to.equal("no data");
+      
   });
 
-  it('promiseNoData returns loader when promise is not resolved yet', async function () {
-    const promiseState = {};
-    promiseState.promise = 'dummyPromise';
+  it('promiseNoData returns an image  when promise is not yet resolved (data and error in promise state are falsy) ', async function () {
+    const response = promiseNoData({promise:"dummy"});
 
-    const response = promiseNoData(promiseState);
-
-    expect(response.type).to.be.equal('img');
+    expect(response.tag).to.be.equal('img');
     expect(response.props.src).to.be.a('string');
-    expect(response.props.src).to.be.equal(
-      'http://www.csc.kth.se/~cristi/loading.gif'
-    );
   });
 
-  it('promiseNoData returns error when promise is rejected or fails', async function () {
-    const promiseState = {};
-    promiseState.promise = 'dummyPromise';
-    promiseState.error = 'dummy error to show';
+  it('promiseNoData returns a div with the error text if the error in promise state is truthy', async function () {
+    const response = promiseNoData({promise:"dummy", error:"dummy error to show"});
 
-    const response = promiseNoData(promiseState);
-
-    expect(response.type).to.be.equal('div');
-    expect(response.children).to.be.equal('dummy error to show');
+    expect(response.tag).to.equal('div');
+    expect(response.children.length).to.equal(1);
+    expect(response.children[0]).to.equal('dummy error to show');
   });
 
-  it('promiseNoData returns false when promise is resolved and data is not null', async function () {
-    const promiseState = {};
-    promiseState.promise = 'dummyPromise';
-    promiseState.data = 'dummy data';
-
-    const response = promiseNoData(promiseState);
-
-    expect(response).to.be.a('boolean');
-    expect(response).to.be.equal(false);
+  it('promiseNoData returns falsy when data in promise state is not undefined and promise is truthy', async function () {
+    const response = promiseNoData({promise: "dummy", data: "some data"});
+    expect(response).to.be.not.ok;
   });
 });
