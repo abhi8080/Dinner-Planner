@@ -92,11 +92,11 @@ describe("TW1.5 Array rendering", function() {
     it("Vue Summary presenter passes ingredients prop (shopping list)", function(){
         installOwnCreateElement();
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
-        const model= new DinnerModel(3, dishes);
+        const model= {numerOfGuests:3, dishes};
         
         const rendering=Summary({model});
 
-        expect(rendering.props);
+        expect(rendering.props).to.be.ok;
         expect(rendering.props.ingredients).to.deep.equal(shoppingList(dishes));
     });
 
@@ -151,7 +151,7 @@ describe("TW1.5 Array rendering", function() {
     it("Vue Sidebar presenter passes dishes prop", function(){
         installOwnCreateElement();
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
-        const model= new DinnerModel(3, dishes);
+        const model= {numberOfGuests:3, dishes};
         
         const rendering= Sidebar({model});
 
@@ -162,7 +162,19 @@ describe("TW1.5 Array rendering", function() {
     it("Vue Sidebar presenter passes two dish-related custom event handlers: one removes dish, the other sets currentDish", function(){
         installOwnCreateElement();
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
-        const model= new DinnerModel(3, dishes);
+        let latestCurrentDish;
+        let latestRemovedDish;
+        const model= {
+            numberOfGuests:3,
+            dishes,
+            setCurrentDish(id){
+                latestCurrentDish=id;
+            },
+            removeFromMenu(dish){
+                latestRemovedDish=dish;
+            }
+            
+        };
         
         const rendering= Sidebar({model});
 
@@ -172,22 +184,34 @@ describe("TW1.5 Array rendering", function() {
         });
         expect(twoHandlers.length).to.equal(2);
         [1, 100, 201].forEach(function(testId){
+            let foundSetCurrentDish, foundRemoveFromMenu;
             twoHandlers.forEach(function(handler){
-                expect(typeof rendering.props[handler]).to.equal("function");
+                latestCurrentDish= undefined;
+                latestRemovedDish= undefined;
                 rendering.props[handler]( getDishDetails(testId));
-                if(model.currentDish==testId){   // we called the handler that changes the currentDish, event if we don't know its name...
-                    expect(model.dishes.length).to.equal(3);
-                    expect(model.dishes).to.include(getDishDetails(testId));
-                    model.setCurrentDish();    // reset the current dish, to prepare for next forEach iteration
-                }
-                else{ // we called the handler that removes the dish, event if we don't know its name...
-                    expect(model.dishes).to.not.include(getDishDetails(testId));
-                    expect(model.dishes.length).to.equal(2);
-                    expect(model.currentDish).to.be.undefined;
-                    model.addToMenu(getDishDetails(testId));  // add back the removed dish, to prepare for next forEach iteration
-                }
+                expect(latestCurrentDish || latestRemovedDish,"custom evvents handlers should call either setCurrentDish or removeFromMenu").to.be.ok;
+                foundSetCurrentDish = foundSetCurrentDish || latestCurrentDish;
+                foundRemoveFromMenu = foundRemoveFromMenu || latestRemovedDish;
             });
+            expect(foundSetCurrentDish && foundRemoveFromMenu,"custom evvents handlers should call both setCurrentDish or removeFromMenu").to.be.ok;
         });
+
+        let div = createUI();
+        window.React = { createElement: h };
+        let buttonPressed;
+        function pressed(x){ buttonPressed=x;}
+        render(h(SidebarView, {
+            number:3,
+            dishes,
+            [twoHandlers[0]]: pressed,
+            [twoHandlers[1]]: pressed
+        }), div
+              );
+        div.querySelectorAll("button")[3].click(); // click the second X
+        expect(buttonPressed).to.equal(getDishDetails(100), "SidebarView fires custom events from X buttons and sends a dish as parameter");
+        buttonPressed=undefined;
+        div.querySelectorAll("a")[0].click();    // click the first link
+        expect(buttonPressed).to.equal(getDishDetails(1), "SidebarView fires custom events links and sends a dish as parameter");      
     });
     it("Integration test: pressing UI X buttons removes dishes in Model", async function(){
         window.React={createElement:h};
@@ -207,14 +231,14 @@ describe("TW1.5 Array rendering", function() {
         const buttons= div.querySelectorAll("button");
         expect(buttons.length).to.be.gte(5, "There should be at least 5 buttons: +, - and 3 X for dishes");
         expect(buttons[0].textContent).to.equal("-", "first button must be minus");
-        const sidear= buttons[0].parentElement;
-        expect(sidear.querySelectorAll("button").length).to.equal(5, "There should be 5 buttons in sidebar: +, - and 3 X for dishes");
+        const sidebar= buttons[0].parentElement;
+        expect(sidebar.querySelectorAll("button").length).to.equal(5, "There should be 5 buttons in sidebar: +, - and 3 X for dishes");
         buttons[4].click();
         expect(myModel.dishes.length).to.equal(2);
         expect(myModel.dishes).to.not.include(getDishDetails(200));
 
         await new Promise(resolve => setTimeout(resolve));  // need to wait a bit for UI to update...
-        expect(sidear.querySelectorAll("button").length).to.equal(4, "There should be 4 buttons after deletion: +, - and 2 X for dishes");
+        expect(sidebar.querySelectorAll("button").length).to.equal(4, "There should be 4 buttons after deletion: +, - and 2 X for dishes");
     });
 
     it("Integration test: clicking on dish names sets model.currentDish", async function(){
@@ -233,7 +257,9 @@ describe("TW1.5 Array rendering", function() {
         await new Promise(resolve => setTimeout(resolve));  // need to wait a bit for UI to update...
         
         expect(div.querySelectorAll("a").length).to.equal(3, "There should be 3 links, one for each dish");
-        div.querySelectorAll("a")[1].click();
-        expect(myModel.currentDish).to.equal(100);
+
+        // nice idea but this hits the API so we comment it out. The SidebarView custom event firing check addresses this.
+        //div.querySelectorAll("a")[1].click();
+        //expect(myModel.currentDish).to.equal(100);
     });
 });
