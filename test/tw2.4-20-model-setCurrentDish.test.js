@@ -18,6 +18,10 @@ describe("TW2.4 Current dish Promise State", function() {
   this.beforeEach(function() {
     model = new DinnerModel();
   });
+  it("Model initializes currentDishPromiseState correctly", function() {
+    expect(model).to.have.property("currentDishPromiseState");
+    expect(JSON.stringify(model.currentDishPromiseState)).to.equal(JSON.stringify({}));
+  });
 
   it("Model sets currentDishPromiseState on valid dish id", async function() {
     expect(model).to.have.property("currentDishPromiseState");
