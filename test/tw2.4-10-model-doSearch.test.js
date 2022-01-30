@@ -22,7 +22,7 @@ describe('TW2.4 Search dishes Promise State', function () {
     expect(model).to.have.property('searchParams');
     expect(JSON.stringify(model.searchParams)).to.equal(JSON.stringify({}));
     model.setSearchQuery('pizza');
-    model.setSearhType('main course');
+    model.setSearchType('main course');
     expect(model.searchParams).to.have.property('query');
     expect(model.searchParams).to.have.property('type');
     expect(model.searchParams.query).to.be.a('string');
@@ -31,7 +31,7 @@ describe('TW2.4 Search dishes Promise State', function () {
     expect(model.searchParams.type).to.be.equal('main course');
   });
 
-  it('Model sets searchResultsPromiseState on valid search query and type', async function () {
+  it('Model doSearch uses with default parameters taken from model.searchParams', async function(){
     expect(model).to.have.property('searchResultsPromiseState');
     expect(JSON.stringify(model.searchResultsPromiseState)).to.equal(
       JSON.stringify({})
@@ -39,9 +39,9 @@ describe('TW2.4 Search dishes Promise State', function () {
     let searchQuery = 'pizza';
     let searchType = 'main course';
     model.setSearchQuery(searchQuery);
-    model.setSearhType(searchType);
-    model.doSearch(model.searchParams);
-
+    model.setSearchType(searchType);
+    model.doSearch();
+      
     expect(model.searchResultsPromiseState).to.have.property('promise');
     expect(model.searchResultsPromiseState).to.have.property('data');
     expect(model.searchResultsPromiseState).to.have.property('error');
@@ -61,12 +61,13 @@ describe('TW2.4 Search dishes Promise State', function () {
     });
   });
 
+    /*
   it('Model does initiate a new promise when searchParams is empty', async function () {
     expect(model).to.have.property('searchResultsPromiseState');
     expect(JSON.stringify(model.searchResultsPromiseState)).to.equal(
       JSON.stringify({})
     );
-    model.doSearch(model.searchParams);
+    model.doSearch();
     expect(model.searchResultsPromiseState).to.have.property('promise');
     expect(model.searchResultsPromiseState).to.have.property('data');
     expect(model.searchResultsPromiseState).to.have.property('error');
@@ -77,5 +78,5 @@ describe('TW2.4 Search dishes Promise State', function () {
     expect(finish - start, 'promise should take minimum 2 ms').to.be.above(2);
     expect(model.searchResultsPromiseState.data).to.be.a('array');
     expect(model.searchResultsPromiseState.data.length).to.not.equal('0');
-  });
+  });*/
 });
