@@ -38,8 +38,8 @@ describe("TW1.3 SidebarView events", function() {
             window.console={ log: function(x){ plusMsg=x;}};
             div.querySelectorAll("button")[1].click();
             console=oldConsole;
-            assert(minusMsg);
-            assert(plusMsg);
+            expect(minusMsg).to.be.ok;
+            expect(plusMsg).to.be.ok;
             expect(minusMsg).to.not.equal(plusMsg);
         }
     });

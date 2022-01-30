@@ -414,7 +414,7 @@ describe("TW2.5 DetailsPresenter", function() {
       });
       expect(window.lastJSXRender.tag).to.equal(DetailsView, "DetailsPresenter should render DetailsView if the promise state includes data");
       expect(window.lastJSXRender.props.guests).to.equal(4, "DetailsView guest prop must be read from the model");
-      expect(!window.lastJSXRender.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be falsy with empty menu");
+      expect(window.lastJSXRender.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be falsy with empty menu").to.not.be.ok;
       expect(window.lastJSXRender.props.dishData).to.equal(dishInformation, "DetailsView dishData prop expected to be read from the currentDish promise state");
 
 
@@ -429,7 +429,7 @@ describe("TW2.5 DetailsPresenter", function() {
               }
           }
       });
-      expect(!window.lastJSXRender.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be truthy if the dish is in menu");  
+      expect(window.lastJSXRender.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be truthy if the dish is in menu").to.not.be.ok;  
       expect(window.lastJSXRender.props.guests).to.equal(5, "DetailsView guest prop must be read from the model");
 
       // find the prop sent to DetailsView that is a function, that must be the custom event handler        

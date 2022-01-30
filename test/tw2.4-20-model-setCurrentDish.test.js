@@ -29,8 +29,8 @@ describe("TW2.4 Current dish Promise State", function() {
     let dishName = "Fruit Pizza";
     model.setCurrentDish(dishId);
     expect(model.currentDishPromiseState).to.have.property("promise");
-    expect(model.currentDishPromiseState).to.have.property("data");
-    expect(model.currentDishPromiseState).to.have.property("error");
+    expect(model.currentDishPromiseState.data).to.be.null;
+    expect(model.currentDishPromiseState.error).to.be.null;
     expect(model.currentDishPromiseState.promise).to.not.be.null;
     let start = new Date();
     await model.currentDishPromiseState.promise;

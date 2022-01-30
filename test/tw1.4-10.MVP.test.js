@@ -38,9 +38,9 @@ describe("TW1.4 Model-View-Presenter", function() {
         installOwnCreateElement();
         Summary({model: new DinnerModel()});
 
-        assert(window.lastJSXRender.tag);
+        expect(window.lastJSXRender.tag).to.be.ok;
         expect(window.lastJSXRender.tag.name).to.equal(SummaryView.name);
-        expect(window.lastJSXRender.props);
+        expect(window.lastJSXRender.props).to.be.ok;
         expect(window.lastJSXRender.props.people).to.equal(2);
     });
 
@@ -49,9 +49,9 @@ describe("TW1.4 Model-View-Presenter", function() {
         expect(Sidebar);
         Sidebar({model: new DinnerModel()});
 
-        assert(window.lastJSXRender.tag);
+        expect(window.lastJSXRender.tag).to.be.ok;
         expect(window.lastJSXRender.tag.name).to.equal(SidebarView.name);
-        expect(window.lastJSXRender.props);
+        expect(window.lastJSXRender.props).to.be.ok;
         expect(window.lastJSXRender.props.number).to.equal(2);
     });
 

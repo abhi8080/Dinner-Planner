@@ -43,8 +43,8 @@ describe('TW2.4 Search dishes Promise State', function () {
     model.doSearch();
       
     expect(model.searchResultsPromiseState).to.have.property('promise');
-    expect(model.searchResultsPromiseState).to.have.property('data');
-    expect(model.searchResultsPromiseState).to.have.property('error');
+    expect(model.searchResultsPromiseState.data).to.be.null;
+    expect(model.searchResultsPromiseState.error).to.be.null;
     expect(model.searchResultsPromiseState.promise).to.not.be.null;
     let start = new Date();
     await model.searchResultsPromiseState.promise;

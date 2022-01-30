@@ -50,17 +50,17 @@ describe("TW2.3 SearchResultsView", function() {
   }
 
   it("SearchResultsView renders div", function() {
-    setUpView()
-    assert(window.lastJSXRender.tag)
+    setUpView();
+    expect(window.lastJSXRender.tag).to.be.ok;
     expect(window.lastJSXRender.tag).to.equal("div");
   });
 
   it("SearchResultsView renders span for each search result", function() {
-    setUpView()
-    assert(window.lastJSXRender.children)
+    setUpView();
+    expect(window.lastJSXRender.children).to.be.ok;
     expect(window.lastJSXRender.children[0].length).to.equal(3);
     window.lastJSXRender.children[0].forEach(child => {
-      assert(child.tag);
+      expect(child.tag).to.be.ok;
       expect(child.tag).to.equal("span");
     });
   });
@@ -68,32 +68,32 @@ describe("TW2.3 SearchResultsView", function() {
   it("SearchResultsView renders only image and title for each span", function() {
     setUpView()
     window.lastJSXRender.children[0].forEach((child, i) => {
-      assert(child.children);
+      expect(child.children).to.be.ok;
       expect(child.children.length).to.equal(2);
-      assert(child.children[0].tag);
+      expect(child.children[0].tag).to.be.ok;
       expect(child.children[0].tag).to.equal("img");
-      assert(child.children[1].tag);
+      expect(child.children[1].tag);
       expect(child.children[1].tag).to.equal("div");
     });
   });
 
   it("SearchResultsView renders images correctly", function() {
-    setUpView()
+    setUpView();
     window.lastJSXRender.children[0].forEach((child, i) => {
       let image = child.children[0];
-      assert(image.props);
-      assert(image.props.src);
+      expect(image.props).to.be.ok;
+      expect(image.props.src).to.be.ok;
       expect(image.props.src).to.equal("https://spoonacular.com/recipeImages/" + searchResults[i].image);
-      assert(image.props.height);
+      expect(image.props.height).to.be.ok;
       expect(image.props.height).to.equal("100");
     });
   });
 
   it("SearchResultsView renders titles correctly", function() {
-    setUpView()
+    setUpView();
     window.lastJSXRender.children[0].forEach((child, i) => {
       let title = child.children[1];
-      assert(title.children);
+      expect(title.children).to.be.ok;
       expect(title.children.length).to.equal(1);
       expect(title.children[0]).to.equal(searchResults[i].title);
     });
