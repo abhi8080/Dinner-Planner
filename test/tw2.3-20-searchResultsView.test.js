@@ -46,28 +46,28 @@ describe("TW2.3 SearchResultsView", function() {
 
   function setUpView(){
     installOwnCreateElement();
-    SearchResultsView({searchResults: searchResults});
+    return SearchResultsView({searchResults: searchResults});
   }
 
   it("SearchResultsView renders div", function() {
-    setUpView();
-    expect(window.lastJSXRender.tag).to.be.ok;
-    expect(window.lastJSXRender.tag).to.equal("div");
+    const rendering= setUpView();
+    expect(rendering.tag).to.be.ok;
+    expect(rendering.tag).to.equal("div");
   });
 
   it("SearchResultsView renders span for each search result", function() {
-    setUpView();
-    expect(window.lastJSXRender.children).to.be.ok;
-    expect(window.lastJSXRender.children[0].length).to.equal(3);
-    window.lastJSXRender.children[0].forEach(child => {
+    const rendering= setUpView();
+    expect(rendering.children).to.be.ok;
+    expect(rendering.children[0].length).to.equal(3);
+    rendering.children[0].forEach(child => {
       expect(child.tag).to.be.ok;
       expect(child.tag).to.equal("span");
     });
   });
 
   it("SearchResultsView renders only image and title for each span", function() {
-    setUpView()
-    window.lastJSXRender.children[0].forEach((child, i) => {
+    const rendering= setUpView();
+    rendering.children[0].forEach((child, i) => {
       expect(child.children).to.be.ok;
       expect(child.children.length).to.equal(2);
       expect(child.children[0].tag).to.be.ok;
@@ -78,8 +78,8 @@ describe("TW2.3 SearchResultsView", function() {
   });
 
   it("SearchResultsView renders images correctly", function() {
-    setUpView();
-    window.lastJSXRender.children[0].forEach((child, i) => {
+      const rendering=setUpView();
+      rendering.children[0].forEach((child, i) => {
       let image = child.children[0];
       expect(image.props).to.be.ok;
       expect(image.props.src).to.be.ok;
@@ -90,8 +90,8 @@ describe("TW2.3 SearchResultsView", function() {
   });
 
   it("SearchResultsView renders titles correctly", function() {
-    setUpView();
-    window.lastJSXRender.children[0].forEach((child, i) => {
+    const rendering= setUpView();
+    rendering.children[0].forEach((child, i) => {
       let title = child.children[1];
       expect(title.children).to.be.ok;
       expect(title.children.length).to.equal(1);

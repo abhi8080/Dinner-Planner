@@ -94,10 +94,10 @@ describe("TW1.5 Array rendering", function() {
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
         const model= new DinnerModel(3, dishes);
         
-        Summary({model});
+        const rendering=Summary({model});
 
-        expect(window.lastJSXRender.props);
-        expect(window.lastJSXRender.props.ingredients).to.deep.equal(shoppingList(dishes));
+        expect(rendering.props);
+        expect(rendering.props.ingredients).to.deep.equal(shoppingList(dishes));
     });
 
     it("SidearView table content", function(){
@@ -153,10 +153,10 @@ describe("TW1.5 Array rendering", function() {
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
         const model= new DinnerModel(3, dishes);
         
-        Sidebar({model});
+        const rendering= Sidebar({model});
 
-        expect(window.lastJSXRender.props);
-        expect(window.lastJSXRender.props.dishes).to.deep.equal(dishes);
+        expect(rendering.props).to.be.ok;
+        expect(rendering.props.dishes).to.deep.equal(dishes);
     });
 
     it("Vue Sidebar presenter passes two dish-related custom event handlers: one removes dish, the other sets currentDish", function(){
@@ -164,17 +164,17 @@ describe("TW1.5 Array rendering", function() {
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
         const model= new DinnerModel(3, dishes);
         
-        Sidebar({model});
+        const rendering= Sidebar({model});
 
-        expect(window.lastJSXRender.props);
-        const twoHandlers= Object.keys(window.lastJSXRender.props).filter(function(prop){
+        expect(rendering.props).to.be.ok;
+        const twoHandlers= Object.keys(rendering.props).filter(function(prop){
             return !["number", "dishes", "onNumberChange"].includes(prop);
         });
         expect(twoHandlers.length).to.equal(2);
         [1, 100, 201].forEach(function(testId){
             twoHandlers.forEach(function(handler){
-                expect(typeof window.lastJSXRender.props[handler]).to.equal("function");
-                window.lastJSXRender.props[handler]( getDishDetails(testId));
+                expect(typeof rendering.props[handler]).to.equal("function");
+                rendering.props[handler]( getDishDetails(testId));
                 if(model.currentDish==testId){   // we called the handler that changes the currentDish, event if we don't know its name...
                     expect(model.dishes.length).to.equal(3);
                     expect(model.dishes).to.include(getDishDetails(testId));

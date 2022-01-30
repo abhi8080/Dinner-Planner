@@ -22,7 +22,7 @@ try{
     Sidebar= require('../src/vuejs/'+X+'sidebarPresenter.js').default;
 }catch(e){};
 
-function traverseJSX({tag, props, children}=window.lastJSXRender){
+function traverseJSX({tag, props, children}){
     if(!children)
         return [{tag, props}];
     return [{tag, props}, ... children.map(child=> traverseJSX(child))].flat();
@@ -36,46 +36,46 @@ describe("TW1.4 Model-View-Presenter", function() {
     
     it("Vue Summary presenter renders SummaryView with people prop", function(){
         installOwnCreateElement();
-        Summary({model: new DinnerModel()});
+        const render=Summary({model: new DinnerModel()});
 
-        expect(window.lastJSXRender.tag).to.be.ok;
-        expect(window.lastJSXRender.tag.name).to.equal(SummaryView.name);
-        expect(window.lastJSXRender.props).to.be.ok;
-        expect(window.lastJSXRender.props.people).to.equal(2);
+        expect(render.tag).to.be.ok;
+        expect(render.tag.name).to.equal(SummaryView.name);
+        expect(render.props).to.be.ok;
+        expect(render.props.people).to.equal(2);
     });
 
     it("Vue Sidebar presenter renders SidebarView with number prop", function(){
         installOwnCreateElement();
-        expect(Sidebar);
-        Sidebar({model: new DinnerModel()});
+        expect(Sidebar).to.be.ok;
+        const render=Sidebar({model: new DinnerModel()});
 
-        expect(window.lastJSXRender.tag).to.be.ok;
-        expect(window.lastJSXRender.tag.name).to.equal(SidebarView.name);
-        expect(window.lastJSXRender.props).to.be.ok;
-        expect(window.lastJSXRender.props.number).to.equal(2);
+        expect(render.tag).to.be.ok;
+        expect(render.tag.name).to.equal(SidebarView.name);
+        expect(render.props).to.be.ok;
+        expect(render.props.number).to.equal(2);
     });
 
     it("Vue Sidebar presenter renders SidebarView with correct custom event handler", function(){
         installOwnCreateElement();
         expect(Sidebar);
         const model= new DinnerModel();
-        Sidebar({model});
+        const render=Sidebar({model});
 
-        expect(typeof window.lastJSXRender.props.onNumberChange).to.equal("function");
+        expect(typeof render.props.onNumberChange).to.equal("function");
         // we can apply the callback, the model should change!
-        window.lastJSXRender.props.onNumberChange(3);
+        render.props.onNumberChange(3);
         expect(model.numberOfGuests).to.equal(3);
-        window.lastJSXRender.props.onNumberChange(5);
+        render.props.onNumberChange(5);
         expect(model.numberOfGuests).to.equal(5);
         
     });
 
     it("App renders Sidebar, then Summary", function(){
         installOwnCreateElement();
-        App({model: new DinnerModel()});
-        expect(window.lastJSXRender.tag).to.equal("div");
+        const render= App({model: new DinnerModel()});
+        expect(render.tag).to.equal("div");
 
-        const components= traverseJSX().filter(function keepComponents({tag, props}){
+        const components= traverseJSX(render).filter(function keepComponents({tag, props}){
             return typeof(tag)=="function" || typeof(tag)=="object";
         });
         expect(components.length).to.be.gte(2);
