@@ -36,7 +36,7 @@ describe("TW1.4 Model-View-Presenter", function() {
     
     it("Vue Summary presenter renders SummaryView with people prop", function(){
         installOwnCreateElement();
-        const rendering=Summary({model: new DinnerModel()});
+        const rendering=Summary({model: {numberOfGuests:2, dishes:[]}});
 
         expect(rendering.tag).to.be.ok;
         expect(rendering.tag.name).to.equal(SummaryView.name);
@@ -47,7 +47,7 @@ describe("TW1.4 Model-View-Presenter", function() {
     it("Vue Sidebar presenter renders SidebarView with number prop", function(){
         installOwnCreateElement();
         expect(Sidebar).to.be.ok;
-        const rendering=Sidebar({model: new DinnerModel()});
+        const rendering=Sidebar({model:  {numberOfGuests:2, dishes:[]}});
 
         expect(rendering.tag).to.be.ok;
         expect(rendering.tag.name).to.equal(SidebarView.name);
@@ -58,21 +58,30 @@ describe("TW1.4 Model-View-Presenter", function() {
     it("Vue Sidebar presenter renders SidebarView with correct custom event handler", function(){
         installOwnCreateElement();
         expect(Sidebar);
-        const model= new DinnerModel();
-        const rendering=Sidebar({model});
-
+        let latestGuests;
+        const rendering=Sidebar({
+            model:{
+                numberOfGuests:2,
+                dishes:[],
+                setNumberOfGuests(x){ latestGuests=x; }
+            }
+        });
+        
         expect(typeof rendering.props.onNumberChange).to.equal("function");
         // we can apply the callback, the model should change!
         rendering.props.onNumberChange(3);
-        expect(model.numberOfGuests).to.equal(3);
+        expect(latestGuests).to.equal(3);
         rendering.props.onNumberChange(5);
-        expect(model.numberOfGuests).to.equal(5);
+        expect(latestGuests).to.equal(5);
         
     });
 
     it("App renders Sidebar, then Summary", function(){
         installOwnCreateElement();
-        const rendering= App({model: new DinnerModel()});
+        const rendering= App({model: {
+            numberOfGuests:2,
+            dishes:[],
+        }});
         expect(rendering.tag).to.equal("div");
 
         const components= traverseJSX(rendering).filter(function keepComponents({tag, props}){
@@ -88,7 +97,21 @@ describe("TW1.4 Model-View-Presenter", function() {
         let div= createUI();
         window.React={createElement:h};
 
-        render(<VueRoot />,div);
+        const oldFetch=fetch;
+        window.fetch= function(){
+            return Promise.resolve({
+                ok:true,
+                status:200,
+                json(){
+                    return Promise.resolve({results:[]});
+                }
+            });
+        };
+
+        try{
+            render(<VueRoot />,div);
+        }finally{ window.fetch=oldFetch; }
+        
         let myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;
 
         expect(div.querySelector('span[title]').firstChild.textContent).to.equal("2");

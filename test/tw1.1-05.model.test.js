@@ -54,10 +54,24 @@ describe("TW1.1 DinnerModel", function() {
     });
 
     it("can set current dish", function(){
-        model.setCurrentDish(1);
-        expect(model.currentDish).to.equal(1);
-        
-        model.setCurrentDish(3);
-        expect(model.currentDish).to.equal(3);
+        const oldFetch= fetch;
+        window.fetch= function(){
+            return Promise.resolve({
+                ok:true,
+                status:200,
+                json(){
+                    return Promise.resolve(dishesConst[0]);
+                }
+            });
+        };
+        try{
+            model.setCurrentDish(1);
+            expect(model.currentDish).to.equal(1);
+            
+            model.setCurrentDish(3);
+            expect(model.currentDish).to.equal(3);
+        }finally{
+            window.fetch=oldFetch;
+        }
     });
 });

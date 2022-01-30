@@ -214,11 +214,23 @@ describe("TW1.5 Array rendering", function() {
         expect(buttonPressed).to.equal(getDishDetails(1), "SidebarView fires custom events links and sends a dish as parameter");      
     });
     it("Integration test: pressing UI X buttons removes dishes in Model", async function(){
+
         window.React={createElement:h};
-
         let div= createUI();
+        const oldFetch= fetch;
+        window.fetch= function(){
+            return Promise.resolve({
+                ok:true,
+                json(){
+                    return Promise.resolve({results:[]});
+                }
+            });
+        };
 
+        try{
         render(<VueRoot />,div);
+        }finally{ window.fetch=oldFetch; }
+        
         let myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;
 
         myModel.addToMenu(getDishDetails(200));
@@ -245,8 +257,21 @@ describe("TW1.5 Array rendering", function() {
         window.React={createElement:h};
 
         let div= createUI();
+        const oldFetch= fetch;
+        window.fetch= function(){
+            return Promise.resolve({
+                ok: true,
+                status:200,
+                json(){
+                    return Promise.resolve({results:[]});
+                }
+            });
+        };
 
+        try{
         render(<VueRoot />,div);
+        }finally{ window.fetch=oldFetch; }
+
         let myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;
 
         myModel.addToMenu(getDishDetails(200));
@@ -258,8 +283,18 @@ describe("TW1.5 Array rendering", function() {
         
         expect(div.querySelectorAll("a").length).to.equal(3, "There should be 3 links, one for each dish");
 
-        // nice idea but this hits the API so we comment it out. The SidebarView custom event firing check addresses this.
-        //div.querySelectorAll("a")[1].click();
-        //expect(myModel.currentDish).to.equal(100);
+        window.fetch= function(){
+            return Promise.resolve({
+                ok: true,
+                status:200,
+                json(){
+                    return Promise.resolve(dishesConst[0]);
+                }
+            });
+        };
+        try{
+            div.querySelectorAll("a")[1].click();
+            expect(myModel.currentDish).to.equal(100);
+        }finally{ window.fetch=oldFetch; }
     });
 });
