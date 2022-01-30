@@ -21,7 +21,7 @@ describe('TW2.4 promiseNoData', function () {
 
     expect(response.tag).to.be.equal('div');
     expect(response.children.length).to.equal(1);
-    expect(response.children[0]).to.equal("no data");
+    expect(response.children[0].toLowerCase()).to.equal("no data");
       
   });
 

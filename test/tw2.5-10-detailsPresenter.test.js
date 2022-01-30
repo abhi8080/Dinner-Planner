@@ -402,7 +402,7 @@ describe("TW2.5 DetailsPresenter", function() {
       }
                                              });
       expect(renderingEmpty.children.length).to.equal(1);
-      expect(renderingEmpty.children[0]).to.equal("no data");
+      expect(renderingEmpty.children[0].toLowerCase()).to.equal("no data");
       
       const renderingPromise=DetailsPresenter({model: {currentDishPromiseState:{promise:"bla"}}});
       expect(renderingPromise.tag).to.equal("img");
