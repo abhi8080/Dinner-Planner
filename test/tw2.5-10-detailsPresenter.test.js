@@ -1,5 +1,8 @@
 import { assert, expect } from "chai";
 import installOwnCreateElement from "./jsxCreateElement";
+import createUI from './createUI.js';
+const { render, h } = require('vue');
+
 
 const dishInformation = {
   "vegetarian": true,
@@ -377,29 +380,12 @@ const dishInformation = {
 };
 
 let DetailsPresenter;
+let DetailsView;
 const X = TEST_PREFIX;
 try {
-  DetailsPresenter = require("../src/vuejs/" + X + "detailsPresenter.js").default;
+    DetailsPresenter = require("../src/vuejs/" + X + "detailsPresenter.js").default;
+    DetailsView = require("../src/views/" + X + "detailsView.js").default;
 } catch(e) {};
-console.log(DetailsPresenter);
-
-class MockModel {
-  constructor() {
-    this.numberOfGuests = 4;
-    this.dishes = [];
-    this.currentDishPromiseState = {};
-  }
-  addToMenu(dish) {this.dishes = [...this.dishes, dish]}
-  setCurrentDish(id) {
-    this.currentDishPromiseState = {
-      promise: new Promise(resolve => setTimeout(() => {
-        resolve(dishInformation);
-      }, 200)).then(data => this.currentDishPromiseState.data = data),
-      data: null,
-      err: null,
-    };
-  }
-}
 
 describe("TW2.5 DetailsPresenter", function() {
   this.timeout(200000);
@@ -408,25 +394,65 @@ describe("TW2.5 DetailsPresenter", function() {
     if(!DetailsPresenter) this.skip();
   });
 
-  it("Vue DetailsPresenter renders DetailsView", async function(){
+  it("Vue DetailsPresenter renders promise states correctly", async function(){
     installOwnCreateElement();
-    let model = new MockModel();
-    DetailsPresenter({model: model});
-    // should log no data since we dont have any dish details yet
-    console.log(window.lastJSXRender);
-
-    // placeholder id
-    model.setCurrentDish(1);
-
-    //should log the loading icon
-    console.log(window.lastJSXRender);
-
-    // awaiting promise
-    await model.currentDishPromiseState.promise
-
-    // should log the details view
-    console.log(window.lastJSXRender);
+      DetailsPresenter({model: {currentDishPromiseState:{}}});
+      expect(window.lastJSXRender.children.length).to.equal(1);
+      expect(window.lastJSXRender.children[0]).to.equal("no data");
+      
+      DetailsPresenter({model: {currentDishPromiseState:{promise:"bla"}}});
+      expect(window.lastJSXRender.tag).to.equal("img");
   });
+    it("Vue DetailsPresenter renders DetailsView", async function(){
+      installOwnCreateElement();
+      DetailsPresenter({
+          model: {
+              currentDishPromiseState:{promise:"bla", data: dishInformation},
+              dishes:[],
+              numberOfGuests:4,
+          }
+      });
+      expect(window.lastJSXRender.tag).to.equal(DetailsView, "DetailsPresenter should render DetailsView if the promise state includes data");
+      expect(window.lastJSXRender.props.guests).to.equal(4, "DetailsView guest prop must be read from the model");
+      expect(!window.lastJSXRender.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be falsy with empty menu");
+      expect(window.lastJSXRender.props.dishData).to.equal(dishInformation, "DetailsView dishData prop expected to be read from the currentDish promise state");
+
+
+      let dishAdded;
+      DetailsPresenter({
+          model: {
+              currentDishPromiseState:{promise:"bla", data: dishInformation},
+              dishes:[dishInformation],
+              numberOfGuests:5,
+              addToMenu(dish){
+                  dishAdded=dish;
+              }
+          }
+      });
+      expect(!window.lastJSXRender.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be truthy if the dish is in menu");  
+      expect(window.lastJSXRender.props.guests).to.equal(5, "DetailsView guest prop must be read from the model");
+
+      // find the prop sent to DetailsView that is a function, that must be the custom event handler        
+      const callbackNames= Object.keys(window.lastJSXRender.props).filter(prop=> typeof window.lastJSXRender.props[prop] =="function");
+      expect(callbackNames.length).to.equal(1, "Details presenter passes one custom event handler");
+      window.lastJSXRender.props[callbackNames[0]]();
+      expect(dishAdded).to.equal(dishInformation, "Details presenter custom event handler calls the appropriate model method");
+
+        // now we know the name of the custom event, and can check if it is called when the button is pressed.
+        // we render in DOM and press the button
+      let div = createUI();
+      window.React = { createElement: h };
+      let buttonPressed;
+        render(h(DetailsView, {
+          isDishInMenu:false,
+          guests:3,
+          dishData:dishInformation,
+          [callbackNames[0]]: function(){ buttonPressed=true;}
+      }), div
+            );
+        div.querySelectorAll("button")[0].click();   // fixme: maybe it's not always the first button?
+        expect(buttonPressed).to.equal(true, "DetailsView fires its custom event correctly");
+
+    });
 });
 
-export default MockModel;
