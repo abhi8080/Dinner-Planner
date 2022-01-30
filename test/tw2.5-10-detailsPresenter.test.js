@@ -396,32 +396,38 @@ describe("TW2.5 DetailsPresenter", function() {
 
   it("Vue DetailsPresenter renders promise states correctly", async function(){
     installOwnCreateElement();
-      DetailsPresenter({model: {currentDishPromiseState:{}}});
-      expect(window.lastJSXRender.children.length).to.equal(1);
-      expect(window.lastJSXRender.children[0]).to.equal("no data");
+      const renderingEmpty= DetailsPresenter({model: {
+          currentDish: dishInformation.id,
+          currentDishPromiseState:{}
+      }
+                                             });
+      expect(renderingEmpty.children.length).to.equal(1);
+      expect(renderingEmpty.children[0]).to.equal("no data");
       
-      DetailsPresenter({model: {currentDishPromiseState:{promise:"bla"}}});
-      expect(window.lastJSXRender.tag).to.equal("img");
+      const renderingPromise=DetailsPresenter({model: {currentDishPromiseState:{promise:"bla"}}});
+      expect(renderingPromise.tag).to.equal("img");
   });
     it("Vue DetailsPresenter renders DetailsView", async function(){
       installOwnCreateElement();
-      DetailsPresenter({
+      const renderingData= DetailsPresenter({
           model: {
               currentDishPromiseState:{promise:"bla", data: dishInformation},
+              currentDish: dishInformation.id,
               dishes:[],
               numberOfGuests:4,
           }
       });
-      expect(window.lastJSXRender.tag).to.equal(DetailsView, "DetailsPresenter should render DetailsView if the promise state includes data");
-      expect(window.lastJSXRender.props.guests).to.equal(4, "DetailsView guest prop must be read from the model");
-      expect(window.lastJSXRender.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be falsy with empty menu").to.not.be.ok;
-      expect(window.lastJSXRender.props.dishData).to.equal(dishInformation, "DetailsView dishData prop expected to be read from the currentDish promise state");
+      expect(renderingData.tag).to.equal(DetailsView, "DetailsPresenter should render DetailsView if the promise state includes data");
+      expect(renderingData.props.guests).to.equal(4, "DetailsView guest prop must be read from the model");
+      expect(renderingData.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be falsy with empty menu").to.not.be.ok;
+      expect(renderingData.props.dishData).to.equal(dishInformation, "DetailsView dishData prop expected to be read from the currentDish promise state");
 
 
       let dishAdded;
-      DetailsPresenter({
+      const renderingCustomEvent=DetailsPresenter({
           model: {
               currentDishPromiseState:{promise:"bla", data: dishInformation},
+              currentDish: dishInformation.id,
               dishes:[dishInformation],
               numberOfGuests:5,
               addToMenu(dish){
@@ -429,13 +435,13 @@ describe("TW2.5 DetailsPresenter", function() {
               }
           }
       });
-      expect(window.lastJSXRender.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be truthy if the dish is in menu").to.not.be.ok;  
-      expect(window.lastJSXRender.props.guests).to.equal(5, "DetailsView guest prop must be read from the model");
+      expect(renderingCustomEvent.props.isDishInMenu, "DetailsView isDishInMenu prop expected to be truthy if the dish is in menu").to.be.ok;  
+      expect(renderingCustomEvent.props.guests).to.equal(5, "DetailsView guest prop must be read from the model");
 
       // find the prop sent to DetailsView that is a function, that must be the custom event handler        
-      const callbackNames= Object.keys(window.lastJSXRender.props).filter(prop=> typeof window.lastJSXRender.props[prop] =="function");
+      const callbackNames= Object.keys(renderingCustomEvent.props).filter(prop=> typeof renderingCustomEvent.props[prop] =="function");
       expect(callbackNames.length).to.equal(1, "Details presenter passes one custom event handler");
-      window.lastJSXRender.props[callbackNames[0]]();
+      renderingCustomEvent.props[callbackNames[0]]();
       expect(dishAdded).to.equal(dishInformation, "Details presenter custom event handler calls the appropriate model method");
 
         // now we know the name of the custom event, and can check if it is called when the button is pressed.
