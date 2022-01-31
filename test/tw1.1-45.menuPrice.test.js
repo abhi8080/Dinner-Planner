@@ -8,10 +8,16 @@ describe("TW1.1 menuPrice", function() {
     it("should sum up dish prices", function(){
         const dishes=[dishesConst[4], dishesConst[6], dishesConst[2], dishesConst[7]];
 
-        return assert.equal(menuPrice(dishes),  dishesConst[4].pricePerServing
+        assert.equal(menuPrice(dishes),  dishesConst[4].pricePerServing
                             + dishesConst[6].pricePerServing
                             + dishesConst[2].pricePerServing
                             + dishesConst[7].pricePerServing
                            );
+    });
+
+    it("for empty menu, should return the second reduce() parameter", function(){
+        const dishes=[];
+        
+        expect(menuPrice(dishes),  "did you forget the second reduce parameter?").to.equal(0);
     });
 });
