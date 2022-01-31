@@ -457,13 +457,13 @@ describe("TW2.5 DetailsPresenter", function() {
       }), div
             );
         
-            // div.querySelectorAll("button")[0].click();   // fixme: maybe it's not always the first button?
-        // fix to find add to menu button
         let addButton = [...div.querySelectorAll("button")].find(function(btn){
             return btn.innerText.toLowerCase().indexOf( "add")!=-1;
         });
         expect(addButton, "add button was not found").to.be.ok;
-        addButton.click();
+        try{
+            addButton.click();
+        }finally{ window.location.hash=""; }
         expect(buttonPressed).to.equal(true, "DetailsView fires its custom event correctly");
 
     });

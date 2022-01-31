@@ -213,7 +213,11 @@ describe("TW1.5 Array rendering", function() {
         div.querySelectorAll("button")[3].click(); // click the second X
         expect(buttonPressed).to.equal(getDishDetails(100), "SidebarView fires custom events from X buttons and sends a dish as parameter");
         buttonPressed=undefined;
-        div.querySelectorAll("a")[0].click();    // click the first link
+
+        try{
+            div.querySelectorAll("a")[0].click();    // click the first link
+        }finally{window.location.hash="";}
+        
         expect(buttonPressed).to.equal(getDishDetails(1), "SidebarView fires custom events links and sends a dish as parameter");      
     });
     it("Integration test: pressing UI X buttons removes dishes in Model", async function(){
@@ -298,6 +302,6 @@ describe("TW1.5 Array rendering", function() {
         try{
             div.querySelectorAll("a")[1].click();
             expect(myModel.currentDish).to.equal(100);
-        }finally{ window.fetch=oldFetch; }
+        }finally{ window.fetch=oldFetch; window.location.hash=""; }
     });
 });
