@@ -22,6 +22,7 @@ describe("TW1.2 SidebarView", function() {
         window.React={createElement:h};
         render(<SidebarView number={4} dishes={[]}/>, div);
         assert.equal(div.querySelectorAll("button").length, 2);
+        assert.equal(div.querySelectorAll("button")[0].disabled, false);
         assert.equal(div.querySelectorAll("button")[0].firstChild.textContent, "-");
         assert.equal(div.querySelectorAll("button")[1].firstChild.textContent, "+");
         assert.equal(div.querySelectorAll("button")[0].nextSibling.textContent, "4");
