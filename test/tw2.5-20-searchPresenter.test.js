@@ -189,29 +189,31 @@ describe("TW2.5 SearchPresenter", function() {
     let SearchResultsViewProps = renderingSearchResults.children[1].props;
     expect(SearchResultsViewProps).to.be.ok;
     expect(SearchResultsViewProps, "expected searchResults prop").to.have.property("searchResults");
-    expect(SearchResultsViewProps["searchResults"]).to.equal("bar", "searchResults prop does not equal promise data")
+    expect(SearchResultsViewProps["searchResults"]).to.equal("bar", "searchResults prop does not equal promise data");
 
-    const oneHandler = Object.keys(SearchResultsViewProps).filter(function(prop){
-      return !["searchResults"].includes(prop)
+    let oneHandler = Object.keys(SearchResultsViewProps).filter(function(prop){
+      return !["searchResults"].includes(prop);
     });
     expect(oneHandler.length).to.equal(1, "expected 2 props in total");
+    oneHandler = oneHandler[0];
     
     dishId = undefined;
-    SearchResultsViewProps[oneHandler](1);
+    SearchResultsViewProps[oneHandler]({id: 1});
     expect(dishId, "custom event handler should call setCurrentDish")
     expect(dishId).to.equal(1, "Search presenter custom event handler calls the appropriate model method");
 
     let div = createUI();
     window.React = { createElement: h };
-    let disId;
+    let dish;
     render(h(SearchResultsView, {
       searchResults: searchResults,
-      [oneHandler[0]]: function(){ disId = 3 }
+      [oneHandler]: d => dish=d
     }), div);
+    // SearchResultsView rendering spans should already be tested.
     let clickableSpan = div.querySelectorAll('span')[0];
-    expect(clickableSpan, "span was not found").to.be.ok;
+    expect(clickableSpan, "span for search result not found").to.be.ok;
     clickableSpan.click();
-    expect(disId).to.equal(3, "SearchResultsView fires its custom event correctly");
-
+    expect(dish, `expected dish parameter passed to ${oneHandler} to have property id`).to.have.property("id");
+    expect(dish.id).to.equal(587203, "SearchResultsView fires its custom event correctly");
   });
 });
