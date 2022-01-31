@@ -77,7 +77,8 @@ describe("TW1.5 Array rendering", function() {
         render(<SummaryView people={ppl} ingredients={ingrList}/>, div);
 
         const [x,...rows]= [...div.querySelectorAll("tr")];  // ignore header
-
+        expect(rows.length, "there should be as many table rows as ingredients").to.equal(ingrList.length);
+        
         rows.forEach(function(tr, index){
             if(!index) return;
             const tds= tr.querySelectorAll("td");
@@ -108,8 +109,10 @@ describe("TW1.5 Array rendering", function() {
         const lookup=  dishes.reduce(function(acc, dish){ return {...acc, [dish.title]:{...dish, type: dishType(dish) }}; }, {});
         
         render(<SidebarView number={ppl} dishes={dishes}/>, div);
+        const trs= div.querySelectorAll("tr");
+        expect(trs.length, "there should be 4 table rows").to.equal(4);
 
-        [...div.querySelectorAll("tr")].forEach(function(tr, index, arr){
+        [...trs].forEach(function(tr, index, arr){
             const tds= tr.querySelectorAll("td");            
             expect(tds.length).to.equal(4, "dish table must have 4 columns");
             expect(tds[3].textContent.trim()[tds[3].textContent.trim().length-3]).to.equal(".", "price and total must be shown with two decimals, use (someExpr).toFixed(2)");  
