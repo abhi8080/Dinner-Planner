@@ -113,15 +113,25 @@ describe("TW2.5 SearchPresenter", function() {
     });
     expect(threeHandlers.length).to.equal(3, "expected 4 props in total");
     let foundOnSearch, foundOnText, foundOnDishType;
+    let onSearchHandler, onTextHandler, onDishTypeHandler;
     threeHandlers.forEach(handler => {
       searched=undefined;
       text=undefined;
       type=undefined;
       SearchFormViewProps[handler]("main course");
       expect(searched || text || type, "custom events handlers should call either doSearch, setSearchQuery or setSearchType");
-      foundOnSearch = foundOnSearch || searched;
-      foundOnText = foundOnText || text;
-      foundOnDishType = foundOnDishType || type;
+      if(searched) {
+        foundOnSearch = searched;
+        onSearchHandler = handler;
+      }
+      if(text) {
+        onTextHandler = handler;
+        foundOnText = text;
+      }
+      if(type) {
+        onDishTypeHandler = handler;
+        foundOnDishType = type;
+      }
     });
     expect(foundOnSearch && foundOnText && foundOnDishType, "custom event handlers should together call all three of doSearch, setSearchQuery and setSearchType");
     let div = createUI();
@@ -129,9 +139,9 @@ describe("TW2.5 SearchPresenter", function() {
     let textChange, typeChange, search;
     render(h(SearchFormView, {
       dishTypeOptions: ['starter', 'main course', 'dessert'],
-      [threeHandlers[0]]: function(txt = 'pizza'){ textChange = txt },
-      [threeHandlers[1]]: function(type = 'starter'){ typeChange = type },
-      [threeHandlers[2]]: function(){ search = true }
+      [onTextHandler]: function(txt = 'pizza'){ textChange = txt },
+      [onDishTypeHandler]: function(type = 'starter'){ typeChange = type },
+      [onSearchHandler]: function(){ search = true }
     }), div);
     let input = div.querySelectorAll('input')[0];
     input.value = 'pizza';
@@ -178,14 +188,8 @@ describe("TW2.5 SearchPresenter", function() {
       [oneHandler[0]]: function(){ disId = 3 }
     }), div);
     let clickableSpan = div.querySelectorAll('span')[0];
-    // let clickableImg = div.querySelectorAll('img')[0];
-    // let clickableDiv = div.querySelectorAll('div')[1];
     expect(clickableSpan, "span was not found").to.be.ok;
-    // expect(clickableImg, "img was not found").to.be.ok;
-    // expect(clickableDiv, "div was not found").to.be.ok;
     clickableSpan.click();
-    // clickableImg.click();
-    // clickableDiv.click();
     expect(disId).to.equal(3, "SearchResultsView fires its custom event correctly");
 
   });
