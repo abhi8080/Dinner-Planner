@@ -57,6 +57,7 @@ describe("TW2.5 SearchPresenter", function() {
 
   before(function() {
     if(!SearchPresenter || !SearchFormView || !SearchResultsView) this.skip();
+    if (typeof SearchPresenter == "object") this.skip();
   });
 
   function expectSearchFormViewAndSecondChild(render) {
@@ -108,13 +109,20 @@ describe("TW2.5 SearchPresenter", function() {
     expect(SearchFormViewProps).to.be.ok;
     expect(SearchFormViewProps, "expected dishTypeOptions prop").to.have.property("dishTypeOptions");
     expect(JSON.stringify(SearchFormViewProps["dishTypeOptions"])).to.equal(JSON.stringify(["starter", "main course", "dessert"]));
+
+    // testing event handlers
     const threeHandlers = Object.keys(SearchFormViewProps).filter(function(prop){
       return !["dishTypeOptions"].includes(prop)
     });
+
     expect(threeHandlers.length).to.equal(3, "expected 4 props in total");
+
     let foundOnSearch, foundOnText, foundOnDishType;
     let onSearchHandler, onTextHandler, onDishTypeHandler;
+
+    // testing that the handlers change the right properties in the model
     threeHandlers.forEach(handler => {
+      expect(typeof SearchFormViewProps[handler]).to.equal("function", "expected custom event handlers to be functions");
       searched=undefined;
       text=undefined;
       type=undefined;
@@ -134,26 +142,39 @@ describe("TW2.5 SearchPresenter", function() {
       }
     });
     expect(foundOnSearch && foundOnText && foundOnDishType, "custom event handlers should together call all three of doSearch, setSearchQuery and setSearchType");
+
+    // testing that the view fires custom events
     let div = createUI();
     window.React = { createElement: h };
     let textChange, typeChange, search;
+    console.log(onTextHandler)
     render(h(SearchFormView, {
       dishTypeOptions: ['starter', 'main course', 'dessert'],
-      [onTextHandler]: function(txt = 'pizza'){ textChange = txt },
-      [onDishTypeHandler]: function(type = 'starter'){ typeChange = type },
-      [onSearchHandler]: function(){ search = true }
+      [onTextHandler]: txt => textChange = txt,
+      [onDishTypeHandler]: t => typeChange = t,
+      [onSearchHandler]: () => search = true
     }), div);
-    let input = div.querySelectorAll('input')[0];
+
+    let inputs = div.querySelectorAll('input')
+    expect(inputs.length).to.equal(1, "expected exactly 1 input element");
+    let input = inputs[0];
     input.value = 'pizza';
-    input.dispatchEvent(new Event("change", {  bubbles: true,  cancelable: true  }))
-    let select = div.querySelectorAll('select')[0];
+    input.dispatchEvent(new Event("input", {  bubbles: true,  cancelable: true  }))
+    expect(textChange).to.equal("pizza", "SearchFormView fires its custom event correctly");
+
+    let selects = div.querySelectorAll('select');
+    expect(selects.length).to.equal(1, "expected exactly 1 select element");
+    let select = selects[0]
     select.value = 'starter';
     select.dispatchEvent(new Event("change", {  bubbles: true,  cancelable: true  }))
     expect(typeChange).to.equal('starter', "SearchFormView fires its custom event correctly");
-    let button = div.querySelectorAll('button')[0];
-    button.click();
-    expect(search).to.equal(true, "SearchFormView fires its custom event correctly");
 
+    let buttons = div.querySelectorAll('button');
+    expect(buttons.length).to.be.greaterThan(1, "expected 1 or more buttons");
+    let searchButtons = Array.from(buttons).filter(btn => btn.textContent && btn.textContent.toLowerCase().includes("search"));
+    expect(searchButtons.length).to.equal(1, "expected 1 search button");
+    searchButtons[0].click();
+    expect(search).to.equal(true, "SearchFormView fires its custom event correctly");
   });
 
   it("Vue SearchPresenter passes correct props and custom events to SearchResultsView", function() {
