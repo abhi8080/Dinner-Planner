@@ -60,11 +60,11 @@ describe("TW1.5 Array rendering", function() {
             expect(lookup[tds[0].textContent.trim()].unit).to.equal(tds[3].textContent.trim(), "measurement unit must be shown in last column");
             expect((lookup[tds[0].textContent.trim()].amount*ppl).toFixed(2)).to.equal(tds[2].textContent.trim(), "amount must be shown in column 3, multiplied by number of guests");
             expect(tds[2].textContent.trim()[tds[2].textContent.trim().length-3]).to.equal(".", "amount must be shown with two decimals, use (someExpr).toFixed(2)"); 
-            document.body.append(tds[2]); // we append the TD to the document, for style.css to take effect
+            document.body.lastElementChild.append(tds[2]); // we append the TD to the document, for style.css to take effect
             try{
                 expect(window.getComputedStyle(tds[2])["text-align"]).to.equal("right", "align quantities to the right using CSS");
             }finally{
-                document.body.lastElementChild.remove();
+                document.body.lastElementChild.firstChild.remove();
             }
         });
     });
