@@ -1,10 +1,44 @@
 import { assert, expect } from "chai";
 import installOwnCreateElement from "./jsxCreateElement";
+import createUI from './createUI.js';
+const { render, h } = require('vue');
 
 let SearchPresenter;
 let SearchFormView;
 let SearchResultsView;
 const X = TEST_PREFIX;
+
+const searchResults = [
+  {
+    id: 587203,
+    title: 'Taco Pizza',
+    readyInMinutes: 20,
+    servings: 6,
+    sourceUrl: 'https://laurenslatest.com/taco-salad-pizza-with-doritos/',
+    openLicense: 0,
+    image: 'Taco-Salad-Pizza-with-Doritos-587203.jpg',
+  },
+  {
+    id: 559251,
+    title: 'Breakfast Pizza',
+    readyInMinutes: 25,
+    servings: 6,
+    sourceUrl: 'http://www.jocooks.com/breakfast-2/breakfast-pizza/',
+    openLicense: 0,
+    image: 'Breakfast-Pizza-559251.jpg',
+  },
+  {
+    id: 556121,
+    title: 'Easy Vegetarian Sausage Basil Pizza',
+    readyInMinutes: 30,
+    servings: 4,
+    sourceUrl: 'https://dizzybusyandhungry.com/cashew-sausage-basil-pizza/',
+    openLicense: 0,
+    image: 'Cashew-Sausage-Basil-Pizza-556121.png',
+  },
+];
+
+
 try {
   SearchPresenter = require("../src/vuejs/" + X + "searchPresenter.js").default;
   SearchFormView = require("../src/views/" + X + "searchFormView.js").default;
@@ -90,6 +124,26 @@ describe("TW2.5 SearchPresenter", function() {
       foundOnDishType = foundOnDishType || type;
     });
     expect(foundOnSearch && foundOnText && foundOnDishType, "custom event handlers should together call all three of doSearch, setSearchQuery and setSearchType");
+    let div = createUI();
+    window.React = { createElement: h };
+    let textChange, typeChange, search;
+    render(h(SearchFormView, {
+      dishTypeOptions: ['starter', 'main course', 'dessert'],
+      [threeHandlers[0]]: function(txt = 'pizza'){ textChange = txt },
+      [threeHandlers[1]]: function(type = 'starter'){ typeChange = type },
+      [threeHandlers[2]]: function(){ search = true }
+    }), div);
+    let input = div.querySelectorAll('input')[0];
+    input.value = 'pizza';
+    input.dispatchEvent(new Event("change", {  bubbles: true,  cancelable: true  }))
+    let select = div.querySelectorAll('select')[0];
+    select.value = 'starter';
+    select.dispatchEvent(new Event("change", {  bubbles: true,  cancelable: true  }))
+    expect(typeChange).to.equal('starter', "SearchFormView fires its custom event correctly");
+    let button = div.querySelectorAll('button')[0];
+    button.click();
+    expect(search).to.equal(true, "SearchFormView fires its custom event correctly");
+
   });
 
   it("Vue SearchPresenter passes correct props and custom events to SearchResultsView", function() {
@@ -114,6 +168,25 @@ describe("TW2.5 SearchPresenter", function() {
     dishId = undefined;
     SearchResultsViewProps[oneHandler](1);
     expect(dishId, "custom event handler should call setCurrentDish")
+    expect(dishId).to.equal(1, "Search presenter custom event handler calls the appropriate model method");
+
+    let div = createUI();
+    window.React = { createElement: h };
+    let disId;
+    render(h(SearchResultsView, {
+      searchResults: searchResults,
+      [oneHandler[0]]: function(){ disId = 3 }
+    }), div);
+    let clickableSpan = div.querySelectorAll('span')[0];
+    // let clickableImg = div.querySelectorAll('img')[0];
+    // let clickableDiv = div.querySelectorAll('div')[1];
+    expect(clickableSpan, "span was not found").to.be.ok;
+    // expect(clickableImg, "img was not found").to.be.ok;
+    // expect(clickableDiv, "div was not found").to.be.ok;
+    clickableSpan.click();
+    // clickableImg.click();
+    // clickableDiv.click();
+    expect(disId).to.equal(3, "SearchResultsView fires its custom event correctly");
 
   });
 });
