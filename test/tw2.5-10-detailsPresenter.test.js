@@ -456,7 +456,15 @@ describe("TW2.5 DetailsPresenter", function() {
           [callbackNames[0]]: function(){ buttonPressed=true;}
       }), div
             );
-        div.querySelectorAll("button")[0].click();   // fixme: maybe it's not always the first button?
+        
+            // div.querySelectorAll("button")[0].click();   // fixme: maybe it's not always the first button?
+        // fix to find add to menu button
+        let allButtons = div.querySelectorAll("button");
+        allButtons.forEach(function (btn) {
+          if (btn.innerText.toLowerCase() === "add to menu!") {
+            btn.click();
+          } 
+        });
         expect(buttonPressed).to.equal(true, "DetailsView fires its custom event correctly");
 
     });
