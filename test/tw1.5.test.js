@@ -110,7 +110,7 @@ describe("TW1.5 Array rendering", function() {
         
         render(<SidebarView number={ppl} dishes={dishes}/>, div);
         const trs= div.querySelectorAll("tr");
-        expect(trs.length, "there should be 4 table rows").to.equal(4);
+        expect(trs.length, "there should be table rows for each dish, plus the row for the totals").to.equal(4);
 
         [...trs].forEach(function(tr, index, arr){
             const tds= tr.querySelectorAll("td");            
