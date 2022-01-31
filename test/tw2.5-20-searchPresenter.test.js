@@ -1,7 +1,5 @@
 import { assert, expect } from "chai";
 import installOwnCreateElement from "./jsxCreateElement";
-import createUI from "./createUI";
-const { render, h } = require("vue");
 
 let SearchPresenter;
 let SearchFormView;
@@ -24,7 +22,7 @@ describe("TW2.5 SearchPresenter", function() {
   this.timeout(200000);
 
   before(function() {
-    if(!SearchPresenter) this.skip();
+    if(!SearchPresenter || !SearchFormView || !SearchResultsView) this.skip();
   });
 
   function expectSearchFormViewAndSecondChild(render) {
@@ -61,7 +59,7 @@ describe("TW2.5 SearchPresenter", function() {
     expect(renderingData.children[1].tag).to.equal(SearchResultsView, "expected second child to be SearchResultsView");
   });
 
-  it("Vue SearchPresenter passes correct props to SearchFormView", function() {
+  it("Vue SearchPresenter passes correct props and custom events to SearchFormView", function() {
     installOwnCreateElement();
     let searched, text, type;
     const renderingCustomEvent = SearchPresenter({
@@ -94,16 +92,28 @@ describe("TW2.5 SearchPresenter", function() {
     expect(foundOnSearch && foundOnText && foundOnDishType, "custom event handlers should together call all three of doSearch, setSearchQuery and setSearchType");
   });
 
-  it("Vue SearchPresenter passes correct props to SearchResultsView", function() {
+  it("Vue SearchPresenter passes correct props and custom events to SearchResultsView", function() {
     installOwnCreateElement();
+    let dishId;
     const renderingSearchResults = SearchPresenter({
       model: {
-        searchResultsPromiseState: {promise: "foo", data: "bar"}
+        searchResultsPromiseState: {promise: "foo", data: "bar"},
+        setCurrentDish: (id) => dishId = id
       }
     });
     let SearchResultsViewProps = renderingSearchResults.children[1].props;
     expect(SearchResultsViewProps).to.be.ok;
     expect(SearchResultsViewProps, "expected searchResults prop").to.have.property("searchResults");
     expect(SearchResultsViewProps["searchResults"]).to.equal("bar", "searchResults prop does not equal promise data")
+
+    const oneHandler = Object.keys(SearchResultsViewProps).filter(function(prop){
+      return !["searchResults"].includes(prop)
+    });
+    expect(oneHandler.length).to.equal(1, "expected 2 props in total");
+    
+    dishId = undefined;
+    SearchResultsViewProps[oneHandler](1);
+    expect(dishId, "custom event handler should call setCurrentDish")
+
   });
 });
