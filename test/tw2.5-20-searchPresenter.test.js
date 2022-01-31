@@ -1,0 +1,109 @@
+import { assert, expect } from "chai";
+import installOwnCreateElement from "./jsxCreateElement";
+import createUI from "./createUI";
+const { render, h } = require("vue");
+
+let SearchPresenter;
+let SearchFormView;
+let SearchResultsView;
+const X = TEST_PREFIX;
+try {
+  SearchPresenter = require("../src/vuejs/" + X + "searchPresenter.js").default;
+  SearchFormView = require("../src/views/" + X + "searchFormView.js").default;
+  SearchResultsView = require("../src/views/" + X + "searchResultsView.js").default;
+} catch(e) {};
+
+const MockModel = {
+  searchResultsPromiseState: {},
+  doSearch: () => {},
+  setSearchQuery: () => {},
+  setSearchType: () => {},
+}
+
+describe("TW2.5 SearchPresenter", function() {
+  this.timeout(200000);
+
+  before(function() {
+    if(!SearchPresenter) this.skip();
+  });
+
+  function expectSearchFormViewAndSecondChild(render) {
+    expect(render.children.length).to.equal(2, "expected 2 children: SearchFormView and promiseNoData/SearchResultsView");
+    expect(render.children[0].tag).to.equal(SearchFormView, "expected first child to be SearchFormView");
+  }
+
+  it("Vue SearchPresenter renders SearchFormView and performs initial search", async function(){
+    installOwnCreateElement();
+    let searched = false;
+    const renderingEmpty = SearchPresenter({
+      model: {
+        searchResultsPromiseState: {},
+        doSearch: () => searched = true,
+      }
+    });
+    expectSearchFormViewAndSecondChild(renderingEmpty);
+    expect(renderingEmpty.children[1].children.length).to.equal(1);
+    expect(renderingEmpty.children[1].children[0].toLowerCase()).to.equal("no data")
+    assert(searched, "model.doSearch() is not called")
+  });
+
+  it("Vue SearchPresenter renders SearchFormView and SearchResultsView", function() {
+    installOwnCreateElement();
+    const renderingData = SearchPresenter({
+      model: {
+        searchResultsPromiseState: {
+          promise: "foo",
+          data: "bar"
+        },
+      }
+    });
+    expectSearchFormViewAndSecondChild(renderingData);
+    expect(renderingData.children[1].tag).to.equal(SearchResultsView, "expected second child to be SearchResultsView");
+  });
+
+  it("Vue SearchPresenter passes correct props to SearchFormView", function() {
+    installOwnCreateElement();
+    let searched, text, type;
+    const renderingCustomEvent = SearchPresenter({
+      model: {
+        searchResultsPromiseState: {promise: "foo"},
+        doSearch: () => searched=true,
+        setSearchQuery: (txt) => text = txt,
+        setSearchType: (t) => type = t,
+      }
+    });
+    let SearchFormViewProps = renderingCustomEvent.children[0].props;
+    expect(SearchFormViewProps).to.be.ok;
+    expect(SearchFormViewProps, "expected dishTypeOptions prop").to.have.property("dishTypeOptions");
+    expect(JSON.stringify(SearchFormViewProps["dishTypeOptions"])).to.equal(JSON.stringify(["starter", "main course", "dessert"]));
+    const threeHandlers = Object.keys(SearchFormViewProps).filter(function(prop){
+      return !["dishTypeOptions"].includes(prop)
+    });
+    expect(threeHandlers.length).to.equal(3, "expected 4 props in total");
+    let foundOnSearch, foundOnText, foundOnDishType;
+    threeHandlers.forEach(handler => {
+      searched=undefined;
+      text=undefined;
+      type=undefined;
+      SearchFormViewProps[handler]("main course");
+      expect(searched || text || type, "custom events handlers should call either doSearch, setSearchQuery or setSearchType");
+      foundOnSearch = foundOnSearch || searched;
+      foundOnText = foundOnText || text;
+      foundOnDishType = foundOnDishType || type;
+    });
+    expect(foundOnSearch && foundOnText && foundOnDishType, "custom event handlers should together call all three of doSearch, setSearchQuery and setSearchType");
+  });
+
+  it("Vue SearchPresenter passes correct props to SearchResultsView", function() {
+    installOwnCreateElement();
+    const renderingSearchResults = SearchPresenter({
+      model: {
+        searchResultsPromiseState: {promise: "foo", data: "bar"}
+      }
+    });
+    let SearchResultsViewProps = renderingSearchResults.children[1].props;
+    expect(SearchResultsViewProps).to.be.ok;
+    expect(SearchResultsViewProps, "expected searchResults prop").to.have.property("searchResults");
+    expect(SearchResultsViewProps["searchResults"]).to.equal("bar", "searchResults prop does not equal promise data")
+  });
+});
