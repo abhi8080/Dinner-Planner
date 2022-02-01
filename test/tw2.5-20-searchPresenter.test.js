@@ -54,7 +54,7 @@ describe("TW2.5 SearchPresenter", function() {
   });
 
   function expectSearchFormViewAndSecondChild(render) {
-    expect(render.children.length).to.equal(2, "expected 2 children: SearchFormView and promiseNoData/SearchResultsView");
+    expect(render.children.length).to.equal(2, "expected 2 children");
     expect(render.children[0].tag).to.equal(SearchFormView, "expected first child to be SearchFormView");
   }
 
@@ -69,8 +69,8 @@ describe("TW2.5 SearchPresenter", function() {
     });
     expectSearchFormViewAndSecondChild(renderingEmpty);
     expect(renderingEmpty.children[1].children.length).to.equal(1);
-    expect(renderingEmpty.children[1].children[0].toLowerCase()).to.equal("no data")
-    assert(searched, "model.doSearch() is not called")
+    expect(renderingEmpty.children[1].children[0].toLowerCase()).to.equal("no data");
+    assert(searched, "appropriate model method not called");
   });
 
   it("Vue SearchPresenter renders SearchFormView and SearchResultsView", function() {
@@ -100,8 +100,13 @@ describe("TW2.5 SearchPresenter", function() {
     });
     let SearchFormViewProps = renderingCustomEvent.children[0].props;
     expect(SearchFormViewProps).to.be.ok;
-    expect(SearchFormViewProps, "expected dishTypeOptions prop").to.have.property("dishTypeOptions");
+    expect(SearchFormViewProps, "SearchFormView is missing a prop").to.have.property("dishTypeOptions");
     expect(JSON.stringify(SearchFormViewProps["dishTypeOptions"])).to.equal(JSON.stringify(["starter", "main course", "dessert"]));
+
+    // test that event handlers are not prematurely called
+    expect(searched, "did not expect model method to be called").to.equal(undefined);
+    expect(text, "did not expect model method to be called").to.equal(undefined);
+    expect(type, "did not expect model method to be called").to.equal(undefined);
 
     // testing event handlers
     const threeHandlers = Object.keys(SearchFormViewProps).filter(function(prop){
@@ -120,7 +125,8 @@ describe("TW2.5 SearchPresenter", function() {
       text=undefined;
       type=undefined;
       SearchFormViewProps[handler]("main course");
-      expect(searched || text || type, "custom events handlers should call either doSearch, setSearchQuery or setSearchType");
+      expect(searched || text || type, "custom events handlers should call appropriate model methods");
+      // getting names of handlers
       if(searched) {
         foundOnSearch = searched;
         onSearchHandler = handler;
@@ -134,7 +140,7 @@ describe("TW2.5 SearchPresenter", function() {
         foundOnDishType = type;
       }
     });
-    expect(foundOnSearch && foundOnText && foundOnDishType, "custom event handlers should together call all three of doSearch, setSearchQuery and setSearchType");
+    expect(foundOnSearch && foundOnText && foundOnDishType, "custom event handlers should call appropriate model methods");
 
     // testing that the view fires custom events
     let div = createUI();
@@ -181,18 +187,22 @@ describe("TW2.5 SearchPresenter", function() {
     });
     let SearchResultsViewProps = renderingSearchResults.children[1].props;
     expect(SearchResultsViewProps).to.be.ok;
-    expect(SearchResultsViewProps, "expected searchResults prop").to.have.property("searchResults");
-    expect(SearchResultsViewProps["searchResults"]).to.equal("bar", "searchResults prop does not equal promise data");
+    expect(SearchResultsViewProps, "SearchResultsView is missing a prop").to.have.property("searchResults");
+    expect(SearchResultsViewProps["searchResults"]).to.equal("bar", "searchResults prop does not equal data in promise");
+
+    // test that event handlers are not prematurely called
+    expect(dishId, "did not expect model method to be called").to.equal(undefined);
 
     let oneHandler = Object.keys(SearchResultsViewProps).filter(function(prop){
       return !["searchResults"].includes(prop);
     });
     expect(oneHandler.length).to.equal(1, "expected 2 props in total");
     oneHandler = oneHandler[0];
+    expect(typeof SearchResultsViewProps[oneHandler], "expected prop to be a function").to.equal("function");
     
     dishId = undefined;
     SearchResultsViewProps[oneHandler]({id: 1});
-    expect(dishId, "custom event handler should call setCurrentDish")
+    expect(dishId, "custom event handler should call appropriate model method")
     expect(dishId).to.equal(1, "Search presenter custom event handler calls the appropriate model method");
 
     let div = createUI();
