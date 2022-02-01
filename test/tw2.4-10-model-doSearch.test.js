@@ -40,7 +40,7 @@ describe('TW2.4 Search dishes Promise State', function () {
     let searchType = 'main course';
     model.setSearchQuery(searchQuery);
     model.setSearchType(searchType);
-    model.doSearch();
+    model.doSearch(model.searchParams);
       
     expect(model.searchResultsPromiseState).to.have.property('promise');
     expect(model.searchResultsPromiseState.data).to.be.null;
@@ -67,7 +67,7 @@ describe('TW2.4 Search dishes Promise State', function () {
     expect(JSON.stringify(model.searchResultsPromiseState)).to.equal(
       JSON.stringify({})
     );
-    model.doSearch();
+    model.doSearch(model.searchParams);
     expect(model.searchResultsPromiseState).to.have.property('promise');
     expect(model.searchResultsPromiseState).to.have.property('data');
     expect(model.searchResultsPromiseState).to.have.property('error');
