@@ -45,13 +45,6 @@ try {
   SearchResultsView = require("../src/views/" + X + "searchResultsView.js").default;
 } catch(e) {};
 
-const MockModel = {
-  searchResultsPromiseState: {},
-  doSearch: () => {},
-  setSearchQuery: () => {},
-  setSearchType: () => {},
-}
-
 describe("TW2.5 SearchPresenter", function() {
   this.timeout(200000);
 
