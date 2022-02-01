@@ -146,7 +146,6 @@ describe("TW2.5 SearchPresenter", function() {
     let div = createUI();
     window.React = { createElement: h };
     let textChange, typeChange, search;
-    console.log(onTextHandler)
     render(h(SearchFormView, {
       dishTypeOptions: ['starter', 'main course', 'dessert'],
       [onTextHandler]: txt => textChange = txt,
@@ -158,7 +157,7 @@ describe("TW2.5 SearchPresenter", function() {
     expect(inputs.length).to.equal(1, "expected exactly 1 input element");
     let input = inputs[0];
     input.value = 'pizza';
-    input.dispatchEvent(new Event("input", {  bubbles: true,  cancelable: true  }))
+    input.dispatchEvent(new Event("change", {  bubbles: true,  cancelable: true  }))
     expect(textChange).to.equal("pizza", "SearchFormView fires its custom event correctly");
 
     let selects = div.querySelectorAll('select');
