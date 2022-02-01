@@ -202,7 +202,6 @@ describe("TW2.5 SearchPresenter", function() {
     
     dishId = undefined;
     SearchResultsViewProps[oneHandler]({id: 1});
-    expect(dishId, "custom event handler should call appropriate model method")
     expect(dishId).to.equal(1, "Search presenter custom event handler calls the appropriate model method");
 
     let div = createUI();
