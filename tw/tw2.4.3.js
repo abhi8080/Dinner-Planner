@@ -22,7 +22,7 @@ if(promiseNoData && DinnerModel.prototype.doSearch){
         } ,
         render(){
             if(!this.rootModel.searchResultsPromiseState.promise)
-                this.rootModel.doSearch();
+                this.rootModel.doSearch({});
 
             return promiseNoData(this.rootModel.searchResultsPromiseState)||
                 <ol>{

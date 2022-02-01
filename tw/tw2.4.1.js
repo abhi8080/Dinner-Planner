@@ -21,7 +21,7 @@ if(DinnerModel.prototype.doSearch){
         } ,
         render(){
             if(!this.rootModel.searchResultsPromiseState.promise){
-                this.rootModel.doSearch();
+                this.rootModel.doSearch({});
             }
                 
 
