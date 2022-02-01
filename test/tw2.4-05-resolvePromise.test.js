@@ -20,12 +20,36 @@ describe('TW2.4 resolvePromise', function () {
   });
 
   it('resolvePromise checks for null promise', async function () {
-    let promise = null;
     let promiseState = {};
 
     expect(function () {
-      resolvePromise(promise, promiseState);
+      resolvePromise(null, promiseState);
     }).to.not.throw();
+  });
+
+    it('resolvePromise sets data after the promise resolves', async function () {
+        let promiseState = {};
+        resolvePromise(sleep(10).then(function(){ return 42; }), promiseState);
+        expect(promiseState.promise, "promiseState.promise should be set").to.be.ok;
+        expect(promiseState.data, "promiseState.data should be null initially").to.be.null;
+        expect(promiseState.error, "promiseState.data should be null initially").to.be.null;
+        await sleep(11);
+        expect(promiseState.promise, "promiseState.promise should be set").to.be.ok;
+        expect(promiseState.data, "promiseState.data should be set when the promise resolves").to.equal(42);
+        expect(promiseState.error, "promiseState.data should remain null when the promise resolves").to.be.null;
+        
+    });
+
+    it('resolvePromise sets error after the promise rejects', async function () {
+        let promiseState = {};
+        resolvePromise(sleep(10).then(function(){ throw 42; }), promiseState);
+        expect(promiseState.promise, "promiseState.promise should be set").to.be.ok;
+        expect(promiseState.data, "promiseState.data should be null initially").to.be.null;
+        expect(promiseState.error, "promiseState.data should be null initially").to.be.null;
+        await sleep(11);
+        expect(promiseState.promise, "promiseState.promise should be set").to.be.ok;
+        expect(promiseState.error, "promiseState.error should be set when the promise rejects").to.equal(42);
+        expect(promiseState.data, "promiseState.data should remain null when the promise rejects ").to.be.null;
   });
 
   it('resolvePromise last promise takes effect', async function () {
@@ -36,18 +60,19 @@ describe('TW2.4 resolvePromise', function () {
         return 'resolved after ' + ms;
       }
 
-      const promise = sleep(2000).then(returnDataACB);
-      promise.name = 'promiseToResolveAfter_' + ms;
-
-      resolvePromise(promise, promiseState);
+        function laterACB(){
+            const promise= Promise.resolve().then(returnDataACB);
+            promise.name="promiseToResolveAfter_"+ms;
+            resolvePromise(promise, promiseState);
+        }
+        return laterACB;
     }
 
-    sleep(1000).then(makeCallback(2000));
-    sleep(5000).then(makeCallback(1000));
-    sleep(8000).then(makeCallback(3000));
-    sleep(10000).then(makeCallback(500));
-
-    expect(promiseState.promise).to.not.be.null;
-    expect(promiseState.promise.name).to.be.equal('promiseToResolveAfter_500');
+      sleep(5).then(makeCallback(20));
+      sleep(10).then(makeCallback(10));
+      await sleep(30);
+      expect(promiseState.promise).to.not.be.null;
+      expect(promiseState.promise.name).to.be.equal('promiseToResolveAfter_10', "latest promise should be set in promiseState.promise");
+      expect(promiseState.data).to.be.equal('resolved after 10', "latest promise result should be set in promiseState.data");
   });
 });
