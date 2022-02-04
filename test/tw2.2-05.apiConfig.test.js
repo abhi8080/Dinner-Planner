@@ -12,10 +12,10 @@ describe("TW2.2 apiConfig", function () {
   });
 
   it("apiConfig exports BASE_URL and API_KEY", function () {
-    expect(apiConfig.BASE_URL, "BASE_URL not found in src/X/apiConfig.js").to
-      .not.be.undefined;
-    expect(apiConfig.API_KEY, "API_key not found in src/X/apiConfig.js").to.not
+    expect(apiConfig.BASE_URL, "BASE_URL not found in src/apiConfig.js").to.not
       .be.undefined;
+    expect(apiConfig.API_KEY, "API_key not found in src/apiConfig.js").to.not.be
+      .undefined;
     expect(apiConfig.BASE_URL, "BASE_URL is not a string").to.be.a("string");
     expect(apiConfig.API_KEY, "API_KEY is not a string").to.be.a("string");
   });
