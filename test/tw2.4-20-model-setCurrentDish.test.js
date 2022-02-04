@@ -19,10 +19,10 @@ describe("TW2.4 Current dish Promise State", function () {
     model = new DinnerModel();
   });
   it("Model initializes currentDishPromiseState correctly", function () {
-    expect(model).to.have.property(
-      "currentDishPromiseState",
+    expect(
+      model,
       "Does the model have a property called currentDishPromiseState?"
-    );
+    ).to.have.property("currentDishPromiseState");
     expect(JSON.stringify(model.currentDishPromiseState)).to.equal(
       JSON.stringify({})
     );
