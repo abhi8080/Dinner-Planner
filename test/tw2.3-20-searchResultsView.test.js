@@ -3,99 +3,124 @@ import installOwnCreateElement from "./jsxCreateElement";
 
 let SearchResultsView;
 const X = TEST_PREFIX;
-try{
-  SearchResultsView = require("../src/views/"+X+"searchResultsView.js").default;
-} catch(e){};
+try {
+  SearchResultsView = require("../src/views/" +
+    X +
+    "searchResultsView.js").default;
+} catch (e) {}
 
-describe("TW2.3 SearchResultsView", function() {
+describe("TW2.3 SearchResultsView", function () {
   this.timeout(200000);
 
-  before(function(){
-    if(!SearchResultsView) this.skip();
+  before(function () {
+    if (!SearchResultsView) this.skip();
   });
 
   const searchResults = [
     {
-      "id": 587203,
-      "title": "Taco Pizza",
-      "readyInMinutes": 20,
-      "servings": 6,
-      "sourceUrl": "https://laurenslatest.com/taco-salad-pizza-with-doritos/",
-      "openLicense": 0,
-      "image": "Taco-Salad-Pizza-with-Doritos-587203.jpg"
+      id: 587203,
+      title: "Taco Pizza",
+      readyInMinutes: 20,
+      servings: 6,
+      sourceUrl: "https://laurenslatest.com/taco-salad-pizza-with-doritos/",
+      openLicense: 0,
+      image: "Taco-Salad-Pizza-with-Doritos-587203.jpg",
     },
     {
-      "id": 559251,
-      "title": "Breakfast Pizza",
-      "readyInMinutes": 25,
-      "servings": 6,
-      "sourceUrl": "http://www.jocooks.com/breakfast-2/breakfast-pizza/",
-      "openLicense": 0,
-      "image": "Breakfast-Pizza-559251.jpg"
+      id: 559251,
+      title: "Breakfast Pizza",
+      readyInMinutes: 25,
+      servings: 6,
+      sourceUrl: "http://www.jocooks.com/breakfast-2/breakfast-pizza/",
+      openLicense: 0,
+      image: "Breakfast-Pizza-559251.jpg",
     },
     {
-      "id": 556121,
-      "title": "Easy Vegetarian Sausage Basil Pizza",
-      "readyInMinutes": 30,
-      "servings": 4,
-      "sourceUrl": "https://dizzybusyandhungry.com/cashew-sausage-basil-pizza/",
-      "openLicense": 0,
-      "image": "Cashew-Sausage-Basil-Pizza-556121.png"
-    }
+      id: 556121,
+      title: "Easy Vegetarian Sausage Basil Pizza",
+      readyInMinutes: 30,
+      servings: 4,
+      sourceUrl: "https://dizzybusyandhungry.com/cashew-sausage-basil-pizza/",
+      openLicense: 0,
+      image: "Cashew-Sausage-Basil-Pizza-556121.png",
+    },
   ];
 
-  function setUpView(){
+  function setUpView() {
     installOwnCreateElement();
-    return SearchResultsView({searchResults: searchResults});
+    return SearchResultsView({ searchResults: searchResults });
   }
 
-  it("SearchResultsView renders div", function() {
-    const rendering= setUpView();
+  it("SearchResultsView renders div", function () {
+    const rendering = setUpView();
     expect(rendering.tag).to.be.ok;
-    expect(rendering.tag).to.equal("div");
+    expect(rendering.tag, "Did you forget to add a div?").to.equal("div");
   });
 
-  it("SearchResultsView renders span for each search result", function() {
-    const rendering= setUpView();
+  it("SearchResultsView renders span for each search result", function () {
+    const rendering = setUpView();
     expect(rendering.children).to.be.ok;
     expect(rendering.children[0].length).to.equal(3);
-    rendering.children[0].forEach(child => {
+    rendering.children[0].forEach((child) => {
       expect(child.tag).to.be.ok;
-      expect(child.tag).to.equal("span");
+      expect(
+        child.tag,
+        "Does your search results generate a span for each dish in search result? "
+      ).to.equal("span");
     });
   });
 
-  it("SearchResultsView renders only image and title for each span", function() {
-    const rendering= setUpView();
+  it("SearchResultsView renders only image and title for each span", function () {
+    const rendering = setUpView();
     rendering.children[0].forEach((child, i) => {
       expect(child.children).to.be.ok;
-      expect(child.children.length).to.equal(2);
+      expect(
+        child.children.length,
+        "Does your search results have more than an image and title for each span?"
+      ).to.equal(2);
       expect(child.children[0].tag).to.be.ok;
-      expect(child.children[0].tag).to.equal("img");
+      expect(
+        child.children[0].tag,
+        "Is the first tag in your span an image?"
+      ).to.equal("img");
       expect(child.children[1].tag);
-      expect(child.children[1].tag).to.equal("div");
+      expect(
+        child.children[1].tag,
+        "Is the second tag in your span a div?"
+      ).to.equal("div");
     });
   });
 
-  it("SearchResultsView renders images correctly", function() {
-      const rendering=setUpView();
-      rendering.children[0].forEach((child, i) => {
+  it("SearchResultsView renders images correctly", function () {
+    const rendering = setUpView();
+    rendering.children[0].forEach((child, i) => {
       let image = child.children[0];
       expect(image.props).to.be.ok;
       expect(image.props.src).to.be.ok;
-      expect(image.props.src).to.equal("https://spoonacular.com/recipeImages/" + searchResults[i].image);
+      expect(
+        image.props.src,
+        "Did you copy the correct url to get images from spoonacular?"
+      ).to.equal(
+        "https://spoonacular.com/recipeImages/" + searchResults[i].image
+      );
       expect(image.props.height).to.be.ok;
-      expect(image.props.height).to.equal("100");
+      expect(image.props.height, "Is your image height 100?").to.equal("100");
     });
   });
 
-  it("SearchResultsView renders titles correctly", function() {
-    const rendering= setUpView();
+  it("SearchResultsView renders titles correctly", function () {
+    const rendering = setUpView();
     rendering.children[0].forEach((child, i) => {
       let title = child.children[1];
       expect(title.children).to.be.ok;
-      expect(title.children.length).to.equal(1);
-      expect(title.children[0]).to.equal(searchResults[i].title);
+      expect(
+        title.children.length,
+        "expecting DIV to have a single (text) child, maybe you have extra spaces?"
+      ).to.equal(1);
+      expect(
+        title.children[0],
+        "The title of your dish was wrong. Did you properly access the title prop?"
+      ).to.equal(searchResults[i].title);
     });
   });
 });
