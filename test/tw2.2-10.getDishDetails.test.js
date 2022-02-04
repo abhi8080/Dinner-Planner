@@ -53,7 +53,7 @@ describe("TW2.2 getDishDetails", function () {
       const promise = await new Promise((resolve, reject) =>
         getDishDetails(undefined).then(reject, resolve)
       );
-      expect(promise).to.not.be.null;
+        expect(promise, "promise must be not null").to.be.ok;
     } catch (e) {
       assert.fail("the promise did not reject");
     }

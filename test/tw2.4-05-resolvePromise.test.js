@@ -24,7 +24,8 @@ describe('TW2.4 resolvePromise', function () {
 
     expect(function () {
       resolvePromise(null, promiseState);
-    }).to.not.throw();
+    }, "did you check whether promise is null?"
+          ).to.not.throw();
   });
 
     it('resolvePromise sets data after the promise resolves', async function () {

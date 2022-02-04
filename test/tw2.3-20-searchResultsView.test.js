@@ -53,14 +53,14 @@ describe("TW2.3 SearchResultsView", function () {
 
   it("SearchResultsView renders div", function () {
     const rendering = setUpView();
-    expect(rendering.tag).to.be.ok;
+    expect(rendering.tag, "A DIV tag was expected").to.be.ok;
     expect(rendering.tag, "Did you forget to add a div?").to.equal("div");
   });
 
   it("SearchResultsView renders span for each search result", function () {
     const rendering = setUpView();
-    expect(rendering.children).to.be.ok;
-    expect(rendering.children[0].length).to.equal(3);
+      expect(rendering.children, "SearchResultView should render a tree").to.be.ok;
+      expect(rendering.children[0].length, "SearchResultsView should render the same amount children as the number of dihses it got").to.equal(3);
     rendering.children[0].forEach((child) => {
       expect(child.tag).to.be.ok;
       expect(
@@ -73,7 +73,7 @@ describe("TW2.3 SearchResultsView", function () {
   it("SearchResultsView renders only image and title for each span", function () {
     const rendering = setUpView();
     rendering.children[0].forEach((child, i) => {
-      expect(child.children).to.be.ok;
+      expect(child.children ).to.be.ok;
       expect(
         child.children.length,
         "Does your search results have more than an image and title for each span?"

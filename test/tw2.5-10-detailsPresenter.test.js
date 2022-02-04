@@ -401,11 +401,11 @@ describe("TW2.5 DetailsPresenter", function() {
           currentDishPromiseState:{}
       }
                                              });
-      expect(renderingEmpty.children.length).to.equal(1);
-      expect(renderingEmpty.children[0].toLowerCase()).to.equal("no data");
+      expect(renderingEmpty.children.length, "when there is no promise, DetailsPresenter should return a signle HTML element").to.equal(1);
+      expect(renderingEmpty.children[0].toLowerCase(), "when there is no promise, DetailsPresenter should show 'no data'").to.equal("no data");
       
       const renderingPromise=DetailsPresenter({model: {currentDishPromiseState:{promise:"bla"}}});
-      expect(renderingPromise.tag).to.equal("img");
+      expect(renderingPromise.tag, "when there is a promise, DetailsPresenter should render a loading image").to.equal("img");
   });
     it("Vue DetailsPresenter renders DetailsView", async function(){
       installOwnCreateElement();
@@ -439,10 +439,10 @@ describe("TW2.5 DetailsPresenter", function() {
       expect(renderingCustomEvent.props.guests).to.equal(5, "DetailsView guest prop must be read from the model");
 
       // find the prop sent to DetailsView that is a function, that must be the custom event handler        
-      const callbackNames= Object.keys(renderingCustomEvent.props).filter(prop=> typeof renderingCustomEvent.props[prop] =="function");
-      expect(callbackNames.length).to.equal(1, "Details presenter passes one custom event handler");
+        const callbackNames= Object.keys(renderingCustomEvent.props).filter(prop=> typeof renderingCustomEvent.props[prop] =="function");
+       expect(callbackNames.length, "Details presenter passes one custom event handler").to.equal(1);
       renderingCustomEvent.props[callbackNames[0]]();
-      expect(dishAdded).to.equal(dishInformation, "Details presenter custom event handler calls the appropriate model method");
+      expect(dishAdded, "Details presenter custom event handler calls the appropriate model method").to.equal(dishInformation);
 
         // now we know the name of the custom event, and can check if it is called when the button is pressed.
         // we render in DOM and press the button
@@ -464,7 +464,7 @@ describe("TW2.5 DetailsPresenter", function() {
         try{
             addButton.click();
         }finally{ window.location.hash=""; }
-        expect(buttonPressed).to.equal(true, "DetailsView fires its custom event correctly");
+        expect(buttonPressed, "DetailsView does not fire its custom event correctly").to.equal(true);
 
     });
 });

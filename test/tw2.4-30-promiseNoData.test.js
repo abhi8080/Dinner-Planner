@@ -54,12 +54,12 @@ describe("TW2.4 promiseNoData", function () {
     ).to.equal(1);
     expect(
       response.children[0],
-      "does the error text show 'dummy error to show'"
+      "does promiseNoData render the error sent?"
     ).to.equal("dummy error to show");
   });
 
   it("promiseNoData returns falsy when data in promise state is not undefined and promise is truthy", async function () {
     const response = promiseNoData({ promise: "dummy", data: "some data" });
-    expect(response).to.be.not.ok;
+    expect(response, "promiseNoData with promise and data should return falsy").to.be.not.ok;
   });
 });

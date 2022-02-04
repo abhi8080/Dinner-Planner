@@ -27,7 +27,7 @@ describe("TW2.3 SearchFormView", function () {
     );
     expect(
       div.querySelectorAll("input").length,
-      "Do you have 1 input?"
+      "Do you have 1 textbox?"
     ).to.equal(1);
     expect(
       div.querySelectorAll("select", "Do you have 1 select?").length
@@ -37,7 +37,7 @@ describe("TW2.3 SearchFormView", function () {
       "Is 'Choose:' rendered?"
     ).to.equal("Choose:");
     expect(
-      div.querySelectorAll("option", "Is 4 options rendered?").length
+      div.querySelectorAll("option", "Are there 4 options rendered?").length
     ).to.equal(4);
     expect(
       div.querySelectorAll("option")[0].firstChild.textContent,
@@ -51,13 +51,13 @@ describe("TW2.3 SearchFormView", function () {
       div.querySelectorAll("option")[2].firstChild.textContent,
       "Is the third option 'main course'?"
     ).to.equal("main course");
-    expect(div.querySelectorAll("option")[3].firstChild.textContent).to.equal(
+      expect(
+          div.querySelectorAll("option")[3].firstChild.textContent,
+          "Is the third last option 'dessert'?"
+         ).to.equal(
       "dessert"
     );
-    expect(div.querySelectorAll("button").length).to.be.gte(
-      1,
-      "there should be at least one button"
-    );
-    expect(div.querySelectorAll("button")[0].firstChild.textContent, "Search!");
+    expect(div.querySelectorAll("button").length, "there should be at least one button").to.be.gte(1);
+      expect(div.querySelectorAll("button")[0].firstChild.textContent, "the first button text must be \"Search!\"").to.equal("Search!");
   });
 });

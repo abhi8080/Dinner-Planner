@@ -457,7 +457,7 @@ describe("TW2.3 DetailsView", function () {
 
       expect(
         searchProperty(divChildren, "textContent", [ingredient["unit"]]),
-        "Did you display the unit?"
+        "Did you display the measurement unit for the ingredient amount?"
       ).to.be.ok;
     });
   });
@@ -467,13 +467,15 @@ describe("TW2.3 DetailsView", function () {
       searchProperty(divChildren, "textContent", [
         dishInformation["instructions"].slice(0, 30),
       ])
-    ).to.equal("instructions not found");
+        , "Cooking instructions not found"
+    ).to.be.ok;
   });
 
   it("DetailsView has link to recipe", function () {
     expect(
       searchProperty(divChildren, "href", [dishInformation["sourceUrl"]], true)
-    ).to.equal("link to original recipe not found");
+        , "link to original recipe not found"  
+    ).to.be.ok;
   });
 
   it("DetailsView renders dish image", function () {
@@ -498,9 +500,6 @@ describe("TW2.3 DetailsView", function () {
       }
     });
     expect(addToMenuButton, "add to menu button not found").to.not.be.undefined;
-    expect(addToMenuButton.disabled).to.equal(
-      disabled,
-      "button must be disabled if the dish is already in the menu"
-    );
+    expect(addToMenuButton.disabled,       "button must be disabled if the dish is already in the menu").to.equal(disabled);
   });
 });
