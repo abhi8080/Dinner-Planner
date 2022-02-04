@@ -80,7 +80,7 @@ describe("TW2.5 SearchPresenter", function () {
       renderingEmpty.children[1].children[0].toLowerCase(),
       "does the text say 'no data?'"
     ).to.equal("no data");
-    assert(searched, "appropriate model method not called");
+    expect(searched).to.equal("appropriate model method not called");
   });
 
   it("Vue SearchPresenter renders SearchFormView and SearchResultsView", function () {
