@@ -208,7 +208,7 @@ describe("TW2.5 SearchPresenter", function () {
     );
 
     let buttons = div.querySelectorAll("button");
-    expect(buttons.length).to.be.greaterThan(1, "expected 1 or more buttons");
+    expect(buttons.length).to.be.gte(1, "expected 1 or more buttons");
     let searchButtons = Array.from(buttons).filter(
       (btn) =>
         btn.textContent && btn.textContent.toLowerCase().includes("search")
