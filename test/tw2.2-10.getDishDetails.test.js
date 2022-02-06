@@ -50,10 +50,10 @@ describe("TW2.2 getDishDetails", function () {
 
   it("getDishDetails promise must reject if the dish with the given ID does not exist", async () => {
     try {
-      const promise = await new Promise((resolve, reject) =>
+      const error= await new Promise((resolve, reject) =>
         getDishDetails(undefined).then(reject, resolve)
       );
-        expect(promise, "promise must be not null").to.be.ok;
+        expect(error, "getDishDetails(bad_param) must reject with a truthy error").to.be.ok;
     } catch (e) {
       assert.fail("the promise did not reject");
     }
