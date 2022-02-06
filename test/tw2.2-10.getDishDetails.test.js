@@ -48,14 +48,16 @@ describe("TW2.2 getDishDetails", function () {
     title: "Fruit Pizza",
   });
 
-  it("getDishDetails promise must reject if the dish with the given ID does not exist", async () => {
-    try {
-      const error= await new Promise((resolve, reject) =>
-        getDishDetails(undefined).then(reject, resolve)
-      );
-        expect(error, "getDishDetails(bad_param) must reject with a truthy error").to.be.ok;
-    } catch (e) {
-      assert.fail("the promise did not reject");
+    it("getDishDetails promise must reject if the dish with the given ID does not exist", async function() {
+        let error;
+        try {
+            error= await new Promise(function(resolve, reject){
+                return getDishDetails(undefined).then(reject, resolve);
+            });
+        } catch (e) {
+            assert.fail("the promise did not reject");
     }
+        expect(error, "getDishDetails(bad_param) must reject with a truthy error").to.be.ok;
+
   }).timeout(4000);
 });
