@@ -1,9 +1,7 @@
 # In case you have problems with node, npm, webpack, you can use docker to make a separate "machine"
 # https://docs.docker.com/get-docker/
-# To set up run:
-# docker build . -t dh2642
 
-# Then every time you want to run the development server:
+# Run this command:
 # docker-compose up
 
 FROM ubuntu:20.04
