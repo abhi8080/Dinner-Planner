@@ -204,7 +204,6 @@ describe("TW3.5 Firebase-model", function () {
         const dishes= dishesKey.slice(root.length);
         const currentDish= currentDishKey.slice(root.length);
         
-        console.log(root, num, dishes);
         firebaseDataForOnce={
             [num]:7,
             [dishes]:{
