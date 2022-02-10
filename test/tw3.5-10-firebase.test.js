@@ -223,7 +223,7 @@ describe("TW3.5 Firebase-model", function () {
         finally{ window.fetch=oldFetch; }
         expect(model, "promise should resolve to a model").to.be.ok;
         expect(model.constructor.name, "promise should resolve to a model").to.equal("DinnerModel");
-        expect(firebaseRoot, "once should be attached on the firebase model root").to.equal(root.slice(0,-1));
+        expect(firebaseRoot, "once should be attached on the firebase model root path").to.equal(root.slice(0,-1));
         expect(model.numberOfGuests, "initial model should read number of guests from firebase").to.equal(7);
         expect(model.dishes, "initial model should read dishes from firebase").to.be.ok;
         expect(model.dishes.length, "initial model should read from firebase the same number of dishes").to.equal(3);
