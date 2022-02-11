@@ -2,7 +2,7 @@ import { expect } from "chai";
 
 var DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
 
-describe("TW3.1 Observers", function() {
+describe("TW3.1 DinnerModel as Observable", function() {
   this.timeout(200000);
 
   let model;
@@ -58,7 +58,7 @@ describe("TW3.1 Observers", function() {
   it("error in observer does not break notifyObservers", function() {
     let obs = () => {throw new Error("")};
     model.addObserver(obs);
-    model.notifyObservers();
+    expect(() => model.notifyObservers(), "did not expect error to be thrown").to.not.throw();
   });
 
   it("error in observer logs in console", function() {
