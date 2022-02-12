@@ -1,8 +1,6 @@
 import { assert, expect } from "chai";
 import installOwnCreateElement from "./jsxCreateElement";
-import {dishInformation} from "./mockFetch.js";
 import {renderWithState} from "./mockReact.js";
-import {findTag} from "./jsxUtilities.js";
 
 let Show;
 
