@@ -40,7 +40,7 @@ function prepareViewWithCustomEvents(view, props, makeButtons, handlers){
         return {...acc, [prop]:(handlers && handlers[index]) || function(){}};
     }, {});
     const rendering1= view({...props, ...extraProps});
-    return { rendering: rendering1, clickables: makeButtons(rendering1)};
+    return { rendering: rendering1, clickables: makeButtons(rendering1), customEventNames:propNames};
 }
 
 export {findTag, findCustomEventName, prepareViewWithCustomEvents};
