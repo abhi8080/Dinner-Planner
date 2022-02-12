@@ -67,7 +67,7 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
 
       // doSearch
       timesObserverNotified = 0;
-      model.doSearch()
+      model.doSearch({});
       expect(timesObserverNotified, "expected initially 1 notifications from setCurrentDish").to.equal(1);
       await model.searchResultsPromiseState.promise;
       expect(timesObserverNotified, "expected 2 notifications from setCurrentDish after promise is resolved").to.equal(2);
@@ -93,7 +93,7 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
 
       // doSearch
       timesObserverNotified = 0;
-      model.doSearch();
+      model.doSearch({});
       expect(timesObserverNotified, "expected initially 1 notifications from setCurrentDish").to.equal(1);
       try {
         await model.searchResultsPromiseState.promise;

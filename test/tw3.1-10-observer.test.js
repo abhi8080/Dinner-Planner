@@ -56,9 +56,19 @@ describe("TW3.1 DinnerModel as Observable", function() {
   });
 
   it("error in observer does not break notifyObservers", function() {
-    let obs = () => {throw new Error("")};
-    model.addObserver(obs);
-    expect(() => model.notifyObservers(), "did not expect error to be thrown").to.not.throw();
+      let obs = () => {throw new Error("");};
+      expect(() => {
+          const oldConsoleLog=console.log;
+          const oldConsoleError=console.error;
+          console.log=console.error=()=>{};
+          try{              
+              model.addObserver(obs);
+              model.notifyObservers();
+          }finally{
+              console.log=oldConsoleLog;
+              console.error=oldConsoleError;
+          }
+      }, "did not expect error to be thrown").to.not.throw();
   });
 
   it("error in observer logs in console", function() {
