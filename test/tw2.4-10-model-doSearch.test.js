@@ -23,7 +23,7 @@ describe("TW2.4 Search dishes Promise State", function () {
       model,
       "Did you correctly add searchParams to your model?"
     ).to.have.property("searchParams");
-    expect(JSON.stringify(model.searchParams)).to.equal(JSON.stringify({}));
+      expect(JSON.stringify(model.searchParams), "paramter expeted to be empty").to.equal(JSON.stringify({}));
     model.setSearchQuery("pizza");
     model.setSearchType("main course");
     expect(
