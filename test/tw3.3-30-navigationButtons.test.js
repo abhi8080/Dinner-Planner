@@ -30,7 +30,7 @@ describe("TW3.3 Navigation buttons in views", function () {
         expect(DetailsView).to.be.ok;
     });
 
-     it("SummaryView should have a button leading back to search without adding the dish",  async function() {
+     it("SummaryView should have a button leading to search",  async function() {
          installOwnCreateElement();
          const rendering= SummaryView({people:2, ingredients:[]});
          const buttons=findTag("button", rendering);
@@ -42,7 +42,7 @@ describe("TW3.3 Navigation buttons in views", function () {
          expect(window.location.hash, "Summary button should navigate to search").to.equal("#search");
      });
 
-    it("DetaillsView should have a button leading back to search without adding the dish",  async function() {
+    it("DetaillsView should have a button leading to search without adding the dish",  async function() {
         installOwnCreateElement();
         const rendering= DetailsView( {isDishInMenu:true, guests:2, dishData:dishInformation});
         
@@ -55,7 +55,7 @@ describe("TW3.3 Navigation buttons in views", function () {
         expect(window.location.hash, "Details navigation button should navigate to search").to.equal("#search");
     });
     
-    it("DetaillsView dish adding button leads back to search",  async function() {
+    it("DetaillsView dish adding button should lead to search",  async function() {
         const {clickables, rendering}= prepareViewWithCustomEvents(
             DetailsView,
             {isDishInMenu:true, guests:2, dishData:dishInformation},
@@ -71,7 +71,7 @@ describe("TW3.3 Navigation buttons in views", function () {
         expect(window.location.hash,  "Details add button should navigate to search").to.equal("#search");
     });
 
-    it("SidebarView dish view links open dish details",  async function() {
+    it("SidebarView dish view links should open dish details",  async function() {
         installOwnCreateElement();
 
         function findLinks(rendering){
