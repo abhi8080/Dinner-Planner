@@ -47,7 +47,7 @@ describe("TW3.3 React navigation Show", function() {
         
         window.location.hash="";
     });
-    
+
     it("React Show only renders children visible if the location hash is the same as props hash", async function(){
         window.location.hash="search";
         installOwnCreateElement();
@@ -56,21 +56,44 @@ describe("TW3.3 React navigation Show", function() {
             children: [React.createElement("div", {}, "hello world!")]
         });
         const rendersFalsy=!renderings[renderings.length-1].rendering;
+        let hiddenClass, shownClass;
+
+        const subtreeMsg= "Show should render given children";
+        function checkRenderTruthyTree(){
+            expect(renderings[renderings.length-1].rendering.children.flat().length, "one child expected").to.equal(1);
+            expect(renderings[renderings.length-1].rendering.children.flat()[0].tag, "one DIV child exected").to.equal("div");
+            expect(renderings[renderings.length-1].rendering.children.flat()[0].children.length, subtreeMsg).to.equal(1);
+            expect(renderings[renderings.length-1].rendering.children.flat()[0].children[0], subtreeMsg).to.equal("hello world!");
+        }
+
+        function getClass(){
+            return renderings[renderings.length-1].rendering.props.class || renderings[renderings.length-1].rendering.props.className;
+        }
+        function divExpected(){
+            expect(renderings[renderings.length-1].rendering.tag, "Show that uses hidden CSS is expected to render a DIV").to.equal("div");
+        }
+
         if(!rendersFalsy){
-            expect(renderings[renderings.length-1].rendering.tag).to.equal("div");
+            divExpected();
+            hiddenClass=getClass();
+            expect(hiddenClass, "if JSX is returned by Show hidden mode, it must have a hiding CSS class").to.be.ok;
+            checkRenderTruthyTree();
         }
 
         window.location.hash="details";
         await new Promise(resolve => setTimeout(resolve));  // letting the hashchange event to fire
-        console.log(renderings);
         
         if(rendersFalsy){
             // since chilldren are expected to be rendered, this is going to be an array
-            expect(renderings[renderings.length-1].rendering[0].tag).to.equal("div");
-            expect(renderings[renderings.length-1].rendering[0].children[0]).to.equal("hello world!");
+            expect(renderings[renderings.length-1].rendering[0].tag, subtreeMsg).to.equal("div");
+            expect(renderings[renderings.length-1].rendering[0].children.length, subtreeMsg).to.equal(1);
+            expect(renderings[renderings.length-1].rendering[0].children[0], subtreeMsg).to.equal("hello world!");
         }else{
             // a root div is expected to be rendered
-            expect(renderings[renderings.length-1].rendering.tag).to.equal("div");
+            divExpected();
+            shownClass=getClass();
+            expect(hiddenClass, "if JSX is returned by Show visible mode, it must have a showing CSS class, different from the hiding one").to.not.equal(shownClass);
+            checkRenderTruthyTree();
         }
             
 
@@ -80,7 +103,30 @@ describe("TW3.3 React navigation Show", function() {
         if(rendersFalsy)
             expect(renderings[renderings.length-1].rendering).to.not.be.ok;
         else{
-            expect(renderings[renderings.length-1].rendering.tag).to.equal("div");
+            divExpected();
+            expect(getClass(), "when hidden, class should always be the same").to.equal(hiddenClass);
+            checkRenderTruthyTree();
+        }
+
+        renderings.cleanup();
+
+        if(!rendersFalsy){
+            const div= document.createElement("div");
+            div.className=  hiddenClass;
+            document.body.lastElementChild.append(div); 
+            try{
+                expect(window.getComputedStyle(div)["display"], "CSS class shown in hidden mode should not render anything visible").to.equal("none");
+            }finally{
+                document.body.lastElementChild.firstChild.remove();
+            }
+            
+            div.className=  shownClass;
+            document.body.lastElementChild.append(div); 
+            try{
+                expect(window.getComputedStyle(div)["display"],  "CSS class shown in visible mode should render visible").to.not.equal("none");
+            }finally{
+                document.body.lastElementChild.firstChild.remove();
+            }
         }
     });
 });
