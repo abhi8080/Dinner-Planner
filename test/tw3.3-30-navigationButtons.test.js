@@ -91,6 +91,7 @@ describe("TW3.3 Navigation buttons in views", function () {
             { number:2, dishes:[dishInformation]},
             findLinks);
 
+        expect(clickables.length).to.equal(1);
         clickables.forEach(async function(clickable){
             window.location.hash="summary";
             clickable.props.onClick();
@@ -109,6 +110,7 @@ describe("TW3.3 Navigation buttons in views", function () {
                 });
             });
 
+        expect(clickables.length).to.equal(searchResults.length);
         clickables.forEach(async function(clickable){
             window.location.hash="search";
             clickable.props.onClick();

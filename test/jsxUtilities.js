@@ -24,9 +24,7 @@ function findCustomEventName(tag){
     }catch(e){
         let msg=e.message;
         expect(e.message).to.include(" is not a function");
-        propName=e.message.replace(" is not a function", "");
-        // remove props.  before the function name, if any
-        propName= propName.replace(/^[$A-Z_][0-9A-Z_$]*\./i, "");
+        propName=e.message.match( /[_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*\s+is not a function/)[0].replace(" is not a function", "");
     }
     expect(propName, "expected  "+tag+ "to invoke a callback prop (fire custom event)").to.be.ok;
     return propName;
