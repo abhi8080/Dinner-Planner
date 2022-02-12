@@ -41,9 +41,7 @@ const searchResults = [
 try {
   SearchPresenter = require("../src/vuejs/" + X + "searchPresenter.js").default;
   SearchFormView = require("../src/views/" + X + "searchFormView.js").default;
-  SearchResultsView = require("../src/views/" +
-    X +
-    "searchResultsView.js").default;
+  SearchResultsView = require("../src/views/" + X + "searchResultsView.js").default;
 } catch (e) {}
 
 describe("TW2.5 SearchPresenter", function () {
@@ -111,13 +109,8 @@ describe("TW2.5 SearchPresenter", function () {
     });
     let SearchFormViewProps = renderingCustomEvent.children[0].props;
     expect(SearchFormViewProps, "The SearchFormView should have props").to.be.ok;
-    expect(
-      SearchFormViewProps,
-      "SearchFormView is missing a prop"
-    ).to.have.property("dishTypeOptions");
-      expect(JSON.stringify(SearchFormViewProps["dishTypeOptions"]), "the options passed are not correct").to.equal(
-      JSON.stringify(["starter", "main course", "dessert"])
-    );
+    expect(SearchFormViewProps,"SearchFormView is missing prop dishTypeOptions").to.have.property("dishTypeOptions");
+    expect(JSON.stringify(SearchFormViewProps["dishTypeOptions"]), "the options passed are not correct").to.equal(JSON.stringify(["starter", "main course", "dessert"]));
 
     // test that event handlers are not prematurely called
     expect(searched, "did not expect model method to be called").to.not.be.ok;
