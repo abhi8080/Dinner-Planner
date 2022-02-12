@@ -88,6 +88,7 @@ describe("TW3.2 React Details presenter (observer)", function() {
             }
         );
         
+      expect(renderingCustomEvent.props[customEventNames[0]], "menu-adding custom event prop should be a function").to.be.a("Function");
       renderingCustomEvent.props[customEventNames[0]]();
       expect(dishAdded, "Details presenter custom event handler calls the appropriate model method").to.equal(dishInformation);
         
