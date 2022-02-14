@@ -41,14 +41,14 @@ function findResultsEventName(){
     const {customEventNames}= prepareViewWithCustomEvents(
         SearchResultsView,
         {searchResults},
-        function findSpanes(rendering){
+        function findSpans(rendering){
             return findTag("span", rendering).filter(function(span){ return span.props.onClick; });
         });
     return customEventNames;
 }
 
 
-describe("TW3.2 React Search presenter 2", function () {
+describe("TW3.2 React (stateful) Search presenter", function () {
     this.timeout(200000);
 
     const formProps=[];
@@ -105,6 +105,9 @@ describe("TW3.2 React Search presenter 2", function () {
         await doRender();
         
         await new Promise(resolve => setTimeout(resolve)); // wait for eventual promise to resolve
+        expect(formProps.slice(-1)[0][setType]).to.be.a("Function");
+        expect(formProps.slice(-1)[0][setText]).to.be.a("Function");
+ 
         const len= formProps.length;
         let len1, len2;
         await withMyFetch(   // just in case we have "search as you type";
@@ -143,6 +146,7 @@ describe("TW3.2 React Search presenter 2", function () {
         expect(div.firstElementChild.firstElementChild.nextSibling.tagName, "the search results view expected to be rendered after promise resolve").to.equal("SPAN");
         expect(div.firstElementChild.firstElementChild.nextSibling.textContent, "the search results view expected to be rendered after promise resolve").to.equal("dummy results");
 
+        expect(resultsProps.slice(-1)[0][resultChosen]).to.be.a("Function");
         resultsProps.slice(-1)[0][resultChosen]({id:42});
         expect(currentDishId, "clicking on a search results should set the current dish in the model").to.equal(42);
     });
@@ -153,6 +157,10 @@ describe("TW3.2 React Search presenter 2", function () {
 
         const div= await doRender();
         await new Promise(resolve => setTimeout(resolve)); // wait for initial promise to resolve
+
+        expect(formProps.slice(-1)[0][setType]).to.be.a("Function");
+        expect(formProps.slice(-1)[0][setText]).to.be.a("Function");
+        expect(formProps.slice(-1)[0][doSearch]).to.be.a("Function");
         
         mySearchFetch.lastFetch=undefined;
         resultsProps.length=0;
