@@ -126,7 +126,7 @@ describe("TW3.2 React Sidebar presenter (observer)", function () {
         checkAgainstModel();
     });
 
-    it("Summary presenter removes observer subscriptions at teardown", async  function(){
+    it("Sidebar presenter removes observer subscriptions at teardown", async  function(){
         turnOff();
         await new Promise(resolve => setTimeout(resolve));  
         expect(observers.length, "observers should be unsubscribed at teardown").to.equal(0);
