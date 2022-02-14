@@ -1,5 +1,10 @@
 import installOwnCreateElement from "./jsxCreateElement";
 
+/*
+this module is not in use. It simulates React state management and effects. 
+Can be interesting reading though
+*/
+
 function renderWithState(component, props){
     let hookNumber;
     let rendering;
