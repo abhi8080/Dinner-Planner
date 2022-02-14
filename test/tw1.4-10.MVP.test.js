@@ -97,6 +97,7 @@ describe("TW1.4 Model-View-Presenter", function() {
         let div= createUI();
         window.React={createElement:h};
 
+        window.location.hash="summary";
         const oldFetch=fetch;
         window.fetch= function(){
             return Promise.resolve({
@@ -108,12 +109,18 @@ describe("TW1.4 Model-View-Presenter", function() {
             });
         };
 
+        let turnOff;
+        const Guard={
+            data(){ return {state:true};},
+            render(){return this.state && this.$slots.default();},
+            created(){ turnOff= ()=> this.state=false; },
+        };
         try{
-            render(<VueRoot />,div);
+        try{
+            render(<Guard><VueRoot /></Guard>,div);
         }finally{ window.fetch=oldFetch; }
         
         let myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;
-
         expect(div.querySelector('span[title]').firstChild.textContent).to.equal("2");
         div.querySelectorAll("button")[0].click();
         expect(myModel.numberOfGuests).to.equal(1);
@@ -125,6 +132,7 @@ describe("TW1.4 Model-View-Presenter", function() {
         expect(myModel.numberOfGuests).to.equal(2);
         await new Promise(resolve => setTimeout(resolve));
         expect(div.querySelector('span[title]').firstChild.textContent).to.equal("2");
+        }finally{turnOff();}   // remove VueRoot and the app from the UI to make sure hashchange (navigation) listeners are removed
     });
     
 });
