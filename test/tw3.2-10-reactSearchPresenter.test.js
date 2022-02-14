@@ -2,7 +2,7 @@ import { assert, expect } from "chai";
 import installOwnCreateElement from "./jsxCreateElement";
 import {renderWithState} from "./mockReact.js";
 import {withMyFetch, mySearchFetch, findCGIParam, searchResults} from "./mockFetch.js";
-import {findTag} from "./jsxUtilities.js";
+import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
 
 let SearchPresenter;
 let SearchFormView;
@@ -19,6 +19,24 @@ function urlInResult(url){
     return {results:[url] };
 }
 
+function findFormEventNames(){
+    const {customEventNames}= prepareViewWithCustomEvents(
+        SearchFormView,
+        {dishTypeOptions:['starter', 'main course', 'dessert']},
+        function collectControls(rendering){
+            const buttons=findTag("button", rendering).filter(function(button){ return button.children.flat()[0].toLowerCase().trim().startsWith("search"); });
+            const selects=findTag("select", rendering);
+            const inputs=findTag("input", rendering);
+            expect(buttons.length, "SearchFormview expected to have one search button").to.equal(1);
+            expect(inputs.length, "SearchFormView expected to have one  input box").to.equal(1);
+            expect(selects.length, "SearchFormView expected to have one  select box").to.equal(1);
+            return [...inputs, ...selects, ...buttons];
+        });
+    return customEventNames;
+}
+
+
+
 describe("TW3.2 React SearchPresenter", function () {
     this.timeout(200000);
 
@@ -26,7 +44,7 @@ describe("TW3.2 React SearchPresenter", function () {
         if (!SearchPresenter || !SearchFormView || !SearchResultsView) this.skip();
     });
 
-    async function findPropsNames(){
+    async function basicRender(){
         let renderings;
         
         await withMyFetch(
@@ -36,6 +54,7 @@ describe("TW3.2 React SearchPresenter", function () {
             },
             urlInResult
         );
+        await new Promise(resolve => setTimeout(resolve));
         
         expect(renderings[0].rendering.children[0].tag).to.equal(SearchFormView, "expected first child to be SearchFormView");
         
@@ -55,62 +74,21 @@ describe("TW3.2 React SearchPresenter", function () {
             JSON.stringify(["starter", "main course", "dessert"])
         );
         
-        const threeHandlers = Object.keys(searchFormViewProps).filter(function(prop) {
-          return !["dishTypeOptions"].includes(prop);
-        });
-        
-        expect(threeHandlers.length, "expected 4 props in total").to.equal(3);
-        threeHandlers.forEach(function(x){
-            expect(typeof searchFormViewProps[x], "expected prop to be a function").to.equal("function");
-        });
-        
-        const props= {dishTypeOptions: ["starter", "main course", "dessert"]};
-        let returned;
-        let theProp;
-        threeHandlers.forEach(function(prop){
-            props[prop]=function(param){
-                returned=param;
-                theProp=prop;
-            };
-        });
-        
-        installOwnCreateElement();
-        const formRendering=SearchFormView(props);
-        
-        const inputs=findTag("input", formRendering);
-        expect(inputs.length, "Expected a signle input box in the search form").to.equal(1);
-        inputs[0].props.onChange({ type:"ChangeEvent", bubbling:"true", target: { value:"pizza"}});
-        expect(returned, "custom event parameter for textbox should be the textbox value").to.equal("pizza");
-        const textProp=theProp;
-        
-        returned= theProp=undefined;
-        const select=findTag("select", formRendering);
-        expect(select.length, "Expected a signle select box in the search form").to.equal(1);      
-        select[0].props.onChange({ type:"ChangeEvent", bubbling:"true", target: { value:"main course"}});
-        expect(returned, "custom event parameter for select box should be the select value").to.equal("main course");
-        const typeProp=theProp;
-
-        const buttons= findTag("button", formRendering).filter(function isSearchCB(tag){
-            return tag.children[0].toLowerCase().startsWith("search");
-        });
-        returned= theProp=undefined;
-        expect(buttons.length, "there should be a single search button").to.equal(1);
-        buttons[0].props.onClick();
-
-        return {renderings, typeProp, textProp, searchProp:theProp};
+        return renderings;
     }
 
     it("React SearchPresenter renders SearchFormView with correct props and custom event handlers for text and type", async function() {
-        const  {renderings, typeProp, textProp}= await findPropsNames();
+        const [setText, setType, doSearch]= findFormEventNames();
+        const  renderings= await basicRender();
         let searchFormViewProps = renderings[0].rendering.children[0].props;
         let len= renderings.length;
-        searchFormViewProps[textProp]("calzone");
+        searchFormViewProps[setText]("calzone");
         expect(renderings.length-len, "text custom event handler should change exactly one React state property").to.equal(1);
         expect(renderings[renderings.length-1].change[0].newValue, "text custom event handler should change a React state property to that value").to.equal("calzone");
         const whichState=renderings[renderings.length-1].change[0].index;
         
         len= renderings.length;
-        searchFormViewProps[typeProp]("dessert");
+        searchFormViewProps[setType]("dessert");
         expect(renderings.length-len, "type custom event handler should change exactly one React state property").to.equal(1);
         expect(renderings[renderings.length-1].change[0].newValue, "type custom event handler should change a React state property to that value").to.equal("dessert");
         
@@ -120,7 +98,7 @@ describe("TW3.2 React SearchPresenter", function () {
 
     function checkFetchAndState(renderings, text, type){
         const resultChange= renderings[renderings.length-1].change[0];
-        expect(resultChange.oldValue, "the last state change should be the promise resolve").to.be.null;
+        expect(resultChange.oldValue, "the last state change should be the promise resolve").to.not.be.ok;
         expect(resultChange.newValue.constructor.name, "promise should resolve to an array").to.equal("Array");
 
         expect(findCGIParam(resultChange.newValue[0], "type", type), "search form presenter expected to search for type \""+type+"\"").to.equal(true);
@@ -133,7 +111,8 @@ describe("TW3.2 React SearchPresenter", function () {
 
     
     it("React SearchPresenter resolves promise in React state", async function() {
-        let  {renderings, typeProp, textProp, searchProp}= await findPropsNames();
+        const [setText, setType, doSearch]= findFormEventNames();
+        let  renderings= await basicRender();
         checkFetchAndState(renderings, "", "");
 
         function latestProps(){
@@ -144,24 +123,26 @@ describe("TW3.2 React SearchPresenter", function () {
             mySearchFetch,
             function callSearchHandler(){
                 searchFormViewProps = latestProps();
-                searchFormViewProps[searchProp]();
+                searchFormViewProps[doSearch]();
             },
             urlInResult
         );
+        await new Promise(resolve => setTimeout(resolve));
         checkFetchAndState(renderings, "", "");
 
         await withMyFetch(
             mySearchFetch,
             function fillInFormAndSearch(){
                 searchFormViewProps = latestProps();
-                searchFormViewProps[textProp]("calzone");
+                searchFormViewProps[setText]("calzone");
                 searchFormViewProps = latestProps();
-                searchFormViewProps[typeProp]("dessert");
+                searchFormViewProps[setType]("dessert");
                 searchFormViewProps = latestProps();
-                searchFormViewProps[searchProp]();
+                searchFormViewProps[doSearch]();
             },
             urlInResult
         );
+        await new Promise(resolve => setTimeout(resolve));
         checkFetchAndState(renderings, "calzone", "dessert");
         renderings.cleanup();
 
@@ -174,21 +155,23 @@ describe("TW3.2 React SearchPresenter", function () {
 
                 // search with default params
                 searchFormViewProps = latestProps();
-                searchFormViewProps[searchProp]();
+                searchFormViewProps[doSearch]();
 
                 // search calzone
                 searchFormViewProps = latestProps();
-                searchFormViewProps[textProp]("calzone");
+                searchFormViewProps[setText]("calzone");
                 searchFormViewProps = latestProps();
-                searchFormViewProps[searchProp]();
+                searchFormViewProps[doSearch]();
                                 
                 // search pasticio
-                searchFormViewProps[textProp]("pasticio");
+                searchFormViewProps[setText]("pasticio");
                 searchFormViewProps = latestProps();
-                searchFormViewProps[searchProp]();
+                searchFormViewProps[doSearch]();
             },
             urlInResult
         );
+        await new Promise(resolve => setTimeout(resolve));
+        
         checkFetchAndState(renderings, "pasticio", "");
         renderings.filter(function checkForArrays(rendering){
             return rendering.change && rendering.change[0].newValue && rendering.change[0].newValue.constructor.name=="Array";
@@ -218,6 +201,7 @@ describe("TW3.2 React SearchPresenter", function () {
                 return {results: searchResults};
             }
         );
+        await new Promise(resolve => setTimeout(resolve));
         
         expect(renderings[renderings.length-1].rendering.children[1].tag, "SearchResultsView should be rendered when promise is resolved").to.equal(SearchResultsView);
         
