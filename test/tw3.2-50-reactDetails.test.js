@@ -84,7 +84,6 @@ describe("TW3.2 React Details  presenter (observer)", function () {
     it("Details presenter renders view with correct props", async function(){
         const[add2Menu]=findDetailsEventName();
         renderDiv= doRender();
-        // TODO
         await new Promise(resolve => setTimeout(resolve));  
         checkAgainstModel();
         expect(propsHistory.slice(-1)[0][add2Menu], "callback prop must be a function").to.be.a("Function");
