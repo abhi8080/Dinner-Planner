@@ -4,10 +4,12 @@ function url2ExampleResults(url){
 function mySearchFetch(fetchURL, fetchParam, url2Results=url2ExampleResults){
     mySearchFetch.lastFetch=fetchURL;
     mySearchFetch.lastParam= fetchParam;
+    const ret= url2Results(fetchURL);
+    const delay= ret.delay ||0;
     return Promise.resolve({
         ok:true,
         json(){
-            return Promise.resolve(url2Results(fetchURL));
+            return new Promise(resolve => setTimeout(resolve, delay)).then(()=> Promise.resolve(ret));
         }
     });
 }
