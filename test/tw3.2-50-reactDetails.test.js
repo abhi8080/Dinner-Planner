@@ -98,7 +98,7 @@ describe("TW3.2 React Details  presenter (observer)", function () {
         model.currentDishPromiseState.data=null;
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));  
-        expect(renderDiv.firstElementChild.textContent, '"no data" should be rendered when there is no promise').to.equal("no data");
+        expect(renderDiv.firstElementChild.textContent.toLowerCase(), '"no data" should be rendered when there is no promise').to.equal("no data");
         expect(propsHistory.length, "view should not be rendered when there is no promise").to.equal(0);
 
         model.currentDishPromiseState.promise="blabla";
