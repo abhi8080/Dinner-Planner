@@ -5,20 +5,13 @@ const X= TEST_PREFIX;
 
 const DinnerModel=require("/src/"+TEST_PREFIX+"DinnerModel.js").default;
 
-let Search;
-try{
-    Search=require("/src/reactjs/"+X+"searchPresenter.js").default;
-}catch(e){
-    render(<div>
-             Please write /src/reactjs/searchPresenter.js
-           </div>,  document.getElementById('root'));
-}
-if(Search){
+const App=require("/src/views/"+TEST_PREFIX+"app.js").default;
+
     const model= new DinnerModel();
     model.addObserver(console.log);
     window.myModel=model;
     render(
-        <Search model={model}/>,
+        <App model={model}/>,
         document.getElementById('root')
     );       
-}
+
