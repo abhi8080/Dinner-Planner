@@ -13,33 +13,43 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
     model.addObserver(arg => {observer = !observer, payload=arg})
   })
 
-  function callMethodTwiceWithValueAndTestObserver(method, value, shouldCarryPayload=true) {
-    // expect messages
-    const obsNotified = `observer not notified in ${method}`;
-    const sameArg = `observer notified when ${method} called with same argument twice`;
-    const foundPayload = `first argument passed to observer does not contain required payload information`;
+  let methodToPayloadNames = {};
 
+  function checkPayload(method, value, payload) {
+      expect(typeof payload, `expected payload in observer notified from ${method}`).to.equal("object");
+      expect(Object.keys(payload).length, `only expected one property in payload for ${method}`).to.equal(1);
+      methodToPayloadNames[method] = Object.keys(payload)[0];
+      expect(payload[methodToPayloadNames[method]], `first argument passed to observer does not contain required payload information for ${method}`).to.equal(value)
+  }
+
+  function callMethodTwiceWithValueAndTestObserver(method, value, shouldCarryPayload=true) {
     let before = observer;
     payload = {}
     model[method](value);
-    expect(before, obsNotified).to.equal(!observer)
+    expect(before, `observer not notified in ${method}`).to.equal(!observer)
 
+    // find out payload property name for this method, and also check that payload value is correct
     if(shouldCarryPayload) {
-      expect(typeof payload, foundPayload).to.equal("object");
-      expect(Object.values(payload).indexOf(value) !== -1, foundPayload);
+      checkPayload(method, value, payload);
     }
 
     model[method](value);
-    expect(before, sameArg).to.equal(!observer)
+    expect(before, `observer notified when ${method} called with same argument twice`).to.equal(!observer)
+
+    if(shouldCarryPayload) {
+      checkPayload(method, value, payload);
+    }
   }
 
-  it("model methods correctly call notifyObservers", async function() {
+  it("model methods correctly call notifyObservers", function() {
 
     callMethodTwiceWithValueAndTestObserver("setNumberOfGuests", 99);
     callMethodTwiceWithValueAndTestObserver("addToMenu", 1);
     // dish 1 is now added to menu
     callMethodTwiceWithValueAndTestObserver("removeFromMenu", 1);
+  });
 
+  it("model methods using resolvePromise correctly call notifyObservers", async function() {
     // for setCurrentDish and doSearch we want to temporarily override default fetch
     const oldFetch = window.fetch;
     window.fetch= function(){
@@ -57,6 +67,7 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
       model.addObserver(() => {timesObserverNotified++;});
       model.setCurrentDish(1);
       expect(timesObserverNotified, "expected initially 2 notifications from setCurrentDish").to.equal(2);
+      checkPayload("setCurrentDish", 1, payload);
       await model.currentDishPromiseState.promise;
       expect(timesObserverNotified, "expected 3 notifications from setCurrentDish after promise is resolved").to.equal(3);
 
@@ -103,5 +114,14 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
     } finally {
       window.fetch = oldFetch;
     }
+  });
+
+  it("observer payloads have different property names for each method", function() {
+    let propertyNames = [];
+    Object.keys(methodToPayloadNames).forEach(method => {
+      let propertyName = methodToPayloadNames[method];
+      expect(propertyNames.includes(propertyName), "expected unique payload property name").to.equal(false);
+      propertyNames.push(propertyName);
+    })
   });
 })
