@@ -47,10 +47,9 @@ function findResultsEventName(){
     return customEventNames;
 }
 
-
 describe("TW3.2 React (stateful) Search presenter", function () {
     this.timeout(200000);
-
+    
     const formProps=[];
     const resultsProps=[];
     function DummyForm(props){
@@ -61,12 +60,18 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         resultsProps.push(props);
         return <span>dummy results</span>;
     }
+    function DummyImg(props){
+        resultsProps.push(1984);
+        return "dummyIMG";
+    }
     const h = React.createElement;
     function replaceViews(tag, props, ...children){
         if(tag==SearchFormView)
             return h(DummyForm, props, ...children);
         if(tag==SearchResultsView)
             return h(DummyResults, props, ...children);
+        if(tag=="img") // FIXME this assumes that the presenter renders no other image than the spinner
+            return h(DummyImg, props, ...children);
         return h(tag, props, ...children);
     };
     
@@ -81,7 +86,7 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         
         await withMyFetch(
             mySearchFetch,
-            function theRender(){
+            async function theRender(){
                 render(<SearchPresenter model={{
                     setCurrentDish(id){
                         currentDishId=id;
@@ -103,8 +108,6 @@ describe("TW3.2 React (stateful) Search presenter", function () {
     it("Search presenter changes state when the form query and type change", async function(){
         const [setText, setType, doSearch]= findFormEventNames();
         await doRender();
-        
-        await new Promise(resolve => setTimeout(resolve)); // wait for eventual promise to resolve
         expect(formProps.slice(-1)[0][setType]).to.be.a("Function");
         expect(formProps.slice(-1)[0][setText]).to.be.a("Function");
  
@@ -125,26 +128,32 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         
         expect(len1-len, "setting the search query should change state and re-render").to.equal(1);
         expect(len2-len1,  "setting the search type should change state and re-render").to.equal(1);
-        await new Promise(resolve => setTimeout(resolve)); // wait for eventual promise to resolve
     });
 
-    it("Search presenter initiates a search promise at first render and resolves the promise in component state", async function(){
-        const [resultChosen]= findResultsEventName();
-        const div= await doRender();
-        expect(mySearchFetch.lastFetch, "presenter should launch a search at component creation").to.be.ok;
-        expect(findCGIParam(mySearchFetch.lastFetch, "type", ""), "first search launched by presenter should be with empty params").to.be.ok;
-        expect(findCGIParam(mySearchFetch.lastFetch, "query", ""), "first search launched by presenter should be with empty params").to.be.ok;
-        
-        expect(div.firstElementChild.firstElementChild.nextSibling.tagName, "an image expected to be rendered during promise resolve").to.equal("IMG");
-        expect(resultsProps.length, "search results view should not be rendered during promise resolve").to.equal(0);
+    function checkResults(div, res){
+        expect(JSON.stringify(resultsProps.slice(-1)[0].searchResults), "search results view should be rendered after promise resolve").to.equal(JSON.stringify(res));
+        expect(resultsProps.slice(-2)[0], "an image should be rendered before promise resolve").to.equal(1984);
 
-        await new Promise(resolve => setTimeout(resolve)); // wait for initial promise to resolve
-
-        expect(resultsProps.length, "search results view should be rendered after promise resolve").to.equal(1);
-        expect(resultsProps[0].searchResults, "search results view should be rendered after promise resolve").to.equal(searchResults);
+        // TODO: at this point, all values before 1984 (image), should be the previous results (which can be a parameter to checkResults)
+        // then a number of 1984 are acceptable
 
         expect(div.firstElementChild.firstElementChild.nextSibling.tagName, "the search results view expected to be rendered after promise resolve").to.equal("SPAN");
         expect(div.firstElementChild.firstElementChild.nextSibling.textContent, "the search results view expected to be rendered after promise resolve").to.equal("dummy results");
+    }
+
+    it("Search presenter initiates a search promise at first render and resolves the promise in component state", async function(){
+        resultsProps.length=0;
+        formProps.length=0;
+        const [resultChosen]= findResultsEventName();
+        const div= await doRender();
+
+        expect(mySearchFetch.lastFetch, "presenter should launch a search at component creation").to.be.ok;
+        expect(findCGIParam(mySearchFetch.lastFetch, "type", ""), "first search launched by presenter should be with empty params").to.be.ok;
+
+        await mySearchFetch.lastPromise;
+        await new Promise(resolve => setTimeout(resolve));  // UI update
+
+        checkResults(div, searchResults);
 
         expect(resultsProps.slice(-1)[0][resultChosen]).to.be.a("Function");
         resultsProps.slice(-1)[0][resultChosen]({id:42});
@@ -156,43 +165,36 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         const [resultChosen]= findResultsEventName();
 
         const div= await doRender();
-        await new Promise(resolve => setTimeout(resolve)); // wait for initial promise to resolve
+        await mySearchFetch.lastPromise;
+        await new Promise(resolve => setTimeout(resolve));  // UI update
 
         expect(formProps.slice(-1)[0][setType]).to.be.a("Function");
         expect(formProps.slice(-1)[0][setText]).to.be.a("Function");
         expect(formProps.slice(-1)[0][doSearch]).to.be.a("Function");
         
-        mySearchFetch.lastFetch=undefined;
         resultsProps.length=0;
-        const formLen= formProps.length;
-        let formLen2;
+
+        mySearchFetch.lastFetch=undefined;
         await withMyFetch(   // just in case we have "search as you type";
             mySearchFetch,
             async function interact(){
                 formProps.slice(-1)[0][setType]("main course");
                 formProps.slice(-1)[0][setText]("pizza");
                 formProps.slice(-1)[0][doSearch]();
-                formLen2= formProps.length;
             },
             function makeResults(url){
                 return {results:[searchResults[1], searchResults[0]]};
             }            
         );
-        expect(formLen2-formLen).to.equal(3);
-        expect(formProps.length-formLen).to.equal(4);
+
         expect(mySearchFetch.lastFetch, "presenter should launch a search at button click").to.be.ok;
         expect(findCGIParam(mySearchFetch.lastFetch, "type", "main course"), "search should use type parameter from state").to.be.ok;
         expect(findCGIParam(mySearchFetch.lastFetch, "query", "pizza"), "search should use text parameter from state").to.be.ok;
-        
-        expect(div.firstElementChild.firstElementChild.nextSibling.tagName, "an image expected to be rendered during promise resolve").to.equal("IMG");
-        expect(resultsProps.length, "search results view should not be rendered during promise resolve").to.equal(3);
 
-        await new Promise(resolve => setTimeout(resolve));
+        await mySearchFetch.lastPromise;
+        await new Promise(resolve => setTimeout(resolve));  // UI update
 
-        expect(resultsProps.length, "search results view should be rendered after promise resolve").to.equal(4);
-        expect(JSON.stringify(resultsProps[3].searchResults), "search results view should be rendered after promise resolve").to.equal(JSON.stringify([searchResults[1], searchResults[0]]));
-        expect(div.firstElementChild.firstElementChild.nextSibling.tagName, "the search results view expected to be rendered after promise resolve").to.equal("SPAN");
-        expect(div.firstElementChild.firstElementChild.nextSibling.textContent, "the search results view expected to be rendered after promise resolve").to.equal("dummy results");
+        checkResults(div, [searchResults[1], searchResults[0]]);
 
         resultsProps.slice(-1)[0][resultChosen]({id:43});
         expect(currentDishId, "clicking on a search results should set the current dish in the model").to.equal(43);
@@ -203,16 +205,16 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         const [setText, setType, doSearch]= findFormEventNames();
         
         const div= await doRender();
-        await new Promise(resolve => setTimeout(resolve)); // wait for initial promise to resolve
+        await mySearchFetch.lastPromise;
+        await new Promise(resolve => setTimeout(resolve));  // UI update
         
         mySearchFetch.lastFetch=undefined;
-        const formLen= formProps.length;
-        let formLen2;
+
         await withMyFetch(
             mySearchFetch,
             async function interact(){
                 formProps.slice(-1)[0][setType]("dessert");
-                formProps.slice(-1)[0][doSearch]();
+                formProps.slice(-1)[0][doSearch]();             
                 formProps.slice(-1)[0][setType]("starter");
                 formProps.slice(-1)[0][doSearch]();
             },
@@ -224,8 +226,10 @@ describe("TW3.2 React (stateful) Search presenter", function () {
             }
         );
 
-        expect(resultsProps.find(p=>p.searchResults.length==2)).to.not.be.ok;
-        await new Promise(resolve => setTimeout(resolve, 5));  // wait so that the slowest promise resolves
-        expect(resultsProps.find(p=>p.searchResults.length==2)).to.not.be.ok;
+        await new Promise(resolve => setTimeout(resolve, 5));  // UI update
+
+        checkResults(div, [searchResults[1]]);
+        
+        expect(resultsProps.find(p=>p!=1984 && p.searchResults.length==2), "the first, slower search should not save in promise state").to.not.be.ok;
  });
 });

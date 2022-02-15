@@ -9,7 +9,7 @@ function mySearchFetch(fetchURL, fetchParam, url2Results=url2ExampleResults){
     return Promise.resolve({
         ok:true,
         json(){
-            return new Promise(resolve => setTimeout(resolve, delay)).then(()=> Promise.resolve(ret));
+            return mySearchFetch.lastPromise=new Promise(resolve => setTimeout(resolve)).then(()=> ret);
         }
     });
 }
