@@ -3,8 +3,6 @@ import installOwnCreateElement from "./jsxCreateElement";
 import {h, render} from "vue";
 import {withMyFetch, mySearchFetch, findCGIParam, searchResults} from "./mockFetch.js";
 import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
-import {searchDishes} from "/src/solved-dishSource.js";
-
 
 let SearchPresenter;
 let SearchFormView;
