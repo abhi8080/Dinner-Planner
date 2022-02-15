@@ -9,9 +9,13 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
   let observer = false;
   let payload = {};
   this.beforeEach(function() {
-    model = new DinnerModel();
-    model.addObserver(arg => {observer = !observer, payload=arg})
-  })
+      model = new DinnerModel();
+      model.addObserver(arg => {
+          observer = !observer;
+          if(arg)
+              payload=arg;
+      });
+  });
 
   let methodToPayloadNames = {};
 
@@ -49,7 +53,7 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
     callMethodTwiceWithValueAndTestObserver("removeFromMenu", 1);
   });
 
-  it("model methods using resolvePromise correctly call notifyObservers", async function() {
+  it("resolvePromise notifies during promise resolution (setCurrentDish, doSearch)", async function() {
     // for setCurrentDish and doSearch we want to temporarily override default fetch
     const oldFetch = window.fetch;
     window.fetch= function(){
