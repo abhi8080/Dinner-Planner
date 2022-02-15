@@ -94,9 +94,11 @@ describe("TW3.3 Navigation buttons in views", function () {
         expect(clickables.length).to.equal(1);
         clickables.forEach(async function(clickable){
             window.location.hash="summary";
-            clickable.props.onClick();
+            const event=new Event("change", {  bubbles: true,  cancelable: true  });
+            clickable.props.onClick(event);
             await new Promise(resolve => setTimeout(resolve));
             expect(window.location.hash,  "SidebarView dish links should navigate to details").to.equal("#details");
+            expect(event.defaultPrevented, "click on a sidebar link should prevent default behavior").to.equal(true);
         });
     });
 
