@@ -111,7 +111,7 @@ describe("TW3.2 React Details  presenter (observer)", function () {
         model.currentDish= dishInformation.id;
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));
-        expect(propsHistory.length, "view should be rendered when promise is resolved").to.equal(1);
+        expect(propsHistory.length, "view should be rendered when promise is resolved").to.gte(1);
         checkAgainstModel();
         expect(propsHistory.slice(-1)[0].isDishInMenu).to.not.be.ok;
 
