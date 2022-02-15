@@ -21,11 +21,24 @@ function makeHtmlCB(file){
     });
 }
 
+// bootstrap entries
+const bootstrap= ["vuejs", "reactjs"]
+      .map(function framework2PathCB(x){return {[x] :"./src/"+x+"/"+prefix+"index.js"}; })   // find file path and return {frameworkJS: path}
+      .filter(function keepOnlyExistingCB(f){ return fs.existsSync(Object.values(f)[0]);})   // include only if file (path) exists
+      .reduce(function mergeObjectsCB(acc, f){ return {...acc, ...f};}, {});                 // merge objects into one  {framework1JS:path1, f2: path2}
+
+function makeBootrapHtmlCB(framework){     // framework bootstrap is at framework/index.html
+    return new HtmlWebpackPlugin({
+        filename: framework.slice(0, -2)+"/index.html",
+        template: './src/'+prefix+'index.html',
+        chunks: [framework],
+    });
+}
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: tws.reduce(makeEntryCB, {test:"./test/index.js"}),   // all tw entries, plus the tests
+    entry: tws.reduce(makeEntryCB, {...bootstrap, test:"./test/index.js"}),   // all tw entries, plus the tests
     output: {
         path: __dirname +"/dist",
         publicPath: '/',
@@ -37,6 +50,7 @@ module.exports = {
     },
     plugins: [
         ...tws.map(makeHtmlCB),    // a HTML for each TW entry, map() produces an array, which we spread ...
+        ...Object.keys(bootstrap).map(makeBootrapHtmlCB),   // a HTML for each existing bootstrap index.js
         
         new HtmlWebpackPlugin({    // the test.html for tests, see the test entry above
             filename: "test.html",
