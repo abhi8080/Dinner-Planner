@@ -40,7 +40,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     entry: tws.reduce(makeEntryCB, {...bootstrap, test:"./test/index.js"}),   // all tw entries, plus the tests
     output: {
-        path: __dirname +"/dist",
+        path: __dirname +"/public",
         publicPath: '/',
     },
     optimization: {
