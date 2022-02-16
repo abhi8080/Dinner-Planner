@@ -18,6 +18,16 @@ try {
     DetailsView= require("../src/views/" + X + "detailsView.js").default;
 } catch (e) {console.log(e);}
 
+function compressHistory(arr){
+    return arr.reduce(function(acc, elem, index){
+        if(index==0)
+            return [elem];
+        if(elem==acc.slice(-1)[0]  || JSON.stringify(elem)==JSON.stringify(acc.slice(-1)[0]))
+            return acc;
+        return [...acc, elem];
+    }, []);
+}
+
 function findDetailsEventName(){
     const {customEventNames}= prepareViewWithCustomEvents(
         DetailsView,
@@ -36,10 +46,16 @@ describe("TW3.2 React Details  presenter (observer)", function () {
         propsHistory.push(props);
         return <span>dummy view</span>;
     }
+    function DummyImg(props){
+        propsHistory.push(1984);
+        return "dummyIMG";
+    }
     const h = React.createElement;
     function replaceViews(tag, props, ...children){
         if(tag==DetailsView)
             return h(Dummy, props, ...children);
+        if(tag=="img") // FIXME this assumes that the presenter renders no other image than the spinner
+            return h(DummyImg, props, ...children);
         return h(tag, props, ...children);
     };
     let turnOff;
@@ -103,15 +119,17 @@ describe("TW3.2 React Details  presenter (observer)", function () {
 
         model.currentDishPromiseState.promise="blabla";
         observers.forEach(o=>o());
-        await new Promise(resolve => setTimeout(resolve));  
-        expect(renderDiv.firstElementChild.tagName, "an image should be rendered when promise is not resolved").to.equal("IMG");
-        expect(propsHistory.length, "view should not be rendered when promise is not resolved").to.equal(0);
+        await new Promise(resolve => setTimeout(resolve));
+        expect(compressHistory(propsHistory).length, "view should not be rendered when promise is not resolved").to.equal(1);
+        expect(propsHistory.slice(-1)[0]).to.equal(1984);
 
         model.currentDishPromiseState.data= dishInformation;
         model.currentDish= dishInformation.id;
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));
-        expect(propsHistory.length, "view should be rendered when promise is resolved").to.gte(1);
+        const compressed= compressHistory(propsHistory); 
+        expect(compressed.length, "view should be rendered when promise is resolved").to.equal(2);
+        expect(compressed[0]).to.equal(1984);
         checkAgainstModel();
         expect(propsHistory.slice(-1)[0].isDishInMenu).to.not.be.ok;
 
@@ -134,14 +152,15 @@ describe("TW3.2 React Details  presenter (observer)", function () {
         propsHistory.length=0;
         model.currentDishPromiseState.data=null;
         observers.forEach(o=>o());
-        await new Promise(resolve => setTimeout(resolve));  
-        expect(renderDiv.firstElementChild.tagName, "an image should be rendered when promise is not resolved").to.equal("IMG");
-        expect(propsHistory.length, "view should not be rendered when promise is not resolved").to.equal(0);
+        await new Promise(resolve => setTimeout(resolve));
+        expect(compressHistory(propsHistory).length, "view should not be rendered when promise is not resolved").to.equal(1);
+        expect(propsHistory.slice(-1)[0]).to.equal(1984);
     });
 
     it("Details presenter removes observer subscriptions at teardown", async  function(){
         turnOff();
         await new Promise(resolve => setTimeout(resolve));  
         expect(observers.length, "observers should be unsubscribed at teardown").to.equal(0);
+        
     });
 });
