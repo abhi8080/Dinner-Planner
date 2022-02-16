@@ -78,7 +78,7 @@ describe("TW2.5 SearchPresenter", function () {
       renderingEmpty.children[1].children[0].toLowerCase(),
       "does the text say 'no data?'"
     ).to.equal("no data");
-    expect(searched, "appropriate model method not called").to.be.ok;
+    expect(searched, "search presenter must perform a search at first render").to.be.ok;
   });
 
   it("Vue SearchPresenter renders SearchFormView and SearchResultsView", function () {
