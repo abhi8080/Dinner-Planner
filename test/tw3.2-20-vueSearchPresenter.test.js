@@ -9,10 +9,12 @@ let SearchFormView;
 let SearchResultsView;
 const X = TEST_PREFIX;
 
+let searchDishes;
 try {
     SearchPresenter = require("../src/vuejs/" + X + "searchPresenter.js").default;
     SearchFormView = require("../src/views/" + X + "searchFormView.js").default;
     SearchResultsView = require("../src/views/" + X + "searchResultsView.js").default;
+    searchDishes= require("../src/" + X + "dishSource.js").searchDishes;
 } catch (e) {console.log(e);}
 
 
