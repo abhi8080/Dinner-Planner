@@ -37,6 +37,16 @@ function findFormEventNames(){
 //var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
 //nativeInputValueSetter.call(input, 'react 16 value');
 
+function compressHistory(arr){
+    return arr.reduce(function(acc, elem, index){
+        if(index==0)
+            return [elem];
+        if(elem==acc.slice(-1)[0]  || JSON.stringify(elem)==JSON.stringify(acc.slice(-1)[0]))
+            return acc;
+        return [...acc, elem];
+    }, []);
+}
+
 function findResultsEventName(){
     const {customEventNames}= prepareViewWithCustomEvents(
         SearchResultsView,
@@ -131,8 +141,8 @@ describe("TW3.2 React (stateful) Search presenter", function () {
     });
 
     function checkResults(div, res){
-        expect(JSON.stringify(resultsProps.slice(-1)[0].searchResults), "search results view should be rendered after promise resolve").to.equal(JSON.stringify(res));
-        expect(resultsProps.slice(-2)[0], "an image should be rendered before promise resolve").to.equal(1984);
+        expect(JSON.stringify(compressHistory(resultsProps).slice(-1)[0].searchResults), "search results view should be rendered after promise resolve").to.equal(JSON.stringify(res));
+        expect(compressHistory(resultsProps).slice(-2)[0], "an image should be rendered before promise resolve").to.equal(1984);
 
         // TODO: at this point, all values before 1984 (image), should be the previous results (which can be a parameter to checkResults)
         // then a number of 1984 are acceptable
@@ -154,7 +164,9 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         await new Promise(resolve => setTimeout(resolve));  // UI update
 
         checkResults(div, searchResults);
-
+        expect(compressHistory(resultsProps).length, "initially search presenter displays an image, then the promise results").to.equal(2);
+        expect(compressHistory(formProps).length, "initially search presenter displays an image, then the promise results").to.equal(1);
+        
         expect(resultsProps.slice(-1)[0][resultChosen]).to.be.a("Function");
         resultsProps.slice(-1)[0][resultChosen]({id:42});
         expect(currentDishId, "clicking on a search results should set the current dish in the model").to.equal(42);
@@ -195,6 +207,10 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         await new Promise(resolve => setTimeout(resolve));  // UI update
 
         checkResults(div, [searchResults[1], searchResults[0]]);
+
+        const compressed=compressHistory(resultsProps);
+        expect(compressed[0].searchResults.length, "rendering should be done with the previous results while the form is fillled").to.equal(3);
+        expect(compressed.length, "rendering should be done with the previous results first, then spinner image, then new results").to.equal(3);
 
         resultsProps.slice(-1)[0][resultChosen]({id:43});
         expect(currentDishId, "clicking on a search results should set the current dish in the model").to.equal(43);
