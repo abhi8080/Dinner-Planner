@@ -3,7 +3,7 @@ import render from "./teacherRender.js";
 const VueRoot=require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").default;
 let navigation;
 try{
-    require("/src/views/"+TEST_PREFIX+"navigation.js").default;
+    require("/src/views/"+X+"navigation.js").default;
     navigation=true;
 }catch(e){
     render(<div>

@@ -5,7 +5,7 @@ const X= TEST_PREFIX;
 
 let Show;
 try{
-    Show=require("/src/vuejs/"+TEST_PREFIX+"show.js").default;
+    Show=require("/src/vuejs/"+X+"show.js").default;
 }catch(e){
     render(<div>
              Please write /src/vuejs/show.js

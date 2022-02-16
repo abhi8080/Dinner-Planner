@@ -5,7 +5,7 @@ const X= TEST_PREFIX;
 
 let Show;
 try{
-    Show=require("/src/reactjs/"+TEST_PREFIX+"show.js").default;
+    Show=require("/src/reactjs/"+X+"show.js").default;
 }catch(e){
     render(<div>
              Please write /src/reactjs/show.js
