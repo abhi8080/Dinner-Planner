@@ -11,20 +11,23 @@ let firebaseModel;
 
 try{
     firebaseModel=require("/src/"+X+"firebaseModel.js");
+    if(!firebaseModel.updateFirebaseFromModel)
+        throw "not found";
     require("/src/views/"+X+"navigation.js");
 }catch(e){
     render(<div>
-             Please write /src/firebaseModel.js
+             Please write /src/firebaseModel.js and updateFirebaseFromModel
            </div>,  document.getElementById('root'));
 }
-if(firebaseModel){
+if(firebaseModel && firebaseModel.updateFirebaseFromModel){
     const {updateFirebaseFromModel, updateModelFromFirebase}=firebaseModel;
     const VueRoot= {
         data(){ return {rootModel:new DinnerModel()};},
         render(){ return <App model={this.rootModel} />;},
         created(){
-            updateFirebaseFromModel(this.rootModel);
-            updateModelFromFirebase(this.rootModel);
+            updateFirebaseFromModel(this.rootModel); 
+            if(updateModelFromFirebase) // maybe it was not defined yet
+                updateModelFromFirebase(this.rootModel);
             window.myModel=this.rootModel;
         }
     };

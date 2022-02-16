@@ -11,20 +11,23 @@ let firebaseModel;
 
 try{
     firebaseModel=require("/src/"+X+"firebaseModel.js");
+    if(!firebaseModel.updateFirebaseFromModel)
+        throw "not found";
     require("/src/views/"+X+"navigation.js");
 }catch(e){
     render(<div>
-             Please write /src/firebaseModel.js
+             Please write /src/firebaseModel.js and updateFirebaseFromModel
            </div>,  document.getElementById('root'));
 }
-if(firebaseModel){
+if(firebaseModel && firebaseModel.updateFirebaseFromModel){
     const {updateFirebaseFromModel, updateModelFromFirebase}=firebaseModel;
     function ReactRoot(){
         const [model, setModel]= React.useState(new DinnerModel());
 
         React.useEffect(function onStartACB(){
             updateFirebaseFromModel(model);
-            updateModelFromFirebase(model);
+            if(updateModelFromFirebase)  // maybe it was not defined yet
+                updateModelFromFirebase(model);
         }, []);
         return  <App model={model}/>;
     }
