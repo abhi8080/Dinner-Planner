@@ -37,7 +37,7 @@ describe('TW2.4 resolvePromise', function () {
         await sleep(11);
         expect(promiseState.promise, "promiseState.promise should be set").to.be.ok;
         expect(promiseState.data, "promiseState.data should be set when the promise resolves").to.equal(42);
-        expect(promiseState.error, "promiseState.data should remain null when the promise resolves").to.be.null;
+        expect(promiseState.error, "promiseState.error should remain null when the promise resolves").to.be.null;
         
     });
 
