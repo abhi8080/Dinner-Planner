@@ -8,6 +8,7 @@ function mySearchFetch(fetchURL, fetchParam, url2Results=url2ExampleResults){
     const delay= ret.delay ||0;
     return Promise.resolve({
         ok:true,
+        status:200,
         json(){
             return mySearchFetch.lastPromise=new Promise(resolve => setTimeout(resolve)).then(()=> ret);
         }
@@ -26,6 +27,7 @@ function myDetailsFetch(fetchURL, fetchParam, url2Dish=url2MockDish){
     myDetailsFetch.lastParam= fetchParam;
     return Promise.resolve({
         ok:true,
+        status:200,
         json(){
             return Promise.resolve(url2Dish(fetchURL));
         }
