@@ -10,7 +10,7 @@ function mySearchFetch(fetchURL, fetchParam, url2Results=url2ExampleResults){
         ok:true,
         status:200,
         json(){
-            return mySearchFetch.lastPromise=new Promise(resolve => setTimeout(resolve)).then(()=> ret);
+            return mySearchFetch.lastPromise=new Promise(resolve => setTimeout(resolve), delay).then(()=> ret);
         }
     });
 }
