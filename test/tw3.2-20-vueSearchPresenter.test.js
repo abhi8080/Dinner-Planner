@@ -41,8 +41,8 @@ function findResultsEventName(){
     const {customEventNames}= prepareViewWithCustomEvents(
         SearchResultsView,
         {searchResults},
-        function findSpanes(rendering){
-            return findTag("span", rendering).filter(function(span){ return span.props.onClick; });
+        function findSpans(rendering){
+            return findTag("span", rendering).filter(function checkSpanCB(span){ return span.props && span.props.onClick; });
         });
     return customEventNames;
 }

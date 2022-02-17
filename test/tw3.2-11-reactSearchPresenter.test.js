@@ -52,7 +52,7 @@ function findResultsEventName(){
         SearchResultsView,
         {searchResults},
         function findSpans(rendering){
-            return findTag("span", rendering).filter(function(span){ return span.props.onClick; });
+            return findTag("span", rendering).filter(function checkSpanCB(span){ return span.props && span.props.onClick; });
         });
     return customEventNames;
 }
@@ -118,8 +118,8 @@ describe("TW3.2 React (stateful) Search presenter", function () {
     it("Search presenter changes state when the form query and type change", async function(){
         const [setText, setType, doSearch]= findFormEventNames();
         await doRender();
-        expect(formProps.slice(-1)[0][setType]).to.be.a("Function");
-        expect(formProps.slice(-1)[0][setText]).to.be.a("Function");
+        expect(formProps.slice(-1)[0][setType], "expected the SearchFormView "+setType+" custom event handler prop to be set. Are you setting correct props?").to.be.a("Function");
+        expect(formProps.slice(-1)[0][setText],  "expected the SearchFormView "+setType+" custom event handler prop to be set. Are you setting correct props?").to.be.a("Function");
  
         const len= formProps.length;
         let len1, len2;
@@ -167,7 +167,7 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         expect(compressHistory(resultsProps).length, "initially search presenter displays an image, then the promise results").to.equal(2);
         expect(compressHistory(formProps).length, "initially search presenter displays an image, then the promise results").to.equal(1);
         
-        expect(resultsProps.slice(-1)[0][resultChosen]).to.be.a("Function");
+        expect(resultsProps.slice(-1)[0][resultChosen],  "expected the SearchResultsView "+resultChosen+" custom event handler prop to be set. Are you setting correct props?").to.be.a("Function");
         resultsProps.slice(-1)[0][resultChosen]({id:42});
         expect(currentDishId, "clicking on a search results should set the current dish in the model").to.equal(42);
     });
@@ -180,9 +180,9 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         await mySearchFetch.lastPromise;
         await new Promise(resolve => setTimeout(resolve));  // UI update
 
-        expect(formProps.slice(-1)[0][setType]).to.be.a("Function");
-        expect(formProps.slice(-1)[0][setText]).to.be.a("Function");
-        expect(formProps.slice(-1)[0][doSearch]).to.be.a("Function");
+        expect(formProps.slice(-1)[0][setType],  "expected the SearchFormView "+setType+" custom event handler prop to be set. Are you setting correct props?").to.be.a("Function");
+        expect(formProps.slice(-1)[0][setText],  "expected the SearchFormView "+setText+" custom event handler prop to be set. Are you setting correct props?").to.be.a("Function");
+        expect(formProps.slice(-1)[0][doSearch],  "expected the SearchFormView "+doSearch+" custom event handler prop to be set. Are you setting correct props?").to.be.a("Function");
         
         resultsProps.length=0;
 

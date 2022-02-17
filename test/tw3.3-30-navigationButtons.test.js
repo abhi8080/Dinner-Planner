@@ -107,8 +107,8 @@ describe("TW3.3 Navigation buttons in views", function () {
             SearchResultsView,
             {searchResults},
             function findSpans(rendering){
-                return findTag("span", rendering).filter(function(span){
-                    return span.props.onClick;
+                return findTag("span", rendering).filter(function checkSpan(span){
+                    return span.props && span.props.onClick;
                 });
             });
 
