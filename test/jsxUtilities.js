@@ -22,14 +22,17 @@ function findCustomEventName(tag){
     });
     try{
         if(tag.props.onChange || tag.props.onInput){
-            (tag.props.onChange || tag.props.onInput)({target:{value:"dummy"}});
+            (tag.props.onChange || tag.props.onInput)({
+                // TODO: fill up a proper Event
+                target:{value:"dummy"}
+            });
         }
         else if(tag.props.onClick)
-            tag.props.onClick();
+            tag.props.onClick(new Event("click"));
         
     }catch(e){
-        let msg=e.message;
-        expect(e.message).to.include(" is not a function");
+        if(e.message.indexOf(" is not a function")==-1)
+            throw e;
         propName=e.message.match( /[_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*\s+is not a function/)[0].replace(" is not a function", "");
     }
     expect(propName, "expected  "+ JSON.stringify(tag)  +"to invoke a callback prop (fire custom event)").to.be.ok;
