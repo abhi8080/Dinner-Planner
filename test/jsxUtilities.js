@@ -22,16 +22,28 @@ function findCustomEventName(tag){
     });
     try{
         if(tag.props.onChange || tag.props.onInput){
+            /*
+            const evt= new Event(tag.props.onChange?"change": "input",  {bubbles:true, cancellable:true});
+            const input= document.createElement("input");
+            input.value= "dummy";
+            let transformedEvent;
+            input.addEventListener(evt.type, function evtACB(e){ transformedEvent=e; });
+            input.dispatchEvent(evt);
+            // Problem: transformedEvent is now async. Therefore the solution below...
+            */
             (tag.props.onChange || tag.props.onInput)({
-                // TODO: fill up a proper Event
+                type: tag.props.onChange?"change":"input",
+                bubles:true,
+                cancellable:true,
                 target:{value:"dummy"}
             });
         }
         else if(tag.props.onClick)
-            tag.props.onClick(new Event("click"));
+            tag.props.onClick(new Event("click",  {bubbles:true, cancellable:true}));
         
     }catch(e){
         if(e.message.indexOf(" is not a function")==-1)
+            // probably a problem in the event listener code, we throw it further
             throw e;
         propName=e.message.match( /[_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*\s+is not a function/)[0].replace(" is not a function", "");
     }
