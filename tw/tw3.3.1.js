@@ -1,5 +1,6 @@
 import render from "./teacherRender.js";
 
+const X = TEST_PREFIX;
 const VueRoot=require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").default;
 let navigation;
 try{
