@@ -125,8 +125,15 @@ describe("TW3.2 Vue stateful Search presenter", function () {
         return div;
     }
     before(async function () {
-        if (!SearchPresenter) this.skip();
-        if (typeof SearchPresenter == "function") this.skip();
+        if (!SearchPresenter || typeof SearchPresenter == "function"){
+            let reactPresenter;
+            try{
+                reactPresenter= require("../src/reactjs/" + X + "searchPresenter.js");
+            }catch(e){}
+            if(!reactPresenter)
+                expect.fail("Either a React presenter or a Vue object presenter should be defined");
+            this.skip();
+        }
     });
     after(function(){
         React.createElement=h;
