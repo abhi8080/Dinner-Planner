@@ -16,8 +16,24 @@ const propNames=["onClick", "onChange", "onInput"];
 
 function findCustomEventName(tag){
     let propName;
+    if(tag.tag=="input" || tag.tag=="select"){
+        if(!Object.keys(tag.props).includes("onChange") && !Object.keys(tag.props).includes("onInput")){
+            if(Object.keys(tag.props).includes("onchange"))
+                expect.fail("onchange not accepted in the lab because it does not work with React. Please use onChange. In "+JSON.stringify(tag));
+            if(Object.keys(tag.props).includes("oninput"))
+                expect.fail("oninput not accepted in the lab because it does not work with React. Please use onInput. In "+JSON.stringify(tag));
+            expect.fail("tag expected to define onChange or onInput native event listener. In "+JSON.stringify(tag));
+        }
+    }else{ 
+        if(!Object.keys(tag.props).includes("onClick")){
+            if(Object.keys(tag.props).includes("onclick"))
+                expect.fail("onclick not accepted in the lab because it does not work with React. Please use onClick. In "+JSON.stringify(tag));
+            expect.fail("tag expected to define onClick native event listener. In "+JSON.stringify(tag));
+        }
+    }
+   
     propNames.forEach(function checkPropCB(prop){
-        if(Object.keys(tag.props).includes(prop) && !tag.props[prop])
+        if(Object.keys(tag.props).includes(prop) &&typeof  tag.props[prop]!="function")
             expect.fail("Please define a named function for event listener "+prop +" of element "+JSON.stringify(tag)+".\nThis is a limitation of the tests but it will not be fixed since the course code convention is to provide named callbacks.");
     });
     try{
