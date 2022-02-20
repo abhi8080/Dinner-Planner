@@ -61,7 +61,7 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
             ok:true,
             status:200,
             json(){
-                return Promise.resolve({});
+                return Promise.resolve({results:[]});
             }
         });
     };
