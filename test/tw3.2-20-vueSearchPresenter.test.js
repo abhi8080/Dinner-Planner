@@ -151,7 +151,7 @@ describe("TW3.2 Vue stateful Search presenter", function () {
         expect(div.firstElementChild.firstElementChild.nextSibling.textContent, "the search results view expected to be rendered after promise resolve").to.equal("dummy results");
     }
 
-    it("Search presenter initial test, should also pass with TW2 functional code", async function(){
+    it("Search presenter initial test, should also pass with TW2 functional code", async function tw3_2_20_1(){
         const [setText, setType, doSearch]= findFormEventNames();
         const div= await doRender();
 
@@ -189,7 +189,7 @@ describe("TW3.2 Vue stateful Search presenter", function () {
     });
 
 
-    it("Search presenter object component test, convert your functional component to an object!", async function(){
+    it("Search presenter object component test, convert your functional component to an object!", async function tw3_2_20_2(){
         expect(SearchPresenter, "presenter must now be an object so we can add state").to.be.a("Object");
         const [setText, setType, doSearch]= findFormEventNames();
         const div= await doRender();
@@ -226,7 +226,7 @@ describe("TW3.2 Vue stateful Search presenter", function () {
         
     });
 
-    it("Search presenter object component stores search parameters in component state", async function(){
+    it("Search presenter object component stores search parameters in component state", async function tw3_2_20_3(){
         expect(SearchPresenter, "presenter must now be an object so we can add state").to.be.a("Object");
         const [setText, setType, doSearch]= findFormEventNames();
 
@@ -245,11 +245,13 @@ describe("TW3.2 Vue stateful Search presenter", function () {
         formProps.slice(-1)[0][setType]("main course");
         formProps.slice(-1)[0][setText]("calzone");
 
-        expect(vueModel.searchParams, "You should not store search params in application state any longer").to.be.empty;
+        expect(vueModel.searchParams, "You should not store search params in application state (model) any longer").to.be.empty;
+        const {searchResultsPromiseState, searchParams, ...rest}= vueModel;
+        expect(JSON.stringify(rest),  "You should not modify application state (model) to store search parameters").to.equal("{}");
         expect(SearchPresenter.created, "use created() to initiate the first search promise").to.be.a("Function");
     });
 
-    it("Search presenter resolves the promise in component state after filling the form and button click", async function(){
+    it("Search presenter resolves the promise in component state after filling the form and button click", async function tw3_2_20_4(){
         const [setText, setType, doSearch]= findFormEventNames();
         const [resultChosen]= findResultsEventName();
 
@@ -292,7 +294,7 @@ describe("TW3.2 Vue stateful Search presenter", function () {
         expect(SearchPresenter.created, "use created() to initiate the first search promise").to.be.a("Function");
     });
 
-    it("Search presenter initiates a search promise at first render and resolves the promise in component state", async function(){
+    it("Search presenter initiates a search promise at first render and resolves the promise in component state", async function tw3_2_20_5(){
         const [resultChosen]= findResultsEventName();
         expect(SearchPresenter.created, "use created() to initiate the first search promise").to.be.a("Function");
         mySearchFetch.lastFetch=undefined;
@@ -322,7 +324,7 @@ describe("TW3.2 Vue stateful Search presenter", function () {
     });
     
     
-    it("on successive searches, presenter only renders results of last search", async function(){
+    it("on successive searches, presenter only renders results of last search", async function tw3_2_20_6(){
         const [setText, setType, doSearch]= findFormEventNames();
         
         const div= await doRender();
