@@ -23,21 +23,21 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
       expect(typeof payload, `expected payload in observer notified from ${method}`).to.equal("object");
       expect(Object.keys(payload).length, `only expected one property in payload for ${method}`).to.equal(1);
       methodToPayloadNames[method] = Object.keys(payload)[0];
-      expect(payload[methodToPayloadNames[method]], `first argument passed to observer does not contain required payload information for ${method}`).to.equal(value)
+      expect(payload[methodToPayloadNames[method]], `first argument passed to observer does not contain required payload information for ${method}`).to.equal(value);
   }
 
-  function callMethodTwiceWithValueAndTestObserver(method, value, shouldCarryPayload=true) {
+  function callMethodTwiceWithValueAndTestObserver(method, value, value2=value, shouldCarryPayload=true) {
     let before = observer;
-    payload = {}
+    payload = {};
     model[method](value);
-    expect(before, `observer not notified in ${method}`).to.equal(!observer)
+    expect(before, `observer not notified in ${method}`).to.equal(!observer);
 
     // find out payload property name for this method, and also check that payload value is correct
     if(shouldCarryPayload) {
       checkPayload(method, value, payload);
     }
 
-    model[method](value);
+    model[method](value2);
     expect(before, `observer notified when ${method} called with same argument twice`).to.equal(!observer)
 
     if(shouldCarryPayload) {
@@ -48,9 +48,9 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
   it("model methods correctly call notifyObservers", function() {
 
     callMethodTwiceWithValueAndTestObserver("setNumberOfGuests", 99);
-    callMethodTwiceWithValueAndTestObserver("addToMenu", 1);
+    callMethodTwiceWithValueAndTestObserver("addToMenu", {id: 1}, {id: 1});
     // dish 1 is now added to menu
-    callMethodTwiceWithValueAndTestObserver("removeFromMenu", 1);
+    callMethodTwiceWithValueAndTestObserver("removeFromMenu", {id: 1}, {id: 1});
   });
 
   it("resolvePromise notifies during promise resolution (setCurrentDish, doSearch)", async function() {
