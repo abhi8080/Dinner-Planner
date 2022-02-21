@@ -7,13 +7,14 @@ describe("TW3.1 DinnerModel as Observable", function() {
 
   let model;
   it("observers array is initialized correctly", function tw3_1_10_1() {
-    let oldSetNumberOfGuests = DinnerModel.prototype.setNumberOfGuests;
-    DinnerModel.prototype.setNumberOfGuests = function(nr) {
-      expect(this.observers, "expected model.observers property to be initialized immediately").to.be.ok;
-      expect(this.observers, "expect model.observers to be array").to.be.an("array");
-    };
-    new DinnerModel();
-    DinnerModel.prototype.setNumberOfGuests = oldSetNumberOfGuests;
+    try {
+      new DinnerModel()
+    } catch(e) {
+      expect(false, "DinnerModel constructor throws an error. Double check that observer is initialized correctly.").to.equal(true);
+    }
+    model = new DinnerModel();
+    expect(model.observers, "expected model.observers property to be initialized immediately").to.be.ok;
+    expect(model.observers, "expect model.observers to be array").to.be.an("array");
   });
 
   it("can add observers to model which are invoked at notifyObservers", function tw3_1_10_2() {
