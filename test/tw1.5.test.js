@@ -27,17 +27,14 @@ const {shoppingList, dishType, menuPrice}=require("/src/"+TEST_PREFIX+"utilities
 
 function getDishDetails(x){ return dishesConst.find(function(d){ return d.id===x;});}
 
-
-
-
-describe("TW1.5 Array rendering", function() {
+describe("TW1.5 Array rendering", function tw1_5() {
     this.timeout(200000);  // increase to allow debugging during the test run
 
-    before(function(){
+    before(function tw1_5_before(){
         if(!SidebarView || !Sidebar) this.skip();
     });
 
-    it("SummaryView table content", function(){
+    it("SummaryView table content", function tw1_5_1(){
         window.React={createElement:h};
         const div= createUI();
         const ingrList=shoppingList([getDishDetails(2), getDishDetails(100), getDishDetails(200)]);
@@ -69,7 +66,7 @@ describe("TW1.5 Array rendering", function() {
         });
     });
 
-    it("SummaryView table order", function(){
+    it("SummaryView table order", function tw1_5_2(){
         window.React={createElement:h};
         const div= createUI();
         const ingrList=shoppingList([getDishDetails(2), getDishDetails(100), getDishDetails(200)]);
@@ -90,18 +87,20 @@ describe("TW1.5 Array rendering", function() {
         });
     });
     
-    it("Vue Summary presenter passes ingredients prop (shopping list)", function(){
+    it("Vue Summary presenter passes ingredients prop (shopping list)", function tw1_5_3(){
         installOwnCreateElement();
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
-        const model= {numerOfGuests:3, dishes};
+        const model= {numberOfGuests:3, dishes};
         
         const rendering=Summary({model});
-
+        
+        expect(rendering.tag).to.equal(SummaryView);
         expect(rendering.props).to.be.ok;
+        expect(rendering.props.people).to.equal(3);
         expect(rendering.props.ingredients).to.deep.equal(shoppingList(dishes));
     });
 
-    it("SidearView table content", function(){
+    it("SidearView table content", function tw1_5_4(){
         window.React={createElement:h};
         const div= createUI();
         const dishes=[getDishDetails(2), getDishDetails(100), getDishDetails(200)];
@@ -133,7 +132,7 @@ describe("TW1.5 Array rendering", function() {
         });
     });
 
-    it("SidebarView table order", function(){
+    it("SidebarView table order", function tw1_5_5(){
         window.React={createElement:h};
         const div= createUI();
         const ppl=3;
@@ -151,18 +150,19 @@ describe("TW1.5 Array rendering", function() {
         });
     });
     
-    it("Vue Sidebar presenter passes dishes prop", function(){
+    it("Vue Sidebar presenter passes dishes prop", function tw1_5_6(){
         installOwnCreateElement();
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
         const model= {numberOfGuests:3, dishes};
         
         const rendering= Sidebar({model});
 
+        expect(rendering.tag).to.equal(SidebarView);
         expect(rendering.props).to.be.ok;
         expect(rendering.props.dishes).to.deep.equal(dishes);
     });
 
-    it("Vue Sidebar presenter passes two dish-related custom event handlers: one removes dish, the other sets currentDish", function(){
+    it("Vue Sidebar presenter passes two dish-related custom event handlers: one removes dish, the other sets currentDish", function tw1_5_7(){
         installOwnCreateElement();
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
         let latestCurrentDish;
@@ -180,7 +180,8 @@ describe("TW1.5 Array rendering", function() {
         };
         
         const rendering= Sidebar({model});
-
+        
+        expect(rendering.tag).to.equal(SidebarView);
         expect(rendering.props).to.be.ok;
         const twoHandlers= Object.keys(rendering.props).filter(function(prop){
             return !["number", "dishes", "onNumberChange"].includes(prop);
@@ -221,32 +222,8 @@ describe("TW1.5 Array rendering", function() {
         expect(buttonPressed).to.equal(getDishDetails(1), "SidebarView fires custom events links and sends a dish as parameter");      
     });
     
-    it("Integration test: pressing UI X buttons removes dishes in Model", async function(){
-        let turnOff;
-        const Guard={
-            data(){ return {state:true};},
-            render(){return this.state && this.$slots.default();},
-            created(){ turnOff= ()=> this.state=false; },
-        };
-
-        window.React={createElement:h};
-        let div= createUI();
-        const oldFetch= fetch;
-        window.fetch= function(){
-            return Promise.resolve({
-                ok:true,
-                json(){
-                    return Promise.resolve({results:[]});
-                }
-            });
-        };
-        window.location.hash="summary";
-        try{
-        try{
-            render(<Guard><VueRoot /></Guard>,div);
-        }finally{ window.fetch=oldFetch; }
-        
-        let myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;
+//    it("Integration test: pressing UI X buttons removes dishes in Model", async function(){
+/*        let myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;
 
         myModel.addToMenu(getDishDetails(200));
         myModel.addToMenu(getDishDetails(2));
@@ -266,38 +243,10 @@ describe("TW1.5 Array rendering", function() {
 
         await new Promise(resolve => setTimeout(resolve));  // need to wait a bit for UI to update...
         expect(sidebar.querySelectorAll("button").length).to.equal(4, "There should be 4 buttons after deletion: +, - and 2 X for dishes");
+*/
 
-        }finally{turnOff();}  // remove VueRoot and the app from the UI to make sure hashchange (navigation) listeners are removed
-    });
-
-    it("Integration test: clicking on dish names sets model.currentDish", async function(){
-        let turnOff;
-        const Guard={
-            data(){ return {state:true};},
-            render(){return this.state && this.$slots.default();},
-            created(){ turnOff= ()=> this.state=false; },
-        };
-
-        window.React={createElement:h};
-
-        let div= createUI();
-        const oldFetch= fetch;
-        window.fetch= function(){
-            return Promise.resolve({
-                ok: true,
-                status:200,
-                json(){
-                    return Promise.resolve({results:[]});
-                }
-            });
-        };
-
-        try{
-        try{
-            render(<Guard><VueRoot /></Guard>,div);
-        }finally{ window.fetch=oldFetch; }
-
-        let myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;
+/*    it("Integration test: clicking on dish names sets model.currentDish", async function(){
+          let myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;
 
         myModel.addToMenu(getDishDetails(200));
         myModel.addToMenu(getDishDetails(2));
@@ -308,19 +257,8 @@ describe("TW1.5 Array rendering", function() {
         
         expect(div.querySelectorAll("a").length).to.equal(3, "There should be 3 links, one for each dish");
 
-        window.fetch= function(){
-            return Promise.resolve({
-                ok: true,
-                status:200,
-                json(){
-                    return Promise.resolve(dishesConst[0]);
-                }
-            });
-        };
-        try{
-            div.querySelectorAll("a")[1].click();
-            expect(myModel.currentDish).to.equal(100);
+        div.querySelectorAll("a")[1].click();
+        expect(myModel.currentDish).to.equal(100);
         }finally{ window.fetch=oldFetch; window.location.hash=""; }
-        }finally{turnOff();}   // remove VueRoot and the app from the UI to make sure hashchange (navigation) listeners are removed
-    });
+        */
 });
