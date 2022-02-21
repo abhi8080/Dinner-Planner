@@ -278,6 +278,9 @@ describe("TW3.2 Vue stateful Search presenter", function () {
         );
         expect(vueModel.searchParams, "You should not store search params in application state any longer").to.be.empty;
         expect(vueModel.searchResultsPromiseState, "You should not resolve the promise in application state any longer").to.be.empty;
+        const {searchResultsPromiseState, searchParams, ...rest}= vueModel;
+        expect(JSON.stringify(rest),  "You should not modify application state (model) from Search presenter for search purposes").to.equal("{}");
+
         
         expect(mySearchFetch.lastFetch, "presenter should launch a search at button click").to.be.ok;
         expect(findCGIParam(mySearchFetch.lastFetch, "type", "main course"), "search should use type parameter from state").to.be.ok;
@@ -308,6 +311,9 @@ describe("TW3.2 Vue stateful Search presenter", function () {
 
         expect(vueModel.searchParams, "You should not store search params in application state any longer").to.be.empty;
         expect(vueModel.searchResultsPromiseState, "You should not resolve the promise in application state any longer").to.be.empty;
+        const {searchResultsPromiseState, searchParams, ...rest}= vueModel;
+        expect(JSON.stringify(rest),  "You should not modify application state (model) from Search presenter for search purposes").to.equal("{}");
+
         
         expect(mySearchFetch.lastFetch, "presenter should initiate a search at component creation").to.be.ok;
         expect(findCGIParam(mySearchFetch.lastFetch, "type", ""), "first search launched by presenter should be with empty params").to.be.ok;
