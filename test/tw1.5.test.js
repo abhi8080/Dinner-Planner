@@ -16,10 +16,6 @@ try{
     Sidebar= require('../src/vuejs/'+X+'sidebarPresenter.js').default;
 }catch(e){};
 
-const App= require('../src/views/'+TEST_PREFIX+'app.js').default;
-
-const VueRoot=require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").default;
-
 const {render, h}= require("vue");
 
 const {shoppingList, dishType, menuPrice}=require("/src/"+TEST_PREFIX+"utilities.js");

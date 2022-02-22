@@ -8,10 +8,6 @@ const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
 const Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
 const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
 
-const App= require('../src/views/'+TEST_PREFIX+'app.js').default;
-
-const VueRoot=require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").default;
-
 const {render, h}= require("vue");
 
 let SidebarView;
@@ -89,6 +85,7 @@ describe("TW1.4 Model-View-Presenter", function tw_1_4_10() {
 
     it("App renders Sidebar, then Summary", function tw_1_4_10_4(){
         installOwnCreateElement();
+        const App= require('../src/views/'+TEST_PREFIX+'app.js').default;
         const rendering= App({model: {
             numberOfGuests:2,
             dishes:[],
