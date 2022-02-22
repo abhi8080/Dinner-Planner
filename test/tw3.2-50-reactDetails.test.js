@@ -33,7 +33,7 @@ function findDetailsEventName(){
         DetailsView,
         {dishData:dishInformation, isDishInMenu:true, guests:6},
         function findButton(rendering){
-            return findTag("button", rendering).filter(function(button){ return button.props.disabled; });
+            return findTag("button", rendering).filter(function(button){ return button.props && button.props.disabled; });
         });
     return customEventNames;
 }

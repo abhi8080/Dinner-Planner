@@ -46,7 +46,7 @@ describe("TW3.3 Navigation buttons in views", function () {
         installOwnCreateElement();
         const rendering= DetailsView( {isDishInMenu:true, guests:2, dishData:dishInformation});
         
-        const buttons=findTag("button", rendering).filter(function(button){ return !button.props.disabled; });
+        const buttons=findTag("button", rendering).filter(function(button){ return !button.props || !button.props.disabled; });
         expect(buttons.length, "DetailsView expected to have one single enabled (navigation) button if dish is in menu").to.equal(1);
 
         window.location.hash="details";
@@ -60,7 +60,7 @@ describe("TW3.3 Navigation buttons in views", function () {
             DetailsView,
             {isDishInMenu:true, guests:2, dishData:dishInformation},
             function makeButtons(rendering){
-                const buttons=findTag("button", rendering).filter(function(button){ return button.props.disabled; });
+                const buttons=findTag("button", rendering).filter(function(button){ return button.props && button.props.disabled; });
                 expect(buttons.length, "DetailsView expected to have one single disabled (add to menu) button if dish is in menu").to.equal(1);
                 return buttons;
             });
