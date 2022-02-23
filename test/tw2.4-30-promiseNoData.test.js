@@ -5,17 +5,17 @@ let promiseNoData;
 const X = TEST_PREFIX;
 try {
   promiseNoData = require("/src/views/" + X + "promiseNoData.js").default;
-} catch (e) {}
+} catch (e) {console.log(e);}
 
-describe("TW2.4 promiseNoData", function () {
+describe("TW2.4 promiseNoData", function tw2_4_30() {
   this.timeout(200000);
 
-  before(function () {
+  before(function tw2_4_30_before() {
     installOwnCreateElement();
     if (!promiseNoData) this.skip();
   });
 
-  it('promiseNoData returns a DIV with "no data" content when promise in the promise state is falsy', async function () {
+  it('promiseNoData returns a DIV with "no data" content when promise in the promise state is falsy', async function tw2_4_30_1() {
     const response = promiseNoData({ promise: null });
 
     expect(response.tag, "Does promiseNoData return a div?").to.be.equal("div");
@@ -29,7 +29,7 @@ describe("TW2.4 promiseNoData", function () {
     ).to.equal("no data");
   });
 
-  it("promiseNoData returns an image  when promise is not yet resolved (data and error in promise state are falsy) ", async function () {
+  it("promiseNoData returns an image  when promise is not yet resolved (data and error in promise state are falsy) ", async function tw2_4_30_2() {
     const response = promiseNoData({ promise: "dummy" });
 
     expect(response.tag, "does promiseNoData have a spinner img?").to.be.equal(
@@ -41,7 +41,7 @@ describe("TW2.4 promiseNoData", function () {
     ).to.be.a("string");
   });
 
-  it("promiseNoData returns a div with the error text if the error in promise state is truthy", async function () {
+  it("promiseNoData returns a div with the error text if the error in promise state is truthy", async function tw2_4_30_3() {
     const response = promiseNoData({
       promise: "dummy",
       error: "dummy error to show",
@@ -58,7 +58,7 @@ describe("TW2.4 promiseNoData", function () {
     ).to.equal("dummy error to show");
   });
 
-  it("promiseNoData returns falsy when data in promise state is not undefined and promise is truthy", async function () {
+  it("promiseNoData returns falsy when data in promise state is not undefined and promise is truthy", async function tw2_4_30_4() {
     const response = promiseNoData({ promise: "dummy", data: "some data" });
     expect(response, "promiseNoData with promise and data should return falsy").to.be.not.ok;
   });

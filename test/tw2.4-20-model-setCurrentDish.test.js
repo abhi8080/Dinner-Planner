@@ -1,24 +1,16 @@
 import { expect } from "chai";
 
-let DinnerModel;
 const X = TEST_PREFIX;
-// DinnerModel should always be there, but making sure doesn't hurt
-try {
-  DinnerModel = require("../src/" + X + "DinnerModel.js").default;
-} catch (e) {}
 
-describe("TW2.4 Current dish Promise State", function () {
+describe("TW2.4 Current dish Promise State", function tw_2_4_20() {
   this.timeout(200000);
 
-  before(function () {
-    if (!DinnerModel) this.skip();
-  });
-
   let model;
-  this.beforeEach(function () {
-    model = new DinnerModel();
+  this.beforeEach(function tw_2_4_20_beforeEach() {
+      const DinnerModel = require("../src/" + X + "DinnerModel.js").default;
+      model = new DinnerModel();
   });
-  it("Model initializes currentDishPromiseState correctly", function () {
+  it("Model initializes currentDishPromiseState correctly", function tw_2_4_20_1() {
     expect(
       model,
       "Does the model have a property called currentDishPromiseState?"
@@ -28,7 +20,7 @@ describe("TW2.4 Current dish Promise State", function () {
     );
   });
 
-  it("Model sets currentDishPromiseState on valid dish id", async function () {
+  it("Model sets currentDishPromiseState on valid dish id", async function tw_2_4_20_2() {
     expect(model).to.have.property("currentDishPromiseState");
     let dishId = 601651;
     let dishName = "Fruit Pizza";
@@ -73,7 +65,7 @@ describe("TW2.4 Current dish Promise State", function () {
     ).to.equal(dishName);
   });
 
-  it("Model does not initiate new promise when id is undefined", function () {
+  it("Model does not initiate new promise when id is undefined", function tw_2_4_20_3() {
     model.setCurrentDish(undefined);
     expect(model).to.have.property("currentDishPromiseState");
     expect(
@@ -82,7 +74,7 @@ describe("TW2.4 Current dish Promise State", function () {
     ).to.equal(JSON.stringify({}));
   });
 
-  it("Model does not initiate new promise when id is not changed", function () {
+  it("Model does not initiate new promise when id is not changed", function tw_2_4_20_4() {
     let dishId = 601651;
     model.currentDish = dishId;
     model.setCurrentDish(dishId);

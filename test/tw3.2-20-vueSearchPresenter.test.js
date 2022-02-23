@@ -3,78 +3,23 @@ import installOwnCreateElement from "./jsxCreateElement";
 import {h, render} from "vue";
 import {withMyFetch, mySearchFetch, findCGIParam, searchResults} from "./mockFetch.js";
 import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
+import {findFormEventNames, findResultsEventName, makeRender} from "./searchUtils.js";
 
 let SearchPresenter;
-let SearchFormView;
-let SearchResultsView;
+
 const X = TEST_PREFIX;
 
-let searchDishes;
 try {
     SearchPresenter = require("../src/vuejs/" + X + "searchPresenter.js").default;
-    SearchFormView = require("../src/views/" + X + "searchFormView.js").default;
-    SearchResultsView = require("../src/views/" + X + "searchResultsView.js").default;
-    searchDishes= require("../src/" + X + "dishSource.js").searchDishes;
 } catch (e) {console.log(e);}
 
 
-function findFormEventNames(){
-    const {customEventNames}= prepareViewWithCustomEvents(
-        SearchFormView,
-        {dishTypeOptions:['starter', 'main course', 'dessert']},
-        function collectControls(rendering){
-            const buttons=findTag("button", rendering).filter(function(button){ return button.children.flat()[0].toLowerCase().trim().startsWith("search"); });
-            const selects=findTag("select", rendering);
-            const inputs=findTag("input", rendering);
-            expect(buttons.length, "SearchFormview expected to have one search button").to.equal(1);
-            expect(inputs.length, "SearchFormView expected to have one  input box").to.equal(1);
-            expect(selects.length, "SearchFormView expected to have one  select box").to.equal(1);
-            return [...inputs, ...selects, ...buttons];
-        });
-    return customEventNames;
-}
-
-//var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-//nativeInputValueSetter.call(input, 'react 16 value');
-
-function findResultsEventName(){
-    const {customEventNames}= prepareViewWithCustomEvents(
-        SearchResultsView,
-        {searchResults},
-        function findSpans(rendering){
-            return findTag("span", rendering).filter(function checkSpanCB(span){ return span.props && span.props.onClick; });
-        });
-    return customEventNames;
-}
-
-
-describe("TW3.2 Vue stateful Search presenter", function () {
+describe("TW3.2 Vue stateful Search presenter", function tw3_2_20() {
     this.timeout(200000);
 
     const formProps=[];
     const resultsProps=[];
-    function DummyForm(props){
-        formProps.push(props);
-        return <span>dummy form</span>;
-    }
-    function DummyResults(props){
-        resultsProps.push(props);
-        return <span>dummy results</span>;
-    }
-    function DummyImg(props){
-        resultsProps.push(1984);
-        return "dummyIMG";
-    }    
-    function replaceViews(tag, props, ...children){
-        if(tag==SearchFormView)
-            return h(DummyForm, props, ...children);
-        if(tag==SearchResultsView)
-            return h(DummyResults, props, ...children);
-        if(tag=="img") // FIXME this assumes that the presenter renders no other image than the spinner
-            return h(DummyImg, props, ...children);
-        return h(tag, props, ...children);
-    };
-    
+
     let currentDishId;
     const oldParams={};
     function makeModel(){
@@ -84,6 +29,7 @@ describe("TW3.2 Vue stateful Search presenter", function () {
             },
             // temporary for the first test only!
             doSearch(params){
+                const searchDishes=require("../src/" + X + "dishSource.js").searchDishes;
                 this.searchResultsPromiseState.promise=searchDishes(params).then(results=>this.searchResultsPromiseState.data=results);
                 this.searchResultsPromiseState.data=null;
             },
@@ -107,24 +53,8 @@ describe("TW3.2 Vue stateful Search presenter", function () {
             vueModel= this.rootModel;
         }
     };
-    async function doRender(){
-        const div= document.createElement("div");
-        window.React={createElement: replaceViews};
-        formProps.length=0;
-        resultsProps.length=0;
-        
-        await withMyFetch(
-            mySearchFetch,
-            function theRender(){
-                render(<Root/>, div);
-            },
-            function makeResults(url){
-                return {results:searchResults};
-            }  
-        );
-        return div;
-    }
-    before(async function () {
+    const doRender= makeRender(formProps, resultsProps, h, render, {}, function makeSearchRoot(){return <Root/>;});
+    before(async function tw3_2_20_before() {
         if (!SearchPresenter || typeof SearchPresenter == "function"){
             let reactPresenter;
             try{
@@ -135,7 +65,7 @@ describe("TW3.2 Vue stateful Search presenter", function () {
             this.skip();
         }
     });
-    after(function(){
+    after(function tw3_2_20_after(){
         React.createElement=h;
     });
 

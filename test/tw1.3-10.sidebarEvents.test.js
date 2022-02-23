@@ -10,14 +10,14 @@ try{
 
 const {render, h}= require("vue");
 
-describe("TW1.3 SidebarView events", function() {
+describe("TW1.3 SidebarView events", function tw1_3_10() {
     this.timeout(200000);  // increase to allow debugging during the test run
 
     before(function(){
         if(!SidebarView) this.skip();
     });
 
-    it("SidebarView handles native events (click)", function(){
+    it("SidebarView handles native events (click)", function tw1_3_10_1(){
         let div= createUI();
         let newNumber;
         let customEventTest= false;
@@ -44,7 +44,7 @@ describe("TW1.3 SidebarView events", function() {
         }
     });
 
-    it("SidebarView fires onNumberChange custom event", function(){
+    it("SidebarView fires onNumberChange custom event", function tw1_3_10_2(){
         let div= createUI();
         window.React={createElement:h};
         let newNumber;

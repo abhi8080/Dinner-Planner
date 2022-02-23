@@ -12,14 +12,14 @@ try {
     DetailsView = require("../src/views/" + X + "detailsView.js").default;
 } catch(e) {};
 
-describe("TW2.5 DetailsPresenter", function() {
+describe("TW2.5 DetailsPresenter", function tw2_5_10() {
   this.timeout(200000);
 
-  before(function(){
+  before(function tw2_5_10_before(){
     if(!DetailsPresenter) this.skip();
   });
 
-  it("Vue DetailsPresenter renders promise states correctly", async function(){
+  it("Vue DetailsPresenter renders promise states correctly", async function tw2_5_10_1(){
     installOwnCreateElement();
       const renderingEmpty= DetailsPresenter({model: {
           currentDish: dishInformation.id,
@@ -32,7 +32,7 @@ describe("TW2.5 DetailsPresenter", function() {
       const renderingPromise=DetailsPresenter({model: {currentDishPromiseState:{promise:"bla"}}});
       expect(renderingPromise.tag, "when there is a promise, DetailsPresenter should render a loading image").to.equal("img");
   });
-    it("Vue DetailsPresenter renders DetailsView", async function(){
+    it("Vue DetailsPresenter renders DetailsView", async function tw2_5_10_2(){
       installOwnCreateElement();
       const renderingData= DetailsPresenter({
           model: {
@@ -64,7 +64,7 @@ describe("TW2.5 DetailsPresenter", function() {
       expect(renderingCustomEvent.props.guests).to.equal(5, "DetailsView guest prop must be read from the model");
 
       // find the prop sent to DetailsView that is a function, that must be the custom event handler        
-        const callbackNames= Object.keys(renderingCustomEvent.props).filter(prop=> typeof renderingCustomEvent.props[prop] =="function");
+        const callbackNames= Object.keys(renderingCustomEvent.props).filter(function tw2_5_10_2_testCallbackCB(prop){return typeof renderingCustomEvent.props[prop] =="function";});
        expect(callbackNames.length, "Details presenter passes one custom event handler").to.equal(1);
       renderingCustomEvent.props[callbackNames[0]]();
       expect(dishAdded, "Details presenter custom event handler calls the appropriate model method").to.equal(dishInformation);

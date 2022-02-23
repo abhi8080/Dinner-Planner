@@ -6,17 +6,17 @@ try {
   const dishSource = require("../src/" + X + "dishSource.js");
   if (dishSource.searchDishes) searchDishes = dishSource.searchDishes;
   else searchDishes = dishSource.default.searchDishes;
-} catch (e) {}
+} catch (e) {console.log(e);}
 
-describe("TW2.2 searchDishes", function () {
+describe("TW2.2 searchDishes", function tw2_2_20() {
   this.timeout(200000);
 
-  before(function () {
+  before(function tw2_2_20_before() {
     if (!searchDishes) this.skip();
   });
 
   function testPromise(text, p, searchq) {
-    it(text, async () => {
+    it(text, async function tw2_2_20_testPromise() {
       let start = new Date();
       let dishes = await p();
       let finish = new Date();
@@ -51,7 +51,7 @@ describe("TW2.2 searchDishes", function () {
   }
   testPromise(
     "searchDishes promise #1",
-    () => searchDishes({ query: "pizza", type: "main course" }),
+      function tw2_2_20_testPromise1(){return searchDishes({ query: "pizza", type: "main course" });},
     "pizza"
   );
 });

@@ -1,24 +1,17 @@
 import { expect } from "chai";
 
-let DinnerModel;
 const X = TEST_PREFIX;
-try {
-  DinnerModel = require("../src/" + X + "DinnerModel.js").default;
-} catch (e) {}
 
-describe("TW2.4 Search dishes Promise State", function () {
+describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
   this.timeout(200000);
 
-  before(function () {
-    if (!DinnerModel) this.skip();
-  });
-
   let model;
-  this.beforeEach(function () {
-    model = new DinnerModel();
+  this.beforeEach(function tw2_4_10_beforeEach() {
+      const   DinnerModel = require("../src/" + X + "DinnerModel.js").default;
+      model = new DinnerModel();
   });
 
-  it("Model sets the searchParams for search query and type", function () {
+  it("Model sets the searchParams for search query and type", function tw2_4_10_1() {
     expect(
       model,
       "Did you correctly add searchParams to your model?"
@@ -52,7 +45,7 @@ describe("TW2.4 Search dishes Promise State", function () {
     ).to.be.equal("main course");
   });
 
-  it("Model doSearch uses with default parameters taken from model.searchParams", async function () {
+  it("Model doSearch uses with default parameters taken from model.searchParams", async function tw2_4_10_2() {
     expect(
       model,
       "Does your model have a searchResultsPromiseState?"
@@ -95,7 +88,7 @@ describe("TW2.4 Search dishes Promise State", function () {
       "Did you correctly return ALL of the results of the promise, not just the first item?"
     ).to.not.equal("0");
 
-    model.searchResultsPromiseState.data.forEach((dish) => {
+    model.searchResultsPromiseState.data.forEach(function tw2_4_10_2_checkDishCB(dish){
       expect(
         dish,
         "Does the date in searchResultsPromiseState contain an id?"

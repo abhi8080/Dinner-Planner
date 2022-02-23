@@ -1,20 +1,19 @@
 import { assert, expect, should } from 'chai';
 import dishesConst from './dishesConst.js';
 
-var DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
-
 function getDishDetails(x){ return dishesConst.find(function(d){ return d.id===x;});}
 
-describe("TW1.1 DinnerModel", function() {
+describe("TW1.1 DinnerModel", function tw1_1_05() {
     this.parent.setMaxListeners(200); // prevent EventEmitter "too many listeners" warning
     this.timeout(200000);  // increase to allow debugging during the test run
     let model;
     
-    beforeEach(function() {
+    beforeEach(function  tw1_1_05_beforeEach() {
+        const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
         model = new DinnerModel();
     });
     
-    it("number of guests can only be set to a positive integer", function(){
+    it("number of guests can only be set to a positive integer", function  tw1_1_05_1(){
         model.setNumberOfGuests(1);
         expect(model.numberOfGuests).to.equal(1);
         model.setNumberOfGuests(2);
@@ -22,12 +21,12 @@ describe("TW1.1 DinnerModel", function() {
         
         const msg= "number of guests not a positive integer";
         
-        expect(function(){model.setNumberOfGuests(-1);}).to.throw(msg);
-        expect(function(){model.setNumberOfGuests(0);}).to.throw(msg);
-        expect(function(){model.setNumberOfGuests(3.14159265);}).to.throw(msg);
+        expect(function tw1_1_05_1_throw1(){model.setNumberOfGuests(-1);}).to.throw(msg);
+        expect(function tw1_1_05_1_throw2(){model.setNumberOfGuests(0);}).to.throw(msg);
+        expect(function tw1_1_05_1_throw3(){model.setNumberOfGuests(3.14159265);}).to.throw(msg);
     });
 
-    it("can remove dishes", () => {
+    it("can remove dishes", function  tw1_1_05_2(){
         model.addToMenu(getDishDetails(100));
         model.addToMenu(getDishDetails(1));
         model.addToMenu(getDishDetails(200));
@@ -53,9 +52,9 @@ describe("TW1.1 DinnerModel", function() {
         expect(model.dishes).to.include(getDishDetails(200));
     });
 
-    it("can set current dish", function(){
+    it("can set current dish", function  tw1_1_05_3(){
         const oldFetch= fetch;
-        window.fetch= function(){
+        window.fetch= function tw1_1_05_3_fetch(){
             return Promise.resolve({
                 ok:true,
                 status:200,

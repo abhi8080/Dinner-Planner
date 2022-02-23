@@ -4,118 +4,47 @@ import React from "react";
 import {render} from "react-dom";
 import {withMyFetch, mySearchFetch, findCGIParam, searchResults} from "./mockFetch.js";
 import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
+import {findFormEventNames, findResultsEventName, makeRender} from "./searchUtils.js";
+import {compressHistory} from "./historyUtils.js";
 
 
 let SearchPresenter;
-let SearchFormView;
-let SearchResultsView;
+
 const X = TEST_PREFIX;
 
 try {
     SearchPresenter = require("../src/reactjs/" + X + "searchPresenter.js").default;
-    SearchFormView = require("../src/views/" + X + "searchFormView.js").default;
-    SearchResultsView = require("../src/views/" + X + "searchResultsView.js").default;
 } catch (e) {console.log(e);}
 
 
-function findFormEventNames(){
-    const {customEventNames}= prepareViewWithCustomEvents(
-        SearchFormView,
-        {dishTypeOptions:['starter', 'main course', 'dessert']},
-        function collectControls(rendering){
-            const buttons=findTag("button", rendering).filter(function(button){ return button.children.flat()[0].toLowerCase().trim().startsWith("search"); });
-            const selects=findTag("select", rendering);
-            const inputs=findTag("input", rendering);
-            expect(buttons.length, "SearchFormview expected to have one search button").to.equal(1);
-            expect(inputs.length, "SearchFormView expected to have one  input box").to.equal(1);
-            expect(selects.length, "SearchFormView expected to have one  select box").to.equal(1);
-            return [...inputs, ...selects, ...buttons];
-        });
-    return customEventNames;
-}
-
-//var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-//nativeInputValueSetter.call(input, 'react 16 value');
-
-function compressHistory(arr){
-    return arr.reduce(function(acc, elem, index){
-        if(index==0)
-            return [elem];
-        if(elem==acc.slice(-1)[0]  || JSON.stringify(elem)==JSON.stringify(acc.slice(-1)[0]))
-            return acc;
-        return [...acc, elem];
-    }, []);
-}
-
-function findResultsEventName(){
-    const {customEventNames}= prepareViewWithCustomEvents(
-        SearchResultsView,
-        {searchResults},
-        function findSpans(rendering){
-            return findTag("span", rendering).filter(function checkSpanCB(span){ return span.props && span.props.onClick; });
-        });
-    return customEventNames;
-}
-
-describe("TW3.2 React (stateful) Search presenter", function () {
+describe("TW3.2 React (stateful) Search presenter", function tw3_2_11() {
     this.timeout(200000);
     
     const formProps=[];
     const resultsProps=[];
-    function DummyForm(props){
-        formProps.push(props);
-        return <span>dummy form</span>;
-    }
-    function DummyResults(props){
-        resultsProps.push(props);
-        return <span>dummy results</span>;
-    }
-    function DummyImg(props){
-        resultsProps.push(1984);
-        return "dummyIMG";
-    }
-    const h = React.createElement;
-    function replaceViews(tag, props, ...children){
-        if(tag==SearchFormView)
-            return h(DummyForm, props, ...children);
-        if(tag==SearchResultsView)
-            return h(DummyResults, props, ...children);
-        if(tag=="img") // FIXME this assumes that the presenter renders no other image than the spinner
-            return h(DummyImg, props, ...children);
-        return h(tag, props, ...children);
-    };
-    
-    let currentDishId;
-
-    async function doRender(){
-        const div= document.createElement("div");
-        window.React=React;
-        React.createElement= replaceViews;
-        formProps.length=0;
-        resultsProps.length=0;
+    const h= React.createElement;
         
-        await withMyFetch(
-            mySearchFetch,
-            async function theRender(){
-                render(<SearchPresenter model={{
-                    setCurrentDish(id){
-                        currentDishId=id;
-                    }
-                }}/>, div);
-            },
-            function makeResults(url){
-                return {results:searchResults};
-            }  
-        );
-        return div;
-    }
-    before(async function () {
+    let currentDishId;
+    const doRender= makeRender(formProps, resultsProps, h, render, React,
+                               function makeSearchRoot(){
+                                   return  (
+                                       <SearchPresenter
+                                         model={{
+                                             setCurrentDish(id){
+                                                 currentDishId=id;
+                                             }
+                                             
+                                         }
+                                               }/>
+                                   );});
+    
+    before(async function tw3_2_11_before() {
         if (!SearchPresenter) this.skip();
     });
-    after(function(){
+    after(function tw3_2_11_after(){
         React.createElement=h;
     });
-    it("Search presenter changes state when the form query and type change", async function(){
+    it("Search presenter changes state when the form query and type change", async function tw3_2_11_1(){
         const [setText, setType, doSearch]= findFormEventNames();
         await doRender();
         expect(formProps.slice(-1)[0][setType], "expected the SearchFormView "+setType+" custom event handler prop to be set. Are you setting correct props?").to.be.a("Function");
@@ -151,7 +80,7 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         expect(div.firstElementChild.firstElementChild.nextSibling.textContent, "the search results view expected to be rendered after promise resolve").to.equal("dummy results");
     }
 
-    it("Search presenter initiates a search promise at first render and resolves the promise in component state", async function(){
+    it("Search presenter initiates a search promise at first render and resolves the promise in component state", async function tw3_2_11_2(){
         resultsProps.length=0;
         formProps.length=0;
         const [resultChosen]= findResultsEventName();
@@ -172,7 +101,7 @@ describe("TW3.2 React (stateful) Search presenter", function () {
         expect(currentDishId, "clicking on a search results should set the current dish in the model").to.equal(42);
     });
     
-    it("Search presenter initiates a search promise after filling the form and button click", async function(){
+    it("Search presenter initiates a search promise after filling the form and button click", async function tw3_2_11_3(){
         const [setText, setType, doSearch]= findFormEventNames();
         const [resultChosen]= findResultsEventName();
 
@@ -217,7 +146,7 @@ describe("TW3.2 React (stateful) Search presenter", function () {
 
     });
     
-    it("on successive searches, presenter only renders results of last search", async function(){
+    it("on successive searches, presenter only renders results of last search", async function tw3_2_11_4(){
         const [setText, setType, doSearch]= findFormEventNames();
         
         const div= await doRender();
@@ -246,6 +175,8 @@ describe("TW3.2 React (stateful) Search presenter", function () {
 
         checkResults(div, [searchResults[1]]);
         
-        expect(resultsProps.find(p=>p!=1984 && p.searchResults.length==2), "the first, slower search should not save in promise state").to.not.be.ok;
+        expect(resultsProps.find(function tw3_2_11_4_checkPropsCB(p){
+            return p!=1984 && p.searchResults.length==2;
+        }), "the first, slower search should not save in promise state").to.not.be.ok;
  });
 });

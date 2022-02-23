@@ -6,17 +6,17 @@ try {
   const dishSource = require("../src/" + X + "dishSource.js");
   if (dishSource.getDishDetails) getDishDetails = dishSource.getDishDetails;
   else getDishDetails = dishSource.default.getDishDetails;
-} catch (e) {}
+} catch (e) {console.log(e);}
 
-describe("TW2.2 getDishDetails", function () {
+describe("TW2.2 getDishDetails", function tw2_2_10() {
   this.timeout(200000);
 
-  before(function () {
+  before(function  tw2_2_10_before() {
     if (!getDishDetails) this.skip();
   });
 
   function testPromise(text, p, expectedDish) {
-    it(text, async () => {
+      it(text, async function tw2_2_10_testPromise(){
       let start = new Date();
       let dish1 = await p();
       let finish = new Date();
@@ -38,17 +38,17 @@ describe("TW2.2 getDishDetails", function () {
     }).timeout(4000);
   }
 
-  testPromise("getDishDetails promise #1", () => getDishDetails(547775), {
-    id: 547775,
-    title: "Creamy Avocado Pasta",
-  });
+    testPromise("getDishDetails promise #1",  function tw2_2_10_testPromise1(){return getDishDetails(547775);}, {
+        id: 547775,
+        title: "Creamy Avocado Pasta",
+    });
 
-  testPromise("getDishDetails promise #2", () => getDishDetails(601651), {
-    id: 601651,
-    title: "Fruit Pizza",
-  });
+    testPromise("getDishDetails promise #2", function tw2_2_10_testPromise2(){return  getDishDetails(601651);}, {
+        id: 601651,
+        title: "Fruit Pizza",
+    });
 
-    it("getDishDetails promise must reject if the dish with the given ID does not exist", async function() {
+    it("getDishDetails promise must reject if the dish with the given ID does not exist", async function tw2_2_10_3(){
         let error;
         try {
             error= await new Promise(function(resolve, reject){

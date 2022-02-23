@@ -5,23 +5,17 @@ import {render} from "react-dom";
 import {dishInformation} from "./mockFetch.js";
 import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
 
-
-const {shoppingList}= require('../src/'+TEST_PREFIX+'utilities.js');
-
-
 let SidebarPresenter;
-let SidebarView;
 const X = TEST_PREFIX;
 
 try {
     SidebarPresenter = require("../src/reactjs/" + X + "sidebarPresenter.js").default;
-    SidebarView= require("../src/views/" + X + "sidebarView.js").default;
 } catch (e) {console.log(e);}
 
 
 function findSidebarEventNames(){
     const {customEventNames}= prepareViewWithCustomEvents(
-        SidebarView,
+        require("../src/views/" + X + "sidebarView.js").default,
         {
             number:5,
             dishes:[dishInformation]
@@ -38,7 +32,7 @@ function findSidebarEventNames(){
     return customEventNames;
 }
 
-describe("TW3.2 React Sidebar presenter (observer)", function () {
+describe("TW3.2 React Sidebar presenter (observer)", function tw_3_2_40() {
     this.timeout(200000);
 
     const propsHistory=[];
@@ -48,7 +42,7 @@ describe("TW3.2 React Sidebar presenter (observer)", function () {
     }
     const h = React.createElement;
     function replaceViews(tag, props, ...children){
-        if(tag==SidebarView)
+        if(tag== require("../src/views/" + X + "sidebarView.js").default)
             return h(Dummy, props, ...children);
         return h(tag, props, ...children);
     };
@@ -82,17 +76,17 @@ describe("TW3.2 React Sidebar presenter (observer)", function () {
         render(<Guard><SidebarPresenter model={model}/></Guard>, div);
         return div;
     }
-    before(async function () {
+    before(async function tw_3_2_40_before() {
         if (!SidebarPresenter) this.skip();
     });
-    after(function(){
+    after(function tw_3_2_40_after(){
         React.createElement=h;
     });
     function checkAgainstModel(){
         expect(propsHistory.slice(-1)[0].number, "passed people should be the number of guests").to.equal(model.numberOfGuests);
         expect(JSON.stringify(propsHistory.slice(-1)[0].dishes), "passed dishes should be the menu").to.equal(JSON.stringify(model.dishes));
     }
-    it("Sidebar presenter renders view with correct props", async function(){
+    it("Sidebar presenter renders view with correct props", async function tw_3_2_40_1(){
         const[setCurrent, setNumber, remove]=findSidebarEventNames();
         doRender();
         await new Promise(resolve => setTimeout(resolve));  
@@ -112,7 +106,7 @@ describe("TW3.2 React Sidebar presenter (observer)", function () {
         expect(nrGuests, "custom event handler should call the appropriate model method").to.equal(17);
     });
 
-    it("Sidebar presenter updates view with correct props",  async function(){
+    it("Sidebar presenter updates view with correct props",  async function tw_3_2_40_2(){
         model.numberOfGuests=3;
         model.dishes=[dishInformation, {... dishInformation, id:42}];
         observers.forEach(o=>o());
@@ -126,7 +120,7 @@ describe("TW3.2 React Sidebar presenter (observer)", function () {
         checkAgainstModel();
     });
 
-    it("Sidebar presenter removes observer subscriptions at teardown", async  function(){
+    it("Sidebar presenter removes observer subscriptions at teardown", async  function tw_3_2_40_3(){
         turnOff();
         await new Promise(resolve => setTimeout(resolve));  
         expect(observers.length, "observers should be unsubscribed at teardown").to.equal(0);

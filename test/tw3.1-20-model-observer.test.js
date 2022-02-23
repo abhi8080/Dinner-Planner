@@ -1,16 +1,15 @@
 import { expect } from "chai";
 
-var DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
-
-describe("TW3.1 DinnerModel notifies its observers", function() {
+describe("TW3.1 DinnerModel notifies its observers", function tw3_1_20() {
   this.timeout(200000);
 
   let model;
   let observer = false;
   let payload = {};
-  this.beforeEach(function() {
+  this.beforeEach(function tw3_1_20_beforeEach() {
+      const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
       model = new DinnerModel();
-      model.addObserver(arg => {
+      model.addObserver(function tw3_1_20_observer(arg){
           observer = !observer;
           if(arg)
               payload=arg;
@@ -45,7 +44,7 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
     }
   }
 
-  it("model methods correctly call notifyObservers", function() {
+  it("model methods correctly call notifyObservers", function tw3_1_20_1() {
 
     callMethodTwiceWithValueAndTestObserver("setNumberOfGuests", 99);
     callMethodTwiceWithValueAndTestObserver("addToMenu", {id: 1}, {id: 1});
@@ -53,7 +52,7 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
     callMethodTwiceWithValueAndTestObserver("removeFromMenu", {id: 1}, {id: 1});
   });
 
-  it("resolvePromise notifies during promise resolution (setCurrentDish, doSearch)", async function() {
+  it("resolvePromise notifies during promise resolution (setCurrentDish, doSearch)", async function tw3_1_20_2() {
     // for setCurrentDish and doSearch we want to temporarily override default fetch
     const oldFetch = window.fetch;
     window.fetch= function(){
@@ -68,7 +67,8 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
     try {
       // setCurrentDish
       let timesObserverNotified = 0;
-      model.addObserver(() => {timesObserverNotified++;});
+      
+      model.addObserver(function tw3_1_20_1_observer1(){timesObserverNotified++;});
       model.setCurrentDish(1);
       expect(timesObserverNotified, "expected initially 2 notifications from setCurrentDish").to.equal(2);
       checkPayload("setCurrentDish", 1, payload);
@@ -97,13 +97,13 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
     try {
       // setCurrentDish
       let timesObserverNotified = 0;
-      model.addObserver(() => {timesObserverNotified++});
+      model.addObserver(function tw3_1_20_1_observer2(){timesObserverNotified++;});
       model.setCurrentDish(2);
       expect(timesObserverNotified, "expected initially 2 notifications from setCurrentDish").to.equal(2);
       try {
         await model.currentDishPromiseState.promise;
       } catch(e) {}
-      await new Promise(resolve => setTimeout(() => resolve(), 1));
+      await new Promise(resolve => setTimeout(resolve));
       expect(timesObserverNotified, "expected 3 notifications from setCurrentDish after promise is rejected").to.equal(3);
 
       // doSearch
@@ -113,19 +113,19 @@ describe("TW3.1 DinnerModel notifies its observers", function() {
       try {
         await model.searchResultsPromiseState.promise;
       } catch(e) {}
-      await new Promise(resolve => setTimeout(() => resolve(), 1));
+      await new Promise(resolve => setTimeout(resolve));
       expect(timesObserverNotified, "expected 2 notifications from setCurrentDish after promise is rejected").to.equal(2);
     } finally {
       window.fetch = oldFetch;
     }
   });
 
-  it("observer payloads have different property names for each method", function() {
+  it("observer payloads have different property names for each method", function tw3_1_20_3() {
     let propertyNames = [];
-    Object.keys(methodToPayloadNames).forEach(method => {
+    Object.keys(methodToPayloadNames).forEach(function tw3_1_20_3_visitMethodCB(method) {
       let propertyName = methodToPayloadNames[method];
       expect(propertyNames.includes(propertyName), "expected unique payload property name").to.equal(false);
       propertyNames.push(propertyName);
-    })
+    });
   });
-})
+});

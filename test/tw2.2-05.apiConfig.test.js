@@ -4,14 +4,14 @@ let apiConfig;
 const X = TEST_PREFIX;
 try {
   apiConfig = require("../src/" + X + "apiConfig.js");
-} catch (e) {}
+} catch (e) {console.log(e);}
 
-describe("TW2.2 apiConfig", function () {
-  before(function () {
+describe("TW2.2 apiConfig", function tw2_2_05() {
+  before(function tw2_2_05_before() {
     if (!apiConfig) this.skip();
   });
 
-  it("apiConfig exports BASE_URL and API_KEY", function () {
+  it("apiConfig exports BASE_URL and API_KEY", function tw2_2_05_1() {
     expect(apiConfig.BASE_URL, "BASE_URL not found in src/apiConfig.js").to.not
       .be.undefined;
     expect(apiConfig.API_KEY, "API_key not found in src/apiConfig.js").to.not.be
@@ -21,14 +21,14 @@ describe("TW2.2 apiConfig", function () {
   });
 
   let urlRegex = /^https\:\/\/brfenergi\.se\/iprog\/group\/[0-9]/;
-  it("Check BASE_URL is correct", function () {
+  it("Check BASE_URL is correct", function tw2_2_05_2() {
     expect(
       apiConfig.BASE_URL,
       "BASE_URL does not follow the format indicated"
     ).to.match(urlRegex);
   });
 
-  it("Check length of API_KEY", function () {
+  it("Check length of API_KEY", function tw2_2_05_3() {
     expect(
       apiConfig.API_KEY,
       "API_KEY does not have a length of 50. Copied it correctly?"

@@ -10,9 +10,9 @@ const X = TEST_PREFIX;
 
 try {
   Show = require("../src/reactjs/" + X + "show.js").default;
-} catch (e) {} 
+} catch (e) { console.log(e);} 
 
-describe("TW3.3 React navigation Show", function () {
+describe("TW3.3 React navigation Show", function  tw3_3_21() {
     this.timeout(200000);
 
     const div= document.createElement("div");
@@ -23,7 +23,7 @@ describe("TW3.3 React navigation Show", function () {
         return state && props.children;
     }
     
-    before(function () {
+    before(function  tw3_3_21_before() {
         if (!Show) this.skip();
         window.React= React;
         render(<Guard><Show hash="#details"><span>Hello World!</span></Show></Guard>, div);
@@ -66,13 +66,13 @@ describe("TW3.3 React navigation Show", function () {
         }
     }
     
-    it("Show does not render (or hides) children if location hash is different from hash prop", async function(){
+    it("Show does not render (or hides) children if location hash is different from hash prop", async function  tw3_3_21_1(){
         window.location.hash="search";
         await new Promise(resolve => setTimeout(resolve));
         expectHidden();
     });
 
-    it("Show displays children if location hash is the same as hash prop", async function(){
+    it("Show displays children if location hash is the same as hash prop", async function  tw3_3_21_2(){
         window.location.hash="search";
         await new Promise(resolve => setTimeout(resolve));
         const rendersNothing= expectHidden();
@@ -86,7 +86,7 @@ describe("TW3.3 React navigation Show", function () {
         expectHidden(rendersNothing);
     });
     
-    it("Show unsubscribes event listener at teardown", async function(){
+    it("Show unsubscribes event listener at teardown", async function  tw3_3_21_3(){
         turnOff();        
         await new Promise(resolve => setTimeout(resolve));
         expect(div.innerText).to.not.be.ok;

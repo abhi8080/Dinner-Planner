@@ -8,35 +8,7 @@ let SearchFormView;
 let SearchResultsView;
 const X = TEST_PREFIX;
 
-const searchResults = [
-  {
-    id: 587203,
-    title: "Taco Pizza",
-    readyInMinutes: 20,
-    servings: 6,
-    sourceUrl: "https://laurenslatest.com/taco-salad-pizza-with-doritos/",
-    openLicense: 0,
-    image: "Taco-Salad-Pizza-with-Doritos-587203.jpg",
-  },
-  {
-    id: 559251,
-    title: "Breakfast Pizza",
-    readyInMinutes: 25,
-    servings: 6,
-    sourceUrl: "http://www.jocooks.com/breakfast-2/breakfast-pizza/",
-    openLicense: 0,
-    image: "Breakfast-Pizza-559251.jpg",
-  },
-  {
-    id: 556121,
-    title: "Easy Vegetarian Sausage Basil Pizza",
-    readyInMinutes: 30,
-    servings: 4,
-    sourceUrl: "https://dizzybusyandhungry.com/cashew-sausage-basil-pizza/",
-    openLicense: 0,
-    image: "Cashew-Sausage-Basil-Pizza-556121.png",
-  },
-];
+import {searchResults} from "./mockFetch.js";
 
 try {
   SearchPresenter = require("../src/vuejs/" + X + "searchPresenter.js").default;
@@ -44,10 +16,10 @@ try {
   SearchResultsView = require("../src/views/" + X + "searchResultsView.js").default;
 } catch (e) {}
 
-describe("TW2.5 SearchPresenter", function () {
+describe("TW2.5 SearchPresenter", function tw2_5_20() {
   this.timeout(200000);
 
-  before(function () {
+  before(function tw2_5_20_before() {
     if (!SearchPresenter || !SearchFormView || !SearchResultsView) this.skip();
     if (typeof SearchPresenter == "object") this.skip();
   });
@@ -60,13 +32,13 @@ describe("TW2.5 SearchPresenter", function () {
     );
   }
 
-  it("Vue SearchPresenter renders SearchFormView and performs initial search", async function () {
+  it("Vue SearchPresenter renders SearchFormView and performs initial search", async function tw2_5_20_1() {
     installOwnCreateElement();
     let searched = false;
     const renderingEmpty = SearchPresenter({
       model: {
         searchResultsPromiseState: {},
-        doSearch: () => (searched = true),
+        doSearch(){searched = true;},
       },
     });
     expectSearchFormViewAndSecondChild(renderingEmpty);
@@ -81,7 +53,7 @@ describe("TW2.5 SearchPresenter", function () {
     expect(searched, "search presenter must perform a search at first render").to.be.ok;
   });
 
-  it("Vue SearchPresenter renders SearchFormView and SearchResultsView", function () {
+  it("Vue SearchPresenter renders SearchFormView and SearchResultsView", function tw2_5_20_2() {
     installOwnCreateElement();
     const renderingData = SearchPresenter({
       model: {
@@ -96,15 +68,15 @@ describe("TW2.5 SearchPresenter", function () {
       SearchResultsView);
   });
 
-  it("Vue SearchPresenter passes correct props and custom events to SearchFormView", function () {
+  it("Vue SearchPresenter passes correct props and custom events to SearchFormView", function tw2_5_20_3() {
     installOwnCreateElement();
     let searched, text, type;
     const renderingCustomEvent = SearchPresenter({
       model: {
         searchResultsPromiseState: { promise: "foo" },
-        doSearch: () => (searched = true),
-        setSearchQuery: (txt) => (text = txt),
-        setSearchType: (t) => (type = t),
+        doSearch(){searched = true; },
+        setSearchQuery(txt){text = txt;},
+        setSearchType(t){type = t;},
       },
     });
     let SearchFormViewProps = renderingCustomEvent.children[0].props;
@@ -118,9 +90,7 @@ describe("TW2.5 SearchPresenter", function () {
     expect(type, "did not expect model method to be called").to.not.be.ok;
 
     // testing event handlers
-    const threeHandlers = Object.keys(SearchFormViewProps).filter(function (
-      prop
-    ) {
+    const threeHandlers = Object.keys(SearchFormViewProps).filter(function tw2_5_20_3_checkPropCB(prop) {
       return !["dishTypeOptions"].includes(prop);
     });
 
@@ -130,7 +100,7 @@ describe("TW2.5 SearchPresenter", function () {
     let onSearchHandler, onTextHandler, onDishTypeHandler;
 
     // testing that the handlers change the right properties in the model
-    threeHandlers.forEach((handler) => {
+    threeHandlers.forEach(function tw2_5_20_3_checkHandlerCB(handler){
       expect(typeof SearchFormViewProps[handler]).to.equal(
         "function",
         "expected custom event handlers to be functions"
@@ -169,9 +139,9 @@ describe("TW2.5 SearchPresenter", function () {
     render(
       h(SearchFormView, {
         dishTypeOptions: ["starter", "main course", "dessert"],
-        [onTextHandler]: (txt) => (textChange = txt),
-        [onDishTypeHandler]: (t) => (typeChange = t),
-        [onSearchHandler]: () => (search = true),
+        [onTextHandler]: function tw2_5_20_3_onTextHandler(txt) {textChange = txt;},
+        [onDishTypeHandler]:function tw2_5_20_3_onDishTypeHandler(t){typeChange = t;},
+        [onSearchHandler]:function tw2_5_20_3_onSearchHandler(){search = true;},
       }),
       div
     );
@@ -202,10 +172,10 @@ describe("TW2.5 SearchPresenter", function () {
 
     let buttons = div.querySelectorAll("button");
     expect(buttons.length).to.be.gte(1, "expected 1 or more buttons");
-    let searchButtons = Array.from(buttons).filter(
-      (btn) =>
-        btn.textContent && btn.textContent.toLowerCase().includes("search")
-    );
+      let searchButtons = Array.from(buttons).filter(
+          function tw2_5_20_3_checkButtonCB(btn) {
+              return btn.textContent && btn.textContent.toLowerCase().includes("search");
+          });
     expect(searchButtons.length).to.equal(1, "expected 1 search button");
     searchButtons[0].click();
     expect(search).to.equal(
@@ -214,13 +184,13 @@ describe("TW2.5 SearchPresenter", function () {
     );
   });
 
-  it("Vue SearchPresenter passes correct props and custom events to SearchResultsView", function () {
+  it("Vue SearchPresenter passes correct props and custom events to SearchResultsView", function tw2_5_20_4() {
     installOwnCreateElement();
     let dishId;
     const renderingSearchResults = SearchPresenter({
       model: {
         searchResultsPromiseState: { promise: "foo", data: "bar" },
-        setCurrentDish: (id) => (dishId = id),
+          setCurrentDish(id) {dishId = id;},
       },
     });
     let SearchResultsViewProps = renderingSearchResults.children[1].props;
@@ -239,9 +209,7 @@ describe("TW2.5 SearchPresenter", function () {
       undefined
     );
 
-    let oneHandler = Object.keys(SearchResultsViewProps).filter(function (
-      prop
-    ) {
+    let oneHandler = Object.keys(SearchResultsViewProps).filter(function tw2_5_20_4_checkPropCB(prop) {
       return !["searchResults"].includes(prop);
     });
     expect(oneHandler.length).to.equal(1, "expected 2 props in total");
@@ -261,7 +229,7 @@ describe("TW2.5 SearchPresenter", function () {
     render(
       h(SearchResultsView, {
         searchResults: searchResults,
-        [oneHandler]: (d) => (dish = d),
+        [oneHandler]: function tw2_5_20_4_oneHanlder(d){dish = d;},
       }),
       div
     );

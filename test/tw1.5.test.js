@@ -3,11 +3,6 @@ import { assert, expect, should } from 'chai';
 import createUI from "./createUI.js";
 import installOwnCreateElement from "./jsxCreateElement.js";
 
-const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
-
-const Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
-const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
-
 let SidebarView;
 let Sidebar;
 const X= TEST_PREFIX;
@@ -36,7 +31,8 @@ describe("TW1.5 Array rendering", function tw1_5() {
         const ingrList=shoppingList([getDishDetails(2), getDishDetails(100), getDishDetails(200)]);
         const ppl=3;
         const lookup=  ingrList.reduce(function(acc, ingr){ return {...acc, [ingr.name]:ingr}; }, {});
-        
+        const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
+
         render(<SummaryView people={ppl} ingredients={ingrList}/>, div);
 
         [...div.querySelectorAll("tr")].forEach(function(tr, index){
@@ -63,6 +59,7 @@ describe("TW1.5 Array rendering", function tw1_5() {
     });
 
     it("SummaryView table order", function tw1_5_2(){
+        const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
         window.React={createElement:h};
         const div= createUI();
         const ingrList=shoppingList([getDishDetails(2), getDishDetails(100), getDishDetails(200)]);
@@ -84,10 +81,11 @@ describe("TW1.5 Array rendering", function tw1_5() {
     });
     
     it("Vue Summary presenter passes ingredients prop (shopping list)", function tw1_5_3(){
+        const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
         installOwnCreateElement();
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
         const model= {numberOfGuests:3, dishes};
-        
+        const Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
         const rendering=Summary({model});
         
         expect(rendering.tag).to.equal(SummaryView);

@@ -1,14 +1,17 @@
 import { expect } from "chai";
 
-var DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
-
-describe("TW3.1 DinnerModel as Observable", function() {
+describe("TW3.1 DinnerModel as Observable", function tw3_1_10() {
   this.timeout(200000);
 
-  let model;
+    let model;
+    this.beforeEach(function tw3_1_10_before(){
+        const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;     
+        model = new DinnerModel();
+    });
   it("observers array is initialized correctly", function tw3_1_10_1() {
-    try {
-      new DinnerModel()
+      const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
+      try {
+          new DinnerModel();
     } catch(e) {
       expect(false, "DinnerModel constructor throws an error. Double check that observer is initialized correctly.").to.equal(true);
     }
@@ -18,7 +21,6 @@ describe("TW3.1 DinnerModel as Observable", function() {
   });
 
   it("can add observers to model which are invoked at notifyObservers", function tw3_1_10_2() {
-    model = new DinnerModel();
     let invoked1 = false;
     let invoked2 = false;
     let obs1 = () => invoked1=true;
@@ -55,7 +57,6 @@ describe("TW3.1 DinnerModel as Observable", function() {
   });
 
   it("can remove observers from model so that they are not invoked at notifyObservers", function tw3_1_10_3() {
-    model = new DinnerModel();
     let invoked1 = false;
     let invoked2 = false;
     let obs1 = () => invoked1=true;
@@ -85,7 +86,6 @@ describe("TW3.1 DinnerModel as Observable", function() {
   });
 
   it("error in observer does not break notifyObservers", function tw3_1_10_4() {
-    model = new DinnerModel();
     let obs = () => {throw new Error("");};
     expect(() => {
       const oldConsoleLog=console.log;
@@ -102,8 +102,7 @@ describe("TW3.1 DinnerModel as Observable", function() {
   });
 
   it("error in observer logs in console", function tw3_1_10_5() {
-    model = new DinnerModel();
-    let obs = () => {throw new Error("")};
+    let obs = () => {throw new Error("");};
     model.addObserver(obs);
 
     let oldConsole = console;

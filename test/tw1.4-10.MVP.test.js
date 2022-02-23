@@ -3,11 +3,6 @@ import { assert, expect, should } from 'chai';
 import createUI from "./createUI.js";
 import installOwnCreateElement from "./jsxCreateElement.js";
 
-const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
-
-const Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
-const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
-
 const {render, h}= require("vue");
 
 let SidebarView;
@@ -16,7 +11,7 @@ const X= TEST_PREFIX;
 try{
     SidebarView= require('../src/views/'+X+'sidebarView.js').default;
     Sidebar= require('../src/vuejs/'+X+'sidebarPresenter.js').default;
-}catch(e){};
+}catch(e){console.log(e);};
 
 function traverseJSX({tag, props, children}){
     if(!children)
@@ -31,6 +26,9 @@ describe("TW1.4 Model-View-Presenter", function tw_1_4_10() {
     });
     
     it("Vue Summary presenter renders SummaryView with people prop", function tw_1_4_10_1(){
+        const Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
+        const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
+
         installOwnCreateElement();
         let rendering=Summary({model: {numberOfGuests:2, dishes:[]}});
 
@@ -84,6 +82,7 @@ describe("TW1.4 Model-View-Presenter", function tw_1_4_10() {
     });
 
     it("App renders Sidebar, then Summary", function tw_1_4_10_4(){
+        const Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
         installOwnCreateElement();
         const App= require('../src/views/'+TEST_PREFIX+'app.js').default;
         const rendering= App({model: {
@@ -98,6 +97,6 @@ describe("TW1.4 Model-View-Presenter", function tw_1_4_10() {
         expect(components.length).to.be.gte(2);
         
         expect(components[0].tag.name).to.equal(Sidebar.name);
-        expect(components.find(function checkSummaryCB(x){ return x.tag.name===Summary.name;}), "Summary must be rendered after Sidebar");
+        expect(components.find(function tw_1_4_10_4_checkSummaryCB(x){ return x.tag.name===Summary.name;}), "Summary must be rendered after Sidebar");
     });
 });

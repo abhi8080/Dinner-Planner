@@ -59,13 +59,13 @@ try {
   firebaseModel = require("../src/" + X + "firebaseModel.js");
 } catch (e) {console.log(e);}
 
-describe("TW3.5 Firebase-model", function () {
+describe("TW3.5 Firebase-model", function tw3_5_10() {
     this.timeout(200000); // increase to allow debugging during the test run
     
     before(function () {
         if (!firebaseModel) this.skip();
     });
-    it("model saved to firebase", async function () {
+    it("model saved to firebase", async function tw3_5_10_1() {
         firebaseData={};
         const model= new DinnerModel();
         
@@ -124,7 +124,8 @@ describe("TW3.5 Firebase-model", function () {
         model.removeFromMenu(dishInformation);
         expect(firebaseData, "removing a dish that is not in the menu should not change firebase").to.be.empty;
     });
-    it("model read from firebase", async function () {
+
+    it("model read from firebase", async function tw3_5_10_2() {
         const {numberKey, dishesKey, currentDishKey}= await findKeys();
 
         let nguests, currentDish, dishAdded, dishRemoved;
@@ -171,7 +172,7 @@ describe("TW3.5 Firebase-model", function () {
         expect(dishRemoved, "a child removed event should remove the dish from the menu").to.be.ok;
     });
 
-    it("model firebase promise", async function () {
+    it("model firebase promise", async function tw3_5_10_3() {
         const {numberKey, dishesKey, currentDishKey}= await findKeys();
         const root= longestCommonPrefix([numberKey, dishesKey, currentDishKey]);
         const num= numberKey.slice(root.length);

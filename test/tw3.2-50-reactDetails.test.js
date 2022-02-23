@@ -4,33 +4,19 @@ import React from "react";
 import {render} from "react-dom";
 import {dishInformation} from "./mockFetch.js";
 import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
-
-
-const {shoppingList}= require('../src/'+TEST_PREFIX+'utilities.js');
-
+import {compressHistory} from "./historyUtils.js";
 
 let DetailsPresenter;
-let DetailsView;
 const X = TEST_PREFIX;
 
 try {
     DetailsPresenter = require("../src/reactjs/" + X + "detailsPresenter.js").default;
-    DetailsView= require("../src/views/" + X + "detailsView.js").default;
 } catch (e) {console.log(e);}
 
-function compressHistory(arr){
-    return arr.reduce(function(acc, elem, index){
-        if(index==0)
-            return [elem];
-        if(elem==acc.slice(-1)[0]  || JSON.stringify(elem)==JSON.stringify(acc.slice(-1)[0]))
-            return acc;
-        return [...acc, elem];
-    }, []);
-}
 
 function findDetailsEventName(){
     const {customEventNames}= prepareViewWithCustomEvents(
-        DetailsView,
+        require("../src/views/" + X + "detailsView.js").default,
         {dishData:dishInformation, isDishInMenu:true, guests:6},
         function findButton(rendering){
             return findTag("button", rendering).filter(function(button){ return button.props && button.props.disabled; });
@@ -38,7 +24,7 @@ function findDetailsEventName(){
     return customEventNames;
 }
 
-describe("TW3.2 React Details  presenter (observer)", function () {
+describe("TW3.2 React Details  presenter (observer)", function tw_3_2_50() {
     this.timeout(200000);
 
     const propsHistory=[];
@@ -52,7 +38,7 @@ describe("TW3.2 React Details  presenter (observer)", function () {
     }
     const h = React.createElement;
     function replaceViews(tag, props, ...children){
-        if(tag==DetailsView)
+        if(tag==require("../src/views/" + X + "detailsView.js").default)
             return h(Dummy, props, ...children);
         if(tag=="img") // FIXME this assumes that the presenter renders no other image than the spinner
             return h(DummyImg, props, ...children);
@@ -87,17 +73,17 @@ describe("TW3.2 React Details  presenter (observer)", function () {
         render(<Guard><DetailsPresenter model={model}/></Guard>, div);
         return div;
     }
-    before(async function () {
+    before(async function tw_3_2_50_before() {
         if (!DetailsPresenter) this.skip();
     });
-    after(function(){
+    after(function tw_3_2_50_after(){
         React.createElement=h;
     });
     function checkAgainstModel(){
         expect(propsHistory.slice(-1)[0].guests, "passed people should be the number of guests").to.equal(model.numberOfGuests);
         expect(JSON.stringify(propsHistory.slice(-1)[0].dishData), "passed dish should be the data in the current dish promise state").to.equal(JSON.stringify(model.currentDishPromiseState.data));
     }
-    it("Details presenter renders view with correct props", async function(){
+    it("Details presenter renders view with correct props", async function tw_3_2_50_1(){
         const[add2Menu]=findDetailsEventName();
         renderDiv= doRender();
         await new Promise(resolve => setTimeout(resolve));  
@@ -108,7 +94,7 @@ describe("TW3.2 React Details  presenter (observer)", function () {
         expect(addedDish, "custom event handler should call the appropriate model method").to.equal(dishInformation);
     });
 
-    it("Details presenter updates view with correct props",  async function(){
+    it("Details presenter updates view with correct props",  async function tw_3_2_50_2(){
         propsHistory.length=0;
         model.currentDishPromiseState.promise=null;
         model.currentDishPromiseState.data=null;
@@ -157,7 +143,7 @@ describe("TW3.2 React Details  presenter (observer)", function () {
         expect(propsHistory.slice(-1)[0]).to.equal(1984);
     });
 
-    it("Details presenter removes observer subscriptions at teardown", async  function(){
+    it("Details presenter removes observer subscriptions at teardown", async  function tw_3_2_50_3(){
         turnOff();
         await new Promise(resolve => setTimeout(resolve));  
         expect(observers.length, "observers should be unsubscribed at teardown").to.equal(0);

@@ -5,18 +5,18 @@ let SearchFormView;
 const X = TEST_PREFIX;
 try {
   SearchFormView = require("../src/views/" + X + "searchFormView.js").default;
-} catch (e) {}
+} catch (e) {console.log(e);}
 
 const { render, h } = require("vue");
 
-describe("TW2.3 SearchFormView", function () {
+describe("TW2.3 SearchFormView", function tw2_3_10() {
   this.timeout(200000); // increase to allow debugging during the test run
 
-  before(function () {
+  before(function tw2_3_10_before() {
     if (!SearchFormView) this.skip();
   });
 
-  it("SearchFormView renders required DOM tree with dishTypeOptions props", function () {
+  it("SearchFormView renders required DOM tree with dishTypeOptions props", function tw2_3_10_1() {
     let div = createUI();
     window.React = { createElement: h };
     render(

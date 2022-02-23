@@ -9,9 +9,9 @@ const X = TEST_PREFIX;
 
 try {
   Show = require("../src/vuejs/" + X + "show.js").default;
-} catch (e) {} 
+} catch (e) {console.log(e);} 
 
-describe("TW3.3 Vue navigation Show", function () {
+describe("TW3.3 Vue navigation Show", function tw3_3_10() {
     this.timeout(200000);
 
     const div= document.createElement("div");
@@ -26,7 +26,7 @@ describe("TW3.3 Vue navigation Show", function () {
         }
     };
     
-    before(function () {
+    before(function  tw3_3_10_before() {
         if (!Show) this.skip();
         window.React= {createElement:h};
         render(<Guard><Show hash="#details"><span>Hello World!</span></Show></Guard>, div);
@@ -69,12 +69,13 @@ describe("TW3.3 Vue navigation Show", function () {
         }
     }
     
-    it("Show does not render (or hides) children if location hash is different from hash prop", async function(){
+    it("Show does not render (or hides) children if location hash is different from hash prop", async function  tw3_3_10_2(){
         window.location.hash="search";
         await new Promise(resolve => setTimeout(resolve));
         expectHidden();
     });
-    it("Show displays children if location hash is the same as hash prop", async function(){
+    
+    it("Show displays children if location hash is the same as hash prop", async function  tw3_3_10_2(){
         window.location.hash="search";
         await new Promise(resolve => setTimeout(resolve));
         const rendersNothing= expectHidden();
@@ -85,7 +86,8 @@ describe("TW3.3 Vue navigation Show", function () {
         await new Promise(resolve => setTimeout(resolve));
         expectHidden(rendersNothing);
     });
-    it("Show unsubscribes event listener at teardown", async function(){
+    
+    it("Show unsubscribes event listener at teardown", async function  tw3_3_10_3(){
         function removeComments(m){ return m.toString().replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, ""); }
         turnOff();        
         await new Promise(resolve => setTimeout(resolve));

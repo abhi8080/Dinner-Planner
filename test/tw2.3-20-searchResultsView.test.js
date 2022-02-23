@@ -7,12 +7,12 @@ try {
   SearchResultsView = require("../src/views/" +
     X +
     "searchResultsView.js").default;
-} catch (e) {}
+} catch (e) { console.log(e);}
 
-describe("TW2.3 SearchResultsView", function () {
+describe("TW2.3 SearchResultsView", function tw2_3_20() {
   this.timeout(200000);
 
-  before(function () {
+  before(function tw2_3_20_before() {
     if (!SearchResultsView) this.skip();
   });
 
@@ -51,26 +51,26 @@ describe("TW2.3 SearchResultsView", function () {
     return SearchResultsView({ searchResults: searchResults });
   }
 
-  it("SearchResultsView renders div", function () {
+  it("SearchResultsView renders div", function tw2_3_20_1 () {
     const rendering = setUpView();
     expect(rendering.tag, "A DIV tag was expected").to.be.ok;
     expect(rendering.tag, "Did you forget to add a div?").to.equal("div");
   });
 
-  it("SearchResultsView renders span for each search result", function () {
+  it("SearchResultsView renders span for each search result", function tw2_3_20_2() {
     const rendering = setUpView();
       expect(rendering.children, "SearchResultView should render a tree").to.be.ok;
       expect(rendering.children[0].length, "SearchResultsView should render the same amount children as the number of dihses it got").to.equal(3);
-    rendering.children[0].forEach((child) => {
-      expect(child.tag).to.be.ok;
-      expect(
-        child.tag,
-        "Does your search results generate a span for each dish in search result? "
-      ).to.equal("span");
-    });
+      rendering.children[0].forEach(function tw2_3_20_2_testChildACB(child){
+          expect(child.tag).to.be.ok;
+          expect(
+              child.tag,
+              "Does your search results generate a span for each dish in search result? "
+          ).to.equal("span");
+      });
   });
 
-  it("SearchResultsView renders only image and title for each span", function () {
+  it("SearchResultsView renders only image and title for each span", function  tw2_3_20_3() {
     const rendering = setUpView();
     rendering.children[0].forEach((child, i) => {
       expect(child.children ).to.be.ok;
@@ -91,7 +91,7 @@ describe("TW2.3 SearchResultsView", function () {
     });
   });
 
-  it("SearchResultsView renders images correctly", function () {
+  it("SearchResultsView renders images correctly", function  tw2_3_20_4() {
     const rendering = setUpView();
     rendering.children[0].forEach((child, i) => {
       let image = child.children[0];
@@ -108,7 +108,7 @@ describe("TW2.3 SearchResultsView", function () {
     });
   });
 
-  it("SearchResultsView renders titles correctly", function () {
+  it("SearchResultsView renders titles correctly", function  tw2_3_20_5() {
     const rendering = setUpView();
     rendering.children[0].forEach((child, i) => {
       let title = child.children[1];

@@ -4,7 +4,7 @@ let resolvePromise;
 const X = TEST_PREFIX;
 try {
   resolvePromise = require('/src/' + X + 'resolvePromise.js').default;
-} catch (e) {}
+} catch (e) {console.log(e);}
 
 function sleep(ms) {
   return new Promise(function (resolve, reject) {
@@ -12,14 +12,14 @@ function sleep(ms) {
   });
 }
 
-describe('TW2.4 resolvePromise', function () {
+describe('TW2.4 resolvePromise', function tw2_4_05() {
   this.timeout(200000);
 
-  before(function () {
+  before(function tw2_4_05_before() {
     if (!resolvePromise) this.skip();
   });
 
-  it('resolvePromise checks for null promise', async function () {
+  it('resolvePromise checks for null promise', async function tw2_4_05_1() {
     let promiseState = {};
 
     expect(function () {
@@ -28,7 +28,7 @@ describe('TW2.4 resolvePromise', function () {
           ).to.not.throw();
   });
 
-    it('resolvePromise sets data after the promise resolves', async function () {
+    it('resolvePromise sets data after the promise resolves', async function tw2_4_05_2() {
         let promiseState = {};
         resolvePromise(sleep(10).then(function(){ return 42; }), promiseState);
         expect(promiseState.promise, "promiseState.promise should be set").to.be.ok;
@@ -41,7 +41,7 @@ describe('TW2.4 resolvePromise', function () {
         
     });
 
-    it('resolvePromise sets error after the promise rejects', async function () {
+    it('resolvePromise sets error after the promise rejects', async function tw2_4_05_3() {
         let promiseState = {};
         resolvePromise(sleep(10).then(function(){ throw 42; }), promiseState);
         expect(promiseState.promise, "promiseState.promise should be set").to.be.ok;
@@ -53,7 +53,7 @@ describe('TW2.4 resolvePromise', function () {
         expect(promiseState.data, "promiseState.data should remain null when the promise rejects ").to.be.null;
   });
 
-  it('resolvePromise last promise takes effect', async function () {
+  it('resolvePromise last promise takes effect', async function tw2_4_05_4() {
     const promiseState = {};
 
     function makeCallback(ms) {
@@ -61,12 +61,12 @@ describe('TW2.4 resolvePromise', function () {
         return 'resolved after ' + ms;
       }
 
-        function laterACB(){
+        function tw2_4_05_4_laterACB(){
             const promise= Promise.resolve().then(returnDataACB);
             promise.name="promiseToResolveAfter_"+ms;
             resolvePromise(promise, promiseState);
         }
-        return laterACB;
+        return tw2_4_05_4_laterACB;
     }
 
       sleep(5).then(makeCallback(20));
