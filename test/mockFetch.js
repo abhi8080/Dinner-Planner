@@ -35,7 +35,7 @@ function myDetailsFetch(fetchURL, fetchParam, url2Dish=url2MockDish){
 }
 async function withMyFetch(theFetch, f, url2Result){
     const oldFetch= fetch;
-    window.fetch= function(url, param){ return theFetch(url, param, url2Result);};
+    window.fetch= function(url, param){ return theFetch(url.toString(), param, url2Result);};
     try{
         f();
         await new Promise(resolve => setTimeout(resolve));  // need to wait a bit for the "fetch"        
