@@ -1,7 +1,5 @@
 import { assert, expect } from "chai";
 
-const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
-
 import {withMyFetch, myDetailsFetch, dishInformation} from "./mockFetch.js";
 
 let firebaseModel;
@@ -40,6 +38,8 @@ window.firebase={
 
 async function findKeys(){
     firebaseData={};
+    const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
+
     const model= new DinnerModel();
     firebaseModel.updateFirebaseFromModel(model);
     model.setNumberOfGuests(3);
@@ -66,7 +66,8 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         if (!firebaseModel) this.skip();
     });
     it("model saved to firebase", async function tw3_5_10_1() {
-        firebaseData={};
+        const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
+        firebaseData={};        
         const model= new DinnerModel();
         
         firebaseModel.updateFirebaseFromModel(model);
