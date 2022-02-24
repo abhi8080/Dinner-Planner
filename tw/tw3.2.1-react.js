@@ -15,7 +15,12 @@ try{
 }
 if(Search){
     const model= new DinnerModel();
-    model.addObserver(console.log);
+
+    function myObserverACB(){
+        console.log(model.searchResultsPromiseState);
+    }
+    model.addObserver(myObserverACB);
+    
     window.myModel=model;
     render(
         <Search model={model}/>,
