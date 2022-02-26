@@ -72,12 +72,15 @@ describe("TW3.2 React Summary presenter (observer)", function tw3_2_30() {
         expect(propsHistory.slice(-1)[0].people, "passed people should be the number of guests").to.equal(3);
         expect(JSON.stringify(propsHistory.slice(-1)[0].ingredients), "passed ingredients should be the shopping list").to.equal(JSON.stringify(shoppingList([dishInformation, dishInformation])));
 
+        model.dishes=[dishInformation, {... dishInformation, id:42}, {... dishInformation, id:43}, {... dishInformation, id:44}];
+        observers.forEach(o=>o());
+        await new Promise(resolve => setTimeout(resolve));  
+        expect(JSON.stringify(propsHistory.slice(-1)[0].ingredients), "passed ingredients should be the shopping list").to.equal(JSON.stringify(shoppingList([dishInformation, dishInformation, dishInformation, dishInformation])));
+
         model.numberOfGuests=2;
-        model.dishes=[dishInformation, {... dishInformation, id:42}, {... dishInformation, id:43}];
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));  
         expect(propsHistory.slice(-1)[0].people, "passed people should be the number of guests").to.equal(2);
-        expect(JSON.stringify(propsHistory.slice(-1)[0].ingredients), "passed ingredients should be the shopping list").to.equal(JSON.stringify(shoppingList([dishInformation, dishInformation, dishInformation])));
     });
 
     it("Summary presenter removes observer subscriptions at teardown", async  function tw3_2_30_3(){

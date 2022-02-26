@@ -107,7 +107,7 @@ describe("TW3.2 React Details  presenter (observer)", function tw_3_2_50() {
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));
         //expect(compressHistory(propsHistory).length, "view should not be rendered when promise is not resolved").to.equal(1);
-        expect(propsHistory.slice(-1)[0]).to.equal(1984);
+        expect(propsHistory.slice(-1)[0], "an image should be rendered when there is no data").to.equal(1984);
 
         model.currentDishPromiseState.data= dishInformation;
         model.currentDish= dishInformation.id;
@@ -115,32 +115,47 @@ describe("TW3.2 React Details  presenter (observer)", function tw_3_2_50() {
         await new Promise(resolve => setTimeout(resolve));
         const compressed= compressHistory(propsHistory); 
         //expect(compressed.length, "view should be rendered when promise is resolved").to.equal(2);
-        expect(compressed.slice(-2)[0]).to.equal(1984);
+        expect(compressed.slice(-2)[0],  "an image should be rendered when there is no data").to.equal(1984);
         checkAgainstModel();
-        expect(propsHistory.slice(-1)[0].isDishInMenu).to.not.be.ok;
+        expect(propsHistory.slice(-1)[0].isDishInMenu, "isDishInMenu expected to be falsy").to.not.be.ok;
 
-        model.numberOfGuests=3;
         model.dishes=[dishInformation, {... dishInformation, id:42}];
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));  
         checkAgainstModel();
-        expect(propsHistory.slice(-1)[0].isDishInMenu).to.be.ok;
+        expect(propsHistory.slice(-1)[0].isDishInMenu, "isDishInMenu expected to be truthy").to.be.ok;
         
-
-        model.numberOfGuests=2;
         model.dishes=[{... dishInformation, id:42}, {... dishInformation, id:43}];
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));  
         checkAgainstModel();
-        expect(propsHistory.slice(-1)[0].isDishInMenu).to.not.be.ok;
+        expect(propsHistory.slice(-1)[0].isDishInMenu, "isDishInMenu expected to be falsy").to.not.be.ok;
 
+        model.numberOfGuests=7;
+        observers.forEach(o=>o());
+        await new Promise(resolve => setTimeout(resolve));  
+        checkAgainstModel();
+
+        model.currentDishPromiseState.data= {...dishInformation, title:"someDish"};
+        observers.forEach(o=>o());
+        await new Promise(resolve => setTimeout(resolve));  
+        checkAgainstModel();
+
+        model.currentDishPromiseState.data= {...dishInformation, id:46};
+        model.currentDish= 46;
+        observers.forEach(o=>o());
+        await new Promise(resolve => setTimeout(resolve));  
+        checkAgainstModel();
+        expect(propsHistory.slice(-1)[0].isDishInMenu, "isDishInMenu expected to be falsy").to.not.be.ok;
+
+        
         model.currentDishPromiseState.promise="blablabbla";
         propsHistory.length=0;
         model.currentDishPromiseState.data=null;
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));
         //expect(compressHistory(propsHistory).length, "view should not be rendered when promise is not resolved").to.equal(1);
-        expect(propsHistory.slice(-1)[0]).to.equal(1984);
+        expect(propsHistory.slice(-1)[0],  "an image should be rendered when there is no data").to.equal(1984);
     });
 
     it("Details presenter removes observer subscriptions at teardown", async  function tw_3_2_50_3(){

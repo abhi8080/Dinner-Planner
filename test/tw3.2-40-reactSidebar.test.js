@@ -113,8 +113,12 @@ describe("TW3.2 React Sidebar presenter (observer)", function tw_3_2_40() {
         await new Promise(resolve => setTimeout(resolve));  
         checkAgainstModel();
 
-        model.numberOfGuests=2;
         model.dishes=[dishInformation, {... dishInformation, id:42}, {... dishInformation, id:43}];
+        observers.forEach(o=>o());
+        await new Promise(resolve => setTimeout(resolve));  
+        checkAgainstModel();
+
+        model.numberOfGuests=2;
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));  
         checkAgainstModel();
