@@ -4,7 +4,7 @@ import {withMyFetch, myDetailsFetch, dishInformation} from "./mockFetch.js";
 
 let firebaseModel;
 
-let firebaseData;
+let firebaseData={};
 
 const firebaseEvents={
     value:{},
@@ -43,15 +43,23 @@ async function findKeys(){
     const model= new DinnerModel();
     firebaseModel.updateFirebaseFromModel(model);
     model.setNumberOfGuests(3);
-    const numberKey= Object.keys(firebaseData)[0];
+    let numberKey= Object.keys(firebaseData)[0];
+    if(numberKey.slice(-1)=="/")
+        numberKey=numberKey.slice(0, -1);
     
     firebaseData={};
     await withMyFetch(myDetailsFetch, function(){ model.setCurrentDish(8);});
-    const currentDishKey= Object.keys(firebaseData)[0];
+    let currentDishKey= Object.keys(firebaseData)[0];
+    if(currentDishKey.slice(-1)=="/")
+        currentDishKey= currentDishKey.slice(0, -1);
     
     firebaseData={};
     model.addToMenu(dishInformation);
-    const dishesKey= Object.keys(firebaseData)[0].replace("/1445969", "");
+    let dishesKey= Object.keys(firebaseData)[0];
+    if(dishesKey.slice(-1)=="/")
+        dishesKey= dishesKey.slice(0, -1);
+    dishesKey=dishesKey.replace("/1445969", "");
+    
     return {numberKey, currentDishKey, dishesKey};
 }
 const X = TEST_PREFIX;
@@ -141,21 +149,30 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         firebaseModel.updateModelFromFirebase(mockModel);
         
         expect(Object.keys(firebaseEvents.value).length, "two value listeners are needed: number of guests and current dish").to.equal(2);
-        expect(firebaseEvents.value[numberKey], "there should be an on() value listener for the number of guests").to.be.ok;
-        expect(firebaseEvents.value[currentDishKey], "there should be an on() value listener for the current dish").to.be.ok;
-        expect(Object.keys(firebaseEvents.child_added).length, "one child_added listener is needed").to.equal(1);
-        expect(firebaseEvents.child_added[dishesKey], "there should be an on() child added listener for the dishes").to.be.ok;
-        expect(Object.keys(firebaseEvents.child_removed).length, "one child_removed listener is needed").to.equal(1);
-        expect(firebaseEvents.child_removed[dishesKey], "there should be an on() child removed listener for the dishes").to.be.ok;
 
-        firebaseEvents.value[numberKey]({val(){ return 7;}});
+        const guestEvent= firebaseEvents.value[numberKey] || firebaseEvents.value[numberKey+"/"];
+        expect(guestEvent, "there should be an on() value listener for the number of guests").to.be.ok;
+
+        const currentEvent= firebaseEvents.value[currentDishKey] || firebaseEvents.value[currentDishKey+"/"]; 
+        expect(currentEvent, "there should be an on() value listener for the current dish").to.be.ok;
+
+        
+        expect(Object.keys(firebaseEvents.child_added).length, "one child_added listener is needed").to.equal(1);
+        const addedEvent= firebaseEvents.child_added[dishesKey] || firebaseEvents.child_added[dishesKey+"/"];
+        expect(addedEvent, "there should be an on() child added listener for the dishes").to.be.ok;
+        
+        expect(Object.keys(firebaseEvents.child_removed).length, "one child_removed listener is needed").to.equal(1);
+        const removedEvent= firebaseEvents.child_removed[dishesKey] || firebaseEvents.child_removed[dishesKey+"/"];
+        expect(removedEvent, "there should be an on() child removed listener for the dishes").to.be.ok;
+
+        guestEvent({val(){ return 7;}});
         expect(nguests, "callback passed to on() value listener for number of guests should change the number of guests").to.equal(7);
 
-        firebaseEvents.value[currentDishKey]({val(){ return 8;}});
+        currentEvent({val(){ return 8;}});
         expect(currentDish, "callback passed to on() value listener for current dish should change the current dish").to.equal(8);
         
         myDetailsFetch.lastFetch=undefined;
-        await withMyFetch(myDetailsFetch, function(){firebaseEvents.child_added[dishesKey]({key:"3214", val(){ return "blabla";}});});
+        await withMyFetch(myDetailsFetch, function(){addedEvent({key:"3214", val(){ return "blabla";}});});
 
         expect(myDetailsFetch.lastFetch, "a child added event should initiate a promise to retrieve the dish").to.be.ok;
         expect(dishAdded, "a child added event should add a dish if it does not exist already").to.be.ok;
@@ -164,12 +181,12 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         mockModel.dishes=[dishAdded];
         dishAdded=undefined;
         myDetailsFetch.lastFetch=undefined;
-        await withMyFetch(myDetailsFetch, function(){firebaseEvents.child_added[dishesKey]({key:"3214", val(){ return "blabla";}});});
+        await withMyFetch(myDetailsFetch, function(){addedEvent({key:"3214", val(){ return "blabla";}});});
 
         expect(myDetailsFetch.lastFetch, "a child added event should not initiate a promise if the dish is already in the menu").to.not.be.ok;
         expect(dishAdded, "a child added event should not add a dish if it is already in the menu").to.not.be.ok;
 
-        firebaseEvents.child_removed[dishesKey]({key:"3214", val(){ return "blabla";}});
+        removedEvent({key:"3214", val(){ return "blabla";}});
         expect(dishRemoved, "a child removed event should remove the dish from the menu").to.be.ok;
     });
 
