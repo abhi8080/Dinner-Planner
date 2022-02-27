@@ -19,6 +19,8 @@ window.firebase={
     database(){
         return {
             ref(x){
+                if(x.slice(-1)=="/")
+                    x=x.slice(0, -1); 
                 return {
                     set(value){firebaseData[x]= value;},
                     on(event,f){firebaseEvents[event][x]= f;},
@@ -43,22 +45,15 @@ async function findKeys(){
     const model= new DinnerModel();
     firebaseModel.updateFirebaseFromModel(model);
     model.setNumberOfGuests(3);
-    let numberKey= Object.keys(firebaseData)[0];
-    if(numberKey.slice(-1)=="/")
-        numberKey=numberKey.slice(0, -1);
+    const numberKey= Object.keys(firebaseData)[0];
     
     firebaseData={};
     await withMyFetch(myDetailsFetch, function(){ model.setCurrentDish(8);});
-    let currentDishKey= Object.keys(firebaseData)[0];
-    if(currentDishKey.slice(-1)=="/")
-        currentDishKey= currentDishKey.slice(0, -1);
+    const currentDishKey= Object.keys(firebaseData)[0];
     
     firebaseData={};
     model.addToMenu(dishInformation);
-    let dishesKey= Object.keys(firebaseData)[0];
-    if(dishesKey.slice(-1)=="/")
-        dishesKey= dishesKey.slice(0, -1);
-    dishesKey=dishesKey.replace("/1445969", "");
+    const dishesKey= Object.keys(firebaseData)[0].replace("/1445969", "");
     
     return {numberKey, currentDishKey, dishesKey};
 }
@@ -150,19 +145,19 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         
         expect(Object.keys(firebaseEvents.value).length, "two value listeners are needed: number of guests and current dish").to.equal(2);
 
-        const guestEvent= firebaseEvents.value[numberKey] || firebaseEvents.value[numberKey+"/"];
+        const guestEvent= firebaseEvents.value[numberKey];
         expect(guestEvent, "there should be an on() value listener for the number of guests").to.be.ok;
 
-        const currentEvent= firebaseEvents.value[currentDishKey] || firebaseEvents.value[currentDishKey+"/"]; 
+        const currentEvent= firebaseEvents.value[currentDishKey]; 
         expect(currentEvent, "there should be an on() value listener for the current dish").to.be.ok;
 
         
         expect(Object.keys(firebaseEvents.child_added).length, "one child_added listener is needed").to.equal(1);
-        const addedEvent= firebaseEvents.child_added[dishesKey] || firebaseEvents.child_added[dishesKey+"/"];
+        const addedEvent= firebaseEvents.child_added[dishesKey];
         expect(addedEvent, "there should be an on() child added listener for the dishes").to.be.ok;
         
         expect(Object.keys(firebaseEvents.child_removed).length, "one child_removed listener is needed").to.equal(1);
-        const removedEvent= firebaseEvents.child_removed[dishesKey] || firebaseEvents.child_removed[dishesKey+"/"];
+        const removedEvent= firebaseEvents.child_removed[dishesKey];
         expect(removedEvent, "there should be an on() child removed listener for the dishes").to.be.ok;
 
         guestEvent({val(){ return 7;}});
