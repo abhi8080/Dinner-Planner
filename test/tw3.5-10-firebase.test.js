@@ -2,58 +2,26 @@ import { assert, expect } from "chai";
 
 import {withMyFetch, myDetailsFetch, dishInformation} from "./mockFetch.js";
 
+import "./mockFirebase.js";
+
 let firebaseModel;
 
-let firebaseData={};
-
-const firebaseEvents={
-    value:{},
-    child_added:{},
-    child_removed:{},
-};
-
-let firebaseRoot;
-let firebaseDataForOnce;
-window.firebase={
-    initializeApp(){},
-    database(){
-        return {
-            ref(x){
-                if(x.slice(-1)=="/")
-                    x=x.slice(0, -1); 
-                return {
-                    set(value){firebaseData[x]= value;},
-                    on(event,f){firebaseEvents[event][x]= f;},
-                    once(event,f){
-                        firebaseRoot=x;
-                        expect(firebaseDataForOnce, "once is only supposed to be used for the initial promise").to.be.ok;
-                        return Promise.resolve({
-                            key:x,
-                            val(){ return firebaseDataForOnce;}
-                        });
-                    },
-                };
-            }
-        };
-    }
-};
-
 async function findKeys(){
-    firebaseData={};
+    window.firebase.firebaseData={};
     const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
 
     const model= new DinnerModel();
     firebaseModel.updateFirebaseFromModel(model);
     model.setNumberOfGuests(3);
-    const numberKey= Object.keys(firebaseData)[0];
+    const numberKey= Object.keys(window.firebase.firebaseData)[0];
     
-    firebaseData={};
+    window.firebase.firebaseData={};
     await withMyFetch(myDetailsFetch, function(){ model.setCurrentDish(8);});
-    const currentDishKey= Object.keys(firebaseData)[0];
+    const currentDishKey= Object.keys(window.firebase.firebaseData)[0];
     
-    firebaseData={};
+    window.firebase.firebaseData={};
     model.addToMenu(dishInformation);
-    const dishesKey= Object.keys(firebaseData)[0].replace("/1445969", "");
+    const dishesKey= Object.keys(window.firebase.firebaseData)[0].replace("/1445969", "");
     
     return {numberKey, currentDishKey, dishesKey};
 }
@@ -70,63 +38,63 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
     });
     it("model saved to firebase", async function tw3_5_10_1() {
         const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
-        firebaseData={};        
+        window.firebase.firebaseData={};        
         const model= new DinnerModel();
         
         firebaseModel.updateFirebaseFromModel(model);
 
-        expect(firebaseData, "no data should be set in firebase by updateFirebaseFromModel").to.be.empty;
+        expect(window.firebase.firebaseData, "no data should be set in firebase by updateFirebaseFromModel").to.be.empty;
 
         model.setNumberOfGuests(5);
-        let data= Object.values(firebaseData);
+        let data= Object.values(window.firebase.firebaseData);
         expect(data.length, "setting number of guests should set a single firebase property").to.equal(1);
         expect(data[0], "number of guests saved correctly").to.equal(5);
-        const numberKey=Object.keys(firebaseData)[0];
+        const numberKey=Object.keys(window.firebase.firebaseData)[0];
 
-        firebaseData={};
+        window.firebase.firebaseData={};
         model.setNumberOfGuests(5);
-        expect(firebaseData, "no data should be set in firebase if number of guests is set to its existing value ").to.be.empty;
+        expect(window.firebase.firebaseData, "no data should be set in firebase if number of guests is set to its existing value ").to.be.empty;
 
-        firebaseData={};        
+        window.firebase.firebaseData={};        
         await withMyFetch(myDetailsFetch, function(){ model.setCurrentDish(7);});
         
-        data= Object.values(firebaseData);
+        data= Object.values(window.firebase.firebaseData);
         expect(data.length, "setting current dish should set a single firebase property").to.equal(1);
         expect(data[0], "current dish id saved correctly").to.equal(7);
-        const currentDishKey=Object.keys(firebaseData)[0];
+        const currentDishKey=Object.keys(window.firebase.firebaseData)[0];
         expect(currentDishKey, "firebase paths for number of guests and current dish must be different").to.not.equal(numberKey); 
         
-        firebaseData={};
+        window.firebase.firebaseData={};
         myDetailsFetch.lastFetch=undefined;
         await withMyFetch(myDetailsFetch, function(){ model.setCurrentDish(7);});
 
         expect(myDetailsFetch.lastFetch, "no fetch expected if currentDish is set to its existing value").to.not.be.ok;
-        expect(firebaseData, "no data should be set in firebase if currentDish is set to its existing value ").to.be.empty;
+        expect(window.firebase.firebaseData, "no data should be set in firebase if currentDish is set to its existing value ").to.be.empty;
         
-        firebaseData={};
+        window.firebase.firebaseData={};
         model.addToMenu(dishInformation);
-        data= Object.keys(firebaseData);
+        data= Object.keys(window.firebase.firebaseData);
         expect(data.length, "adding a dish should set a single firebase property").to.equal(1);
         let numbers= data[0].match(/\d+$/);
         expect(numbers[numbers.length-1], "the firebase path for an added dish must end with the dish id as string").to.equal("1445969");
         expect(data[0].endsWith(numbers[numbers.length-1]), "the firebase path for an added dish must end with the dish id as string").to.be.true;
-        expect(Object.values(firebaseData)[0], "the object saved in firebase for an added dish must be truthy").to.be.ok;
+        expect(Object.values(window.firebase.firebaseData)[0], "the object saved in firebase for an added dish must be truthy").to.be.ok;
 
-        firebaseData={};
+        window.firebase.firebaseData={};
         model.addToMenu(dishInformation);
-        expect(firebaseData, "adding a dish that is already in the menu should not change firebase").to.be.empty;
+        expect(window.firebase.firebaseData, "adding a dish that is already in the menu should not change firebase").to.be.empty;
 
-        firebaseData={};
+        window.firebase.firebaseData={};
         model.removeFromMenu(dishInformation);
-        data= Object.keys(firebaseData);
+        data= Object.keys(window.firebase.firebaseData);
         expect(data.length, "removing a dish should set a single firebase property").to.equal(1);
         numbers= data[0].match(/\d+$/);
         expect(numbers[numbers.length-1], "the firebase path for a removed dish must end with the dish id as string").to.equal("1445969");
         expect(data[0].endsWith(numbers[numbers.length-1]), "the firebase path for a removed dish must end with the dish id as string").to.be.true;
-        expect(Object.values(firebaseData)[0], "removing a dish should remove an object from firebase by setting null on its path").to.not.be.ok;
-        firebaseData={};
+        expect(Object.values(window.firebase.firebaseData)[0], "removing a dish should remove an object from firebase by setting null on its path").to.not.be.ok;
+        window.firebase.firebaseData={};
         model.removeFromMenu(dishInformation);
-        expect(firebaseData, "removing a dish that is not in the menu should not change firebase").to.be.empty;
+        expect(window.firebase.firebaseData, "removing a dish that is not in the menu should not change firebase").to.be.empty;
     });
 
     it("model read from firebase", async function tw3_5_10_2() {
@@ -143,21 +111,21 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         
         firebaseModel.updateModelFromFirebase(mockModel);
         
-        expect(Object.keys(firebaseEvents.value).length, "two value listeners are needed: number of guests and current dish").to.equal(2);
+        expect(Object.keys(window.firebase.firebaseEvents.value).length, "two value listeners are needed: number of guests and current dish").to.equal(2);
 
-        const guestEvent= firebaseEvents.value[numberKey];
+        const guestEvent= window.firebase.firebaseEvents.value[numberKey];
         expect(guestEvent, "there should be an on() value listener for the number of guests").to.be.ok;
 
-        const currentEvent= firebaseEvents.value[currentDishKey]; 
+        const currentEvent= window.firebase.firebaseEvents.value[currentDishKey]; 
         expect(currentEvent, "there should be an on() value listener for the current dish").to.be.ok;
 
         
-        expect(Object.keys(firebaseEvents.child_added).length, "one child_added listener is needed").to.equal(1);
-        const addedEvent= firebaseEvents.child_added[dishesKey];
+        expect(Object.keys(window.firebase.firebaseEvents.child_added).length, "one child_added listener is needed").to.equal(1);
+        const addedEvent= window.firebase.firebaseEvents.child_added[dishesKey];
         expect(addedEvent, "there should be an on() child added listener for the dishes").to.be.ok;
         
-        expect(Object.keys(firebaseEvents.child_removed).length, "one child_removed listener is needed").to.equal(1);
-        const removedEvent= firebaseEvents.child_removed[dishesKey];
+        expect(Object.keys(window.firebase.firebaseEvents.child_removed).length, "one child_removed listener is needed").to.equal(1);
+        const removedEvent= window.firebase.firebaseEvents.child_removed[dishesKey];
         expect(removedEvent, "there should be an on() child removed listener for the dishes").to.be.ok;
 
         guestEvent({val(){ return 7;}});
@@ -192,7 +160,7 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         const dishes= dishesKey.slice(root.length);
         const currentDish= currentDishKey.slice(root.length);
         
-        firebaseDataForOnce={
+        window.firebase.firebaseDataForOnce={
             [num]:7,
             [dishes]:{
                 "12":"bla",
@@ -210,14 +178,57 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         finally{ window.fetch=oldFetch; }
         expect(model, "promise should resolve to a model").to.be.ok;
         expect(model.constructor.name, "promise should resolve to a model").to.equal("DinnerModel");
-        expect(firebaseRoot, "once should be attached on the firebase model root path").to.equal(root.slice(0,-1));
+        expect(window.firebase.firebaseRoot, "once should be attached on the firebase model root path").to.equal(root.slice(0,-1));
         expect(model.numberOfGuests, "initial model should read number of guests from firebase").to.equal(7);
         expect(model.dishes, "initial model should read dishes from firebase").to.be.ok;
         expect(model.dishes.length, "initial model should read from firebase the same number of dishes").to.equal(3);
         expect(model.dishes.map(d=>d.id).sort().join(","), "initial model should read from firebase the same dishes").to.equal("12,14,15");
         expect(model.currentDish, "initial model should not include current dish").to.not.be.ok;
     });
+
+    it("model firebase promise with empty database", async function tw3_5_10_4() {
+        const {numberKey, dishesKey, currentDishKey}= await findKeys();
+        const root= longestCommonPrefix([numberKey, dishesKey, currentDishKey]);
+        const num= numberKey.slice(root.length);
+        const dishes= dishesKey.slice(root.length);
+        const currentDish= currentDishKey.slice(root.length);
+
+        // test that the code is resilient when the database has not been created yet
+        window.firebase.firebaseDataForOnce= undefined;
+        const oldFetch= fetch;
+        window.fetch= myDetailsFetch;
+        let model;
+        try{
+            model= await firebaseModel.firebaseModelPromise();
+        }
+        finally{ window.fetch=oldFetch; }
+        expect(model, "promise should resolve to a model").to.be.ok;
+        expect(model.constructor.name, "promise should resolve to a model").to.equal("DinnerModel");
+        expect(window.firebase.firebaseRoot, "once should be attached on the firebase model root path").to.equal(root.slice(0,-1));
+        expect(model.numberOfGuests, "initial model should have 2 guests on empty firebase database").to.equal(2);
+        expect(model.dishes, "initial model should have empty dishes on empty firebase database").to.be.ok;
+        expect(model.dishes.length,  "initial model should have empty dishes on empty firebase database").to.equal(0);
+        expect(model.currentDish, "initial model should not include current dish").to.not.be.ok;
+
+        // test that the code is resilient when the database contains no guests or (more importantly) no dishes 
+        window.firebase.firebaseDataForOnce= {};
+        window.fetch= myDetailsFetch;
+        model= undefined;
+        try{
+            model= await firebaseModel.firebaseModelPromise();
+        }
+        finally{ window.fetch=oldFetch; }
+        expect(model, "promise should resolve to a model").to.be.ok;
+        expect(model.constructor.name, "promise should resolve to a model").to.equal("DinnerModel");
+        expect(window.firebase.firebaseRoot, "once should be attached on the firebase model root path").to.equal(root.slice(0,-1));
+        expect(model.numberOfGuests, "initial model should have 2 guests on empty firebase database").to.equal(2);
+        expect(model.dishes, "initial model should have empty dishes on empty firebase database").to.be.ok;
+        expect(model.dishes.length,  "initial model should have empty dishes on empty firebase database").to.equal(0);
+        expect(model.currentDish, "initial model should not include current dish").to.not.be.ok;
+   });
 });
+
+
 
 function longestCommonPrefix(strs) {
     if (strs === undefined || strs.length === 0) { return ''; }
