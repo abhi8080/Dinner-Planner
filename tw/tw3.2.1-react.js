@@ -17,7 +17,7 @@ if(Search){
     const model= new DinnerModel();
 
     function myObserverACB(){
-        console.log(model.searchResultsPromiseState);
+        console.log(model);
     }
     model.addObserver(myObserverACB);
     
