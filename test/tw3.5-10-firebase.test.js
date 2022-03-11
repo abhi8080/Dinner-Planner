@@ -2,29 +2,10 @@ import { assert, expect } from "chai";
 
 import {withMyFetch, myDetailsFetch, dishInformation} from "./mockFetch.js";
 
-import "./mockFirebase.js";
+import {findKeys, longestCommonPrefix} from "./mockFirebase.js";
 
 let firebaseModel;
 
-async function findKeys(){
-    window.firebase.firebaseData={};
-    const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
-
-    const model= new DinnerModel();
-    firebaseModel.updateFirebaseFromModel(model);
-    model.setNumberOfGuests(3);
-    const numberKey= Object.keys(window.firebase.firebaseData)[0];
-    
-    window.firebase.firebaseData={};
-    await withMyFetch(myDetailsFetch, function(){ model.setCurrentDish(8);});
-    const currentDishKey= Object.keys(window.firebase.firebaseData)[0];
-    
-    window.firebase.firebaseData={};
-    model.addToMenu(dishInformation);
-    const dishesKey= Object.keys(window.firebase.firebaseData)[0].replace("/1445969", "");
-    
-    return {numberKey, currentDishKey, dishesKey};
-}
 const X = TEST_PREFIX;
 try {
   firebaseModel = require("../src/" + X + "firebaseModel.js");
@@ -33,7 +14,7 @@ try {
 describe("TW3.5 Firebase-model", function tw3_5_10() {
     this.timeout(200000); // increase to allow debugging during the test run
     
-    before(function () {
+    before(function tw3_5_10_before() {
         if (!firebaseModel) this.skip();
     });
     it("model saved to firebase", async function tw3_5_10_1() {
@@ -154,11 +135,7 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
     });
 
     it("model firebase promise", async function tw3_5_10_3() {
-        const {numberKey, dishesKey, currentDishKey}= await findKeys();
-        const root= longestCommonPrefix([numberKey, dishesKey, currentDishKey]);
-        const num= numberKey.slice(root.length);
-        const dishes= dishesKey.slice(root.length);
-        const currentDish= currentDishKey.slice(root.length);
+        const {numberKey, dishesKey, currentDishKey, num, dishes, currentDish, root}= await findKeys();
         
         window.firebase.firebaseDataForOnce={
             [num]:7,
@@ -187,11 +164,7 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
     });
 
     it("model firebase promise with empty database", async function tw3_5_10_4() {
-        const {numberKey, dishesKey, currentDishKey}= await findKeys();
-        const root= longestCommonPrefix([numberKey, dishesKey, currentDishKey]);
-        const num= numberKey.slice(root.length);
-        const dishes= dishesKey.slice(root.length);
-        const currentDish= currentDishKey.slice(root.length);
+        const {numberKey, dishesKey, currentDishKey, num, dishes, currentDish, root}= await findKeys();
 
         // test that the code is resilient when the database has not been created yet
         window.firebase.firebaseDataForOnce= undefined;
@@ -230,13 +203,5 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
 
 
 
-function longestCommonPrefix(strs) {
-    if (strs === undefined || strs.length === 0) { return ''; }
-    
-    return strs.reduce((prev, next) => {
-        let i = 0;
-        while (prev[i] && next[i] && prev[i] === next[i]) i++;
-        return prev.slice(0, i);
-    });
-};
+
 
