@@ -1,7 +1,7 @@
 import render from "./teacherRender.js";
 
 const X = TEST_PREFIX;
-const VueRoot=require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").default;
+const VueRoot=require("./"+TEST_PREFIX+"VueRoot.js").default;
 let navigation;
 try{
     require("/src/views/"+X+"navigation.js").default;
@@ -18,4 +18,4 @@ render(
 );
 }
 
-window.myModel= require("/src/vuejs/"+TEST_PREFIX+"VueRoot.js").proxyModel;
+window.myModel= require("./"+TEST_PREFIX+"VueRoot.js").proxyModel;
