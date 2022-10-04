@@ -29,8 +29,10 @@ describe("TW1.5 Array rendering", function tw1_5() {
         window.React={createElement:h};
         const div= createUI();
         const ingrList=shoppingList([getDishDetails(2), getDishDetails(100), getDishDetails(200)]);
+        const ingrList2=shoppingList([getDishDetails(2), getDishDetails(100)]);
         const ppl=3;
         const lookup=  ingrList.reduce(function(acc, ingr){ return {...acc, [ingr.name]:ingr}; }, {});
+        const lookup2=  ingrList2.reduce(function(acc, ingr){ return {...acc, [ingr.name]:ingr}; }, {});
         const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
 
         render(<SummaryView people={ppl} ingredients={ingrList}/>, div);
@@ -56,6 +58,25 @@ describe("TW1.5 Array rendering", function tw1_5() {
                 document.body.lastElementChild.firstChild.remove();
             }
         });
+
+        const div2= createUI();
+        render(<SummaryView people={ppl} ingredients={ingrList2}/>, div2);
+        [...div2.querySelectorAll("tr")].forEach(function(tr, index){
+            const tds= tr.querySelectorAll("td");
+            
+            if(!tds.length){
+                expect(tr.querySelectorAll("th").length).to.equal(4);
+                expect(index).to.equal(0);  // must be first row
+                return;
+            }
+            expect(tds.length).to.equal(4);
+            expect(lookup2[tds[0].textContent.trim()]);
+            expect(lookup2[tds[0].textContent.trim()].aisle).to.equal(tds[1].textContent.trim(), "aisle must be shown in column 2");
+            expect(lookup2[tds[0].textContent.trim()].unit).to.equal(tds[3].textContent.trim(), "measurement unit must be shown in last column");
+            expect((lookup2[tds[0].textContent.trim()].amount*ppl).toFixed(2)).to.equal(tds[2].textContent.trim(), "amount must be shown in column 3, multiplied by number of guests");
+            expect(tds[2].textContent.trim()[tds[2].textContent.trim().length-3]).to.equal(".", "amount must be shown with two decimals, use (someExpr).toFixed(2)"); 
+        });
+
     });
 
     it("SummaryView table order", function tw1_5_2(){
@@ -98,9 +119,12 @@ describe("TW1.5 Array rendering", function tw1_5() {
         window.React={createElement:h};
         const div= createUI();
         const dishes=[getDishDetails(2), getDishDetails(100), getDishDetails(200)];
+        const dishes2=[getDishDetails(2), getDishDetails(200)];
+
         const ppl=3;
         const lookup=  dishes.reduce(function(acc, dish){ return {...acc, [dish.title]:{...dish, type: dishType(dish) }}; }, {});
-        
+        const lookup2=  dishes2.reduce(function(acc, dish){ return {...acc, [dish.title]:{...dish, type: dishType(dish) }}; }, {});
+
         render(<SidebarView number={ppl} dishes={dishes}/>, div);
         const trs= div.querySelectorAll("tr");
         expect(trs.length, "there should be table rows for each dish, plus the row for the totals").to.equal(4);
@@ -124,6 +148,31 @@ describe("TW1.5 Array rendering", function tw1_5() {
             expect((lookup[tds[1].textContent.trim()].pricePerServing*ppl).toFixed(2)).to.equal(tds[3].textContent.trim(), "last column must show total menu price multiplied by number of guests");
 
         });
+
+        // const div2= createUI();
+        // render(<SidebarView number={ppl} dishes={dishes2}/>, div2);
+        // const trs2= div2.querySelectorAll("tr");
+        // expect(trs2.length, "there should be table rows for each dish, plus the row for the totals").to.equal(3);
+
+        // [...trs2].forEach(function(tr, index, arr){
+        //     const tds= tr.querySelectorAll("td");            
+        //     expect(tds.length).to.equal(4, "dish table must have 4 columns");
+        //     expect(tds[3].textContent.trim()[tds[3].textContent.trim().length-3]).to.equal(".", "price and total must be shown with two decimals, use (someExpr).toFixed(2)");  
+        //     document.body.append(tds[3]);
+        //     try{  // we append the TD to the document, for style.css to take effect
+        //         expect(window.getComputedStyle(tds[3])["text-align"]).to.equal("right", "align dish prices and total to the right using CSS");
+        //     }finally{
+        //         document.body.lastElementChild.remove();
+        //     }            
+        //     if(index==arr.length-1){
+        //         expect(tds[3].textContent.trim()).to.equal((menuPrice(dishes2)*ppl).toFixed(2), "last row must show total menu price multiplied by number of guests");
+        //         return;
+        //     }
+        //     expect(lookup2[tds[1].textContent.trim()]);
+        //     expect(lookup2[tds[1].textContent.trim()].type).to.equal(tds[2].textContent.trim(), "3rd column must show dish type");
+        //     expect((lookup2[tds[1].textContent.trim()].pricePerServing*ppl).toFixed(2)).to.equal(tds[3].textContent.trim(), "last column must show total menu price multiplied by number of guests");
+
+        // });
     });
 
     it("SidebarView table order", function tw1_5_5(){
