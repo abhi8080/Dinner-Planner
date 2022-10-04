@@ -50,6 +50,7 @@ function __give_a_proper_name_CB(dishA, dishB){
 function sortDishes(dishes){
     // hint: use someArray.sort(comparator_above_CB)
     // check the tests, look for sortDishes!
+    return //TODO
 }
 
 /* 
