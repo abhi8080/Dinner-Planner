@@ -4,5 +4,6 @@ dist
 package-lock.json
 **/*solved*
 **/*Config.js*
+!telemetry.config.json
 /public/*.js
 /public/*.html

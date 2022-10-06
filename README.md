@@ -48,3 +48,9 @@ Then every time you want to run the development server:
 docker-compose up
 ```
 (see the file `docker-compose.yml`) 
+
+## Telemetry Config
+- Track me: "full"  
+- Track me but without username: "anonymous"  
+- Don't track me: "none"  
+
