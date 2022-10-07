@@ -2,7 +2,7 @@ const fs=  require("fs");
 const path = require('path');
 const webpack= require("webpack");
 
-const prefix=  fs.existsSync("./src/utilities.js")?"":"";
+const prefix=  fs.existsSync("./src/solved-utilities.js")?"solved-":"";
 
 // we will make a webpack entry out of every tw/tw*.js file
 const tws= fs.readdirSync("./tw").filter(function(file){return path.parse(file).ext===".js" && path.parse(file).name.startsWith("tw");});
