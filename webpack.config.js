@@ -2,10 +2,24 @@ const fs=  require("fs");
 const path = require('path');
 const webpack= require("webpack");
 
-const prefix=  fs.existsSync("./src/solved-utilities.js")?"solved-":"";
+const prefix=  fs.existsSync("./src/utilities.js")?"":"";
 
 // we will make a webpack entry out of every tw/tw*.js file
 const tws= fs.readdirSync("./tw").filter(function(file){return path.parse(file).ext===".js" && path.parse(file).name.startsWith("tw");});
+
+const currentDirectory = path.basename(__dirname);
+const usernameRegex = new RegExp("(.*)-[vh]t[0-9]{2}-(1|2_3)", "g");
+const regexResult = usernameRegex.exec(currentDirectory);
+const username = regexResult ? regexResult[1] : "anonymous";
+
+const telemetryConfig = fs.readFileSync("./telemetry.config.json");
+let telemetryUserInfo;
+try {
+    telemetryUserInfo = JSON.parse(telemetryConfig)["userInformation"];
+    telemetryUserInfo = ["full", "anonymous", "none"].find(x => x === telemetryUserInfo) ? telemetryUserInfo : "full";
+} catch (e) {
+    telemetryUserInfo = "full";
+}
 
 function makeEntryCB(acc, file){   // reducer for making a large object. entry  below needs to be an object
     return { ... acc, [path.parse(file).name]: './tw/'+file};     // we ... spread the current object, then add one more property
@@ -64,11 +78,13 @@ module.exports = {
                 sourceRoot:"Debug here!"
             }),
         new webpack.DefinePlugin({           // globals neeeded by Vue
+            USERNAME: JSON.stringify(username),
+            TELEMETRY: JSON.stringify(telemetryUserInfo),
             __VUE_OPTIONS_API__:true,
             __VUE_PROD_DEVTOOLS__:true,
-            TEST_PREFIX:"\'"+prefix+"\'"
+            TEST_PREFIX:"\'"+prefix+"\'",
 //            TEST_PREFIX: "\'\'"
-        })      
+        }),
     ],
     module: {
         rules: [
