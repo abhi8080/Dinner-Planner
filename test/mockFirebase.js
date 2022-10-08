@@ -11,8 +11,11 @@ window.firebase={
     database(){
         return {
             ref(x){
-                if(x.slice(-1)=="/")
-                    x=x.slice(0, -1); 
+                if(!x)
+                    window.firebase.emptyRef= true;
+                else
+                    if(x.slice(-1)=="/")
+                        x=x.slice(0, -1); 
                 return {
                     set(value){window.firebase.firebaseData[x]= value;},
                     on(event,f){window.firebase.firebaseEvents[event][x]= f;},
