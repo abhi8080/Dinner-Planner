@@ -162,6 +162,7 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
             model= await firebaseModel.firebaseModelPromise();
         }
         finally{ window.fetch=oldFetch; }
+        expect(window.firebase.emptyRef, "empty firebase ref used when setting up firebase promise").to.not.be.ok;
         expect(model, "promise should resolve to a model").to.be.ok;
         expect(model.constructor.name, "promise should resolve to a model").to.equal("DinnerModel");
         expect(window.firebase.firebaseRoot, "once should be attached on the firebase model root path").to.equal(root.slice(0,-1));
