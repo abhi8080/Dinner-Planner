@@ -60,4 +60,29 @@ describe("TW2.3 SearchFormView", function tw2_3_10() {
     expect(div.querySelectorAll("button").length, "there should be at least one button").to.be.gte(1);
       expect(div.querySelectorAll("button")[0].firstChild.textContent, "the first button text must be \"Search!\"").to.equal("Search!");
   });
+
+  it("SearchFormView properly performs array rendering", function tw2_3_10_2() {
+    function checkArrayRendering(div, dishTypes) {
+    render(
+      <SearchFormView
+        dishTypeOptions={dishTypes}
+      />,
+      div
+    );
+    const options = div.querySelectorAll("option");
+    expect(options.length, `Are there ${dishTypes.length + 1} options rendered?`).to.equal(dishTypes.length + 1);
+    expect(options[0].firstChild.textContent, "Is the first option 'Choose:'?").to.equal("Choose:");
+    }
+
+    let div = createUI();
+    window.React = { createElement: h };
+    const dishTypes = ["starter", "main course", "dessert"];
+    checkArrayRendering(div, dishTypes);
+
+    let div2 = createUI();
+    window.React = { createElement: h };
+    const dishTypes2 = ["primero", "segundo", "tercero", "cuarto"];
+    checkArrayRendering(div2, dishTypes2);
+});
+
 });

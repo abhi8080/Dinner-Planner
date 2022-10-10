@@ -46,9 +46,30 @@ describe("TW2.3 SearchResultsView", function tw2_3_20() {
     },
   ];
 
-  function setUpView() {
+  const searchResults2 = [
+    {
+      id: 587203,
+      title: "Taco Pizza",
+      readyInMinutes: 20,
+      servings: 6,
+      sourceUrl: "https://laurenslatest.com/taco-salad-pizza-with-doritos/",
+      openLicense: 0,
+      image: "Taco-Salad-Pizza-with-Doritos-587203.jpg",
+    },
+    {
+      id: 559251,
+      title: "Breakfast Pizza",
+      readyInMinutes: 25,
+      servings: 6,
+      sourceUrl: "http://www.jocooks.com/breakfast-2/breakfast-pizza/",
+      openLicense: 0,
+      image: "Breakfast-Pizza-559251.jpg",
+    },
+  ]
+
+  function setUpView(theSearchResults = searchResults) {
     installOwnCreateElement();
-    return SearchResultsView({ searchResults: searchResults });
+    return SearchResultsView({ searchResults: theSearchResults });
   }
 
   it("SearchResultsView renders div", function tw2_3_20_1 () {
@@ -69,6 +90,12 @@ describe("TW2.3 SearchResultsView", function tw2_3_20() {
           ).to.equal("span");
       });
   });
+
+  it("SearchResultsView properly performs array rendering", function tw2_3_20_2() {
+      const rendering = setUpView(searchResults2);
+      expect(rendering.children, "SearchResultView should render a tree").to.be.ok;
+      expect(rendering.children[0].length, "SearchResultsView should accept a variable length of searchResults and must not be fixed to 3 only").to.equal(searchResults2.length);
+    });
 
   it("SearchResultsView renders only image and title for each span", function  tw2_3_20_3() {
     const rendering = setUpView();
