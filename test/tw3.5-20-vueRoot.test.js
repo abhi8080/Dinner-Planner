@@ -2,9 +2,11 @@ import {h, render} from "vue";
 import {checkImageAndProps, checkUpdateFromFirebase, checkFirebaseUpdate} from "./rootUtils.js";
 
 let VueRoot;
+let app;
 const X = TEST_PREFIX;
 try {
     VueRoot = require("../src/vuejs/" + X + "VueRoot.js").default;
+    app = require("../src/vuejs/" + X + "App.js").default;
 } catch (e) {console.log(e);}
 
 describe("TW3.5 VueRoot", function tw3_5_20() {
@@ -21,7 +23,7 @@ describe("TW3.5 VueRoot", function tw3_5_20() {
     }
     
     function replaceViews(tag, props, ...children){
-        if(tag== require("../src/views/" + X + "app.js").default)
+        if(tag== app)
             return h(Dummy, props, ...children);
         if(tag=="img") // FIXME this assumes that the presenter renders no other image than the spinner
             return h(DummyImg, props, ...children);

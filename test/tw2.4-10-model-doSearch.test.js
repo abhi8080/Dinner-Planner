@@ -7,7 +7,7 @@ describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
 
   let model;
   this.beforeEach(function tw2_4_10_beforeEach() {
-      const   DinnerModel = require("../src/" + X + "DinnerModel.js").default;
+      const DinnerModel = require("../src/" + X + "DinnerModel.js").default;
       model = new DinnerModel();
   });
 

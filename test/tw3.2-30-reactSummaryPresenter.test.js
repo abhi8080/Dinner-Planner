@@ -5,10 +5,14 @@ import {render} from "react-dom";
 import {dishInformation} from "./mockFetch.js";
 
 let SummaryPresenter;
+let SummaryView;
+let utilities;
 const X = TEST_PREFIX;
 
 try {
     SummaryPresenter = require("../src/reactjs/" + X + "summaryPresenter.js").default;
+    SummaryView = require("../src/views/" + X + "summaryView.js").default;
+    utilities= require('../src/'+TEST_PREFIX+'utilities.js');
 } catch (e) {console.log(e);}
 
 
@@ -22,7 +26,7 @@ describe("TW3.2 React Summary presenter (observer)", function tw3_2_30() {
     }
     const h = React.createElement;
     function replaceViews(tag, props, ...children){
-        if(tag==require("../src/views/" + X + "summaryView.js").default)
+        if(tag==SummaryView)
             return h(Dummy, props, ...children);
         return h(tag, props, ...children);
     };
@@ -56,7 +60,7 @@ describe("TW3.2 React Summary presenter (observer)", function tw3_2_30() {
         React.createElement=h;
     });
     it("Summary presenter renders view with correct props", async function tw3_2_30_1(){
-        const {shoppingList}= require('../src/'+TEST_PREFIX+'utilities.js');
+        const {shoppingList}= utilities;
         doRender();
         await new Promise(resolve => setTimeout(resolve));  
         expect(propsHistory.slice(-1)[0].people, "passed people should be the number of guests").to.equal(7);
@@ -64,7 +68,7 @@ describe("TW3.2 React Summary presenter (observer)", function tw3_2_30() {
     });
 
     it("Summary presenter updates view with correct props",  async function tw3_2_30_2(){
-        const {shoppingList}= require('../src/'+TEST_PREFIX+'utilities.js');
+        const {shoppingList}= utilities;
         model.numberOfGuests=3;
         model.dishes=[dishInformation, {... dishInformation, id:42}];
         observers.forEach(o=>o());

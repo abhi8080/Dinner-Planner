@@ -26,8 +26,12 @@ describe("TW1.4 Model-View-Presenter", function tw_1_4_10() {
     });
     
     it("Vue Summary presenter renders SummaryView with people prop", function tw_1_4_10_1(){
-        const Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
-        const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
+        let Summary;
+        let SummaryView;
+        try{
+        Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
+        SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
+        }catch(e){console.log(e);};
 
         installOwnCreateElement();
         let rendering=Summary({model: {numberOfGuests:2, dishes:[]}});

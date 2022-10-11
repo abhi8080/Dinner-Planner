@@ -5,9 +5,11 @@ import {render} from "react-dom";
 import {checkImageAndProps, checkUpdateFromFirebase, checkFirebaseUpdate} from "./rootUtils.js";
 
 let ReactRoot;
+let app;
 const X = TEST_PREFIX;
 try {
     ReactRoot = require("../src/reactjs/" + X + "ReactRoot.js").default;
+    app = require("../src/reactjs/" + X + "App.js").default;
 } catch (e) {console.log(e);}
 
 describe("TW3.5 ReactRoot", function tw3_5_30() {
@@ -28,7 +30,7 @@ describe("TW3.5 ReactRoot", function tw3_5_30() {
     }
     
     function replaceViews(tag, props, ...children){
-        if(tag== require("../src/views/" + X + "app.js").default)
+        if(tag== app)
             return h(Dummy, props, ...children);
         if(tag=="img") // FIXME this assumes that the presenter renders no other image than the spinner
             return h(DummyImg, props, ...children);

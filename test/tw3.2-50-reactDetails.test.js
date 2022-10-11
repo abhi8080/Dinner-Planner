@@ -7,16 +7,18 @@ import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
 import {compressHistory} from "./historyUtils.js";
 
 let DetailsPresenter;
+let DetailsView;
 const X = TEST_PREFIX;
 
 try {
     DetailsPresenter = require("../src/reactjs/" + X + "detailsPresenter.js").default;
+    DetailsView = require("../src/views/" + X + "detailsView.js").default;
 } catch (e) {console.log(e);}
 
 
 function findDetailsEventName(){
     const {customEventNames}= prepareViewWithCustomEvents(
-        require("../src/views/" + X + "detailsView.js").default,
+        DetailsView,
         {dishData:dishInformation, isDishInMenu:true, guests:6},
         function findButton(rendering){
             return findTag("button", rendering).filter(function(button){ return button.props && button.props.disabled; });
@@ -38,7 +40,7 @@ describe("TW3.2 React Details  presenter (observer)", function tw_3_2_50() {
     }
     const h = React.createElement;
     function replaceViews(tag, props, ...children){
-        if(tag==require("../src/views/" + X + "detailsView.js").default)
+        if(tag==DetailsView)
             return h(Dummy, props, ...children);
         if(tag=="img") // FIXME this assumes that the presenter renders no other image than the spinner
             return h(DummyImg, props, ...children);

@@ -4,16 +4,20 @@ import createUI from "./createUI.js";
 import installOwnCreateElement from "./jsxCreateElement.js";
 
 let SidebarView;
+let SummaryView;
 let Sidebar;
+let utilities;
 const X= TEST_PREFIX;
 try{
     SidebarView= require('../src/views/'+X+'sidebarView.js').default;
+    SummaryView= require('../src/views/'+X+'summaryView.js').default;
     Sidebar= require('../src/vuejs/'+X+'sidebarPresenter.js').default;
+    utilities = require("/src/"+TEST_PREFIX+"utilities.js")
 }catch(e){};
 
 const {render, h}= require("vue");
 
-const {shoppingList, dishType, menuPrice}=require("/src/"+TEST_PREFIX+"utilities.js");
+const {shoppingList, dishType, menuPrice}=utilities;
 
 
 function getDishDetails(x){ return dishesConst.find(function(d){ return d.id===x;});}
@@ -28,7 +32,6 @@ describe("TW1.5 Array rendering", function tw1_5() {
     it("SummaryView table content", function tw1_5_1(){
         window.React={createElement:h};
         const ppl=3;
-        const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
 
         // 3 dishes, 2 guests
         const div= createUI();
@@ -73,7 +76,6 @@ describe("TW1.5 Array rendering", function tw1_5() {
     });
 
     it("SummaryView table order", function tw1_5_2(){
-        const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
         window.React={createElement:h};
         const div= createUI();
         const ingrList=shoppingList([getDishDetails(2), getDishDetails(100), getDishDetails(200)]);
@@ -95,11 +97,13 @@ describe("TW1.5 Array rendering", function tw1_5() {
     });
     
     it("Vue Summary presenter passes ingredients prop (shopping list)", function tw1_5_3(){
-        const SummaryView= require('../src/views/'+TEST_PREFIX+'summaryView.js').default;
         installOwnCreateElement();
         const dishes= [getDishDetails(1), getDishDetails(100), getDishDetails(201)];
         const model= {numberOfGuests:3, dishes};
-        const Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
+        let Summary;
+        try {
+        Summary= require('../src/vuejs/'+TEST_PREFIX+'summaryPresenter.js').default;
+        } catch(e){console.log(e);};
         const rendering=Summary({model});
         
         expect(rendering.tag).to.equal(SummaryView);

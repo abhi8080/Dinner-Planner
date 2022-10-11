@@ -1,5 +1,11 @@
 import { assert, expect, should } from 'chai';
 
+let utilities;
+try {
+utilities= require('../src/'+TEST_PREFIX+'utilities.js');
+}
+catch (e) {console.log(e);}
+
 const dishes= [
     {
         extendedIngredients:[
@@ -20,7 +26,7 @@ const dishes= [
 
 describe("TW1.1 shoppingList", function tw1_1_40() {
     it("should add up ingredient amounts", function  tw1_1_40_1(){
-        const {shoppingList}= require('../src/'+TEST_PREFIX+'utilities.js');
+        const {shoppingList}= utilities;
         this.timeout(200000);  // increase to allow debugging during the test run
 
         const result= shoppingList(dishes);
