@@ -49,6 +49,31 @@ docker-compose up
 ```
 (see the file `docker-compose.yml`) 
 
+## REQUIRED CODING CONVENTIONS
+
+### Not-Allowed   
+
+    # You are not allowed to use anonymous functions in any capacity 
+    ()=> console.log("NO!")
+    (someArgument)=> {console.log(someArgument)}
+
+### Required 
+
+    # You must use a named function
+
+    function fancyCB() {console.log("YES!")}
+    function fancyWithArgsCB(someArgument) {console.log(someArgument)}
+
+    # You must name your functions with either CB or ACB appended to the end  
+    # depending on if it is async or sync 
+
+    function treatHTTPResponseACB(resp) {console.log("Doing async work")} 
+    fetch("url").then(acb1).then(acb2).catch(errorCallbackACB)
+
+    function boringConsoleCB() {console.log("Doing sync work")}
+    
+
+
 ## Test Tracking 
 Your test results are saved in a secured KTH database. We use this for three main purposes:
 
