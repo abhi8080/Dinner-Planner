@@ -1,5 +1,6 @@
 import { assert, expect } from "chai";
 import installOwnCreateElement from "./jsxCreateElement";
+import {findTag,onlyAllowNativeEventNames} from "./jsxUtilities.js";
 
 let SearchResultsView;
 const X = TEST_PREFIX;
@@ -150,4 +151,13 @@ describe("TW2.3 SearchResultsView", function tw2_3_20() {
       ).to.equal(searchResults[i].title);
     });
   });
+  it("SearchResultsView uses correct native event names", function tw2_3_30_8() {
+    installOwnCreateElement();
+    const rendering= SearchResultsView({searchResults:searchResults});
+    const spans=findTag("span", rendering);
+    spans.forEach(span => {
+        onlyAllowNativeEventNames(span);
+    });
+  });
+
 });
