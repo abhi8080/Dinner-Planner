@@ -34,7 +34,7 @@ function findResultsEventName(){
 }
 
 
-const dummyImgName = 1984;
+const dummyImgName = "promise loading image GIF";
 
 function makeRender(formProps, resultsProps, h, render, theReact, makeRoot){
     function DummyForm(props){
