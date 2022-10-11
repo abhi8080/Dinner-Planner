@@ -150,4 +150,11 @@ describe("TW2.3 SearchResultsView", function tw2_3_20() {
       ).to.equal(searchResults[i].title);
     });
   });
+  it("SearchResultsView does not change props after rendering", function  tw2_3_20_6() {
+    installOwnCreateElement();
+    const props = {searchResults: searchResults};
+    const json = JSON.stringify(props);
+    const rendering= SearchResultsView(props);
+    expect(JSON.stringify(props),"Do not change the props in the View after rendering!").to.equal(json);
+  });
 });
