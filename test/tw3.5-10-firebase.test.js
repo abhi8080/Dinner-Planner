@@ -27,6 +27,8 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         expect(window.firebase.firebaseData, "no data should be set in firebase by updateFirebaseFromModel").to.be.empty;
 
         model.setNumberOfGuests(5);
+        expect(window.firebase.emptyRef, "empty firebase ref used during execution of setNumberOfGuests").to.not.be.ok;
+        
         let data= Object.values(window.firebase.firebaseData);
         expect(data.length, "setting number of guests should set a single firebase property").to.equal(1);
         expect(data[0], "number of guests saved correctly").to.equal(5);
@@ -38,7 +40,8 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
 
         window.firebase.firebaseData={};        
         await withMyFetch(myDetailsFetch, function(){ model.setCurrentDish(7);});
-        
+        expect(window.firebase.emptyRef, "empty firebase ref used during execution of setCurrentDish").to.not.be.ok;
+
         data= Object.values(window.firebase.firebaseData);
         expect(data.length, "setting current dish should set a single firebase property").to.equal(1);
         expect(data[0], "current dish id saved correctly").to.equal(7);
@@ -49,11 +52,14 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         myDetailsFetch.lastFetch=undefined;
         await withMyFetch(myDetailsFetch, function(){ model.setCurrentDish(7);});
 
+        expect(window.firebase.emptyRef, "empty firebase ref used during execution of setCurrentDish").to.not.be.ok;
         expect(myDetailsFetch.lastFetch, "no fetch expected if currentDish is set to its existing value").to.not.be.ok;
         expect(window.firebase.firebaseData, "no data should be set in firebase if currentDish is set to its existing value ").to.be.empty;
         
         window.firebase.firebaseData={};
         model.addToMenu(dishInformation);
+
+        expect(window.firebase.emptyRef, "empty firebase ref used during execution of addToMenu").to.not.be.ok;
         data= Object.keys(window.firebase.firebaseData);
         expect(data.length, "adding a dish should set a single firebase property").to.equal(1);
         let numbers= data[0].match(/\d+$/);
@@ -67,6 +73,8 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
 
         window.firebase.firebaseData={};
         model.removeFromMenu(dishInformation);
+
+        expect(window.firebase.emptyRef, "empty firebase ref used during execution of removeFromMenu").to.not.be.ok;
         data= Object.keys(window.firebase.firebaseData);
         expect(data.length, "removing a dish should set a single firebase property").to.equal(1);
         numbers= data[0].match(/\d+$/);
@@ -91,6 +99,7 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         };
         
         firebaseModel.updateModelFromFirebase(mockModel);
+        expect(window.firebase.emptyRef, "empty firebase ref used in updateModelFromFirebase").to.not.be.ok;
         
         expect(Object.keys(window.firebase.firebaseEvents.value).length, "two value listeners are needed: number of guests and current dish").to.equal(2);
 
@@ -153,6 +162,7 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
             model= await firebaseModel.firebaseModelPromise();
         }
         finally{ window.fetch=oldFetch; }
+        expect(window.firebase.emptyRef, "empty firebase ref used when setting up firebase promise").to.not.be.ok;
         expect(model, "promise should resolve to a model").to.be.ok;
         expect(model.constructor.name, "promise should resolve to a model").to.equal("DinnerModel");
         expect(window.firebase.firebaseRoot, "once should be attached on the firebase model root path").to.equal(root.slice(0,-1));
