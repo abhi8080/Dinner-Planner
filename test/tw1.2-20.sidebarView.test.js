@@ -43,7 +43,7 @@ describe("TW1.2 SidebarView", function tw1_2_20() {
     });
     it("Correct native event names", function tw1_2_20_3(){
         installOwnCreateElement();
-        const rendering= require("../src/views/" + X + "sidebarView.js").default({number:2, dishes:[]});
+        const rendering= SidebarView({number:2, dishes:[]});
         const buttons=findTag("button", rendering);
         buttons.forEach(button => {
             onlyAllowNativeEventNames(button);
