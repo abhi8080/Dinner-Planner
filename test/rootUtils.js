@@ -1,6 +1,7 @@
 import { assert, expect } from "chai";
 import {findKeys} from "./mockFirebase.js";
 import {withMyFetch, myDetailsFetch, dishInformation} from "./mockFetch.js";
+import {dummyImgName} from "./searchUtils.js";
 
 async function checkImageAndProps(doRender, propsHistory){
     const {numberKey, dishesKey, currentDishKey, num, dishes, currentDish}= await findKeys();
