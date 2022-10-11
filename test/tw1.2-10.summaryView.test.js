@@ -1,6 +1,8 @@
 import dishesConst from './dishesConst.js';
 import { assert, expect, should } from 'chai';
 import createUI from "./createUI.js";
+import installOwnCreateElement from "./jsxCreateElement.js";
+import {findTag,onlyAllowNativeEventNames} from "./jsxUtilities.js";
 
 const {render, h}= require("vue");
 
@@ -19,5 +21,14 @@ describe("TW1.2 SummaryView", function tw1_2_10() {
         window.React={createElement:h};
         render(<SummaryView people={4} ingredients={[]} />, div);
         assert.equal(div.firstElementChild.firstElementChild.firstChild.textContent, "4");
+    });
+
+    it("SummaryView uses correct native event names", function tw1_2_10_2(){
+        installOwnCreateElement();
+        const rendering= SummaryView({people:2, ingredients:[]});
+        const buttons=findTag("button", rendering);
+        buttons.forEach(button => {
+            onlyAllowNativeEventNames(button);
+        });
     });
 });
