@@ -7,11 +7,17 @@ const ingredientsConst= [
     {aisle:"Frozen", name:"frozen broccoli"},
 ];
 
+let utilities;
+try {
+utilities= require('../src/'+TEST_PREFIX+'utilities.js');
+}
+catch (e) {console.log(e);}
+
 describe("TW1.1 sortIngredients", function tw1_1_30() {
     this.timeout(200000);  // increase to allow debugging during the test run
     
     it("sorted array should not be the same object as original array. Use e.g. spread syntax [...array]", function  tw1_1_30_1(){
-        const {sortIngredients}= require('../src/'+TEST_PREFIX+'utilities.js');
+        const {sortIngredients}= utilities;
         const ingredients= [...ingredientsConst];
         const sorted= sortIngredients(ingredients);
 
@@ -24,7 +30,7 @@ describe("TW1.1 sortIngredients", function tw1_1_30() {
         });
     });
     it("should sort by aisle first, then by name", function  tw1_1_30_2(){
-        const {sortIngredients}= require('../src/'+TEST_PREFIX+'utilities.js');
+        const {sortIngredients}= utilities;
 
         // Check that it sorts by aisle first and then by name
         const ingredients= [...ingredientsConst];

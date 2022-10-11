@@ -6,16 +6,18 @@ import {dishInformation} from "./mockFetch.js";
 import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
 
 let SidebarPresenter;
+let SidebarView;
 const X = TEST_PREFIX;
 
 try {
     SidebarPresenter = require("../src/reactjs/" + X + "sidebarPresenter.js").default;
+    SidebarView = require("../src/views/" + X + "sidebarView.js").default;
 } catch (e) {console.log(e);}
 
 
 function findSidebarEventNames(){
     const {customEventNames}= prepareViewWithCustomEvents(
-        require("../src/views/" + X + "sidebarView.js").default,
+        SidebarView,
         {
             number:5,
             dishes:[dishInformation]
@@ -42,7 +44,7 @@ describe("TW3.2 React Sidebar presenter (observer)", function tw_3_2_40() {
     }
     const h = React.createElement;
     function replaceViews(tag, props, ...children){
-        if(tag== require("../src/views/" + X + "sidebarView.js").default)
+        if(tag== SidebarView)
             return h(Dummy, props, ...children);
         return h(tag, props, ...children);
     };
