@@ -17,6 +17,23 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
     before(function tw3_5_10_before() {
         if (!firebaseModel) this.skip();
     });
+
+    // Optional Test: Only do it if the students have implemented observerRecap
+    if (firebaseModel.observerRecap && typeof firebaseModel.observerRecap === "function") {
+        it("function observerRecap should add an observer to a model that prints a payload. Check your console! You should see 4 payloads.", function tw3_5_10_1() {
+            const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
+            const model= new DinnerModel();
+
+            firebaseModel.observerRecap(model);
+            expect(model.observers.length, "Remember to add the observer!").to.be.gt(0);
+        
+            model.setNumberOfGuests(5);
+            model.setCurrentDish(1);
+            model.addToMenu({id: 1, title: "dish1"});
+            model.removeFromMenu( {id: 1, title: "dish1"});
+        });
+    }
+
     it("model saved to firebase", async function tw3_5_10_1() {
         const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
         window.firebase.firebaseData={};        
