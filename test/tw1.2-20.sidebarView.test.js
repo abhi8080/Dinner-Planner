@@ -1,9 +1,6 @@
 import dishesConst from './dishesConst.js';
 import { assert, expect, should } from 'chai';
 import createUI from "./createUI.js";
-import installOwnCreateElement from "./jsxCreateElement.js";
-import {findTag,onlyAllowNativeEventNames} from "./jsxUtilities.js";
-
 let SidebarView;
 const X= TEST_PREFIX;
 try{
@@ -41,12 +38,5 @@ describe("TW1.2 SidebarView", function tw1_2_20() {
         assert.equal(div.querySelectorAll("button")[0].nextSibling.textContent, "1");
         
     });
-    it("Correct native event names", function tw1_2_20_3(){
-        installOwnCreateElement();
-        const rendering= SidebarView({number:2, dishes:[]});
-        const buttons=findTag("button", rendering);
-        buttons.forEach(button => {
-            onlyAllowNativeEventNames(button);
-        });
-    });
+
 });
