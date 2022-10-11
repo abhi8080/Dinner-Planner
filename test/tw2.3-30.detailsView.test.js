@@ -1,5 +1,7 @@
 import { assert, expect } from "chai";
 import createUI from "./createUI";
+import installOwnCreateElement from "./jsxCreateElement.js";
+import {findTag,onlyAllowNativeEventNames} from "./jsxUtilities.js";
 
 import {dishInformation} from "./mockFetch.js";
 
@@ -150,5 +152,14 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
     });
     expect(addToMenuButton, "add to menu button not found").to.not.be.undefined;
     expect(addToMenuButton.disabled,       "button must be disabled if the dish is already in the menu").to.equal(disabled);
+  });
+
+  it("DetailsView uses correct native event names", function tw2_3_30_8() {
+    installOwnCreateElement();
+    const rendering= DetailsView({dishData:dishInformation,guests:guests,isDishInMenu:{disabled}})
+    const buttons=findTag("button", rendering);
+    buttons.forEach(button => {
+        onlyAllowNativeEventNames(button);
+    });
   });
 });
