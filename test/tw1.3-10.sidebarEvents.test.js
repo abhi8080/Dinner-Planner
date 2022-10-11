@@ -1,6 +1,8 @@
 import dishesConst from './dishesConst.js';
 import { assert, expect, should } from 'chai';
 import createUI from "./createUI.js";
+import installOwnCreateElement from './jsxCreateElement';
+import {findTag} from "./jsxUtilities.js";
 
 let SidebarView;
 const X= TEST_PREFIX;
@@ -59,5 +61,14 @@ describe("TW1.3 SidebarView events", function tw1_3_10() {
         div.querySelectorAll("button")[1].click();
         expect(newNumber).to.equal(5);
     });
+
+    it("SidebarView does not change props after rendering", function tw1_3_10_3(){
+        installOwnCreateElement();
+        const props = {number: 4, dishes: []};
+        const json = JSON.stringify(props);
+        const rendering= SidebarView(props);
+        expect(JSON.stringify(props),"Do not change the props in the View after rendering!").to.equal(json);
+    });
+        
     
 });
