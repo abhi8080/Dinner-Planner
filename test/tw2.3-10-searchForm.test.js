@@ -1,5 +1,7 @@
 import { assert, expect } from "chai";
 import createUI from "./createUI.js";
+import installOwnCreateElement from "./jsxCreateElement.js";
+import {findTag,onlyAllowNativeEventNames} from "./jsxUtilities.js";
 
 let SearchFormView;
 const X = TEST_PREFIX;
@@ -84,5 +86,20 @@ describe("TW2.3 SearchFormView", function tw2_3_10() {
     const dishTypes2 = ["primero", "segundo", "tercero", "cuarto"];
     checkArrayRendering(div2, dishTypes2);
 });
+
+it("SearchFormView uses correct native event names", function tw2_3_10_3() {
+    installOwnCreateElement();
+    const rendering = SearchFormView({dishTypeOptions:[]});
+    const selects = findTag("select", rendering);
+    selects.forEach(select => {
+      onlyAllowNativeEventNames(select);
+    });
+
+    const inputs = findTag("input", rendering);
+    inputs.forEach(input => {
+      onlyAllowNativeEventNames(input);
+    }
+    );
+  });
 
 });
