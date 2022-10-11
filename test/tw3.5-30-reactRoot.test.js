@@ -3,6 +3,7 @@ const h= React.createElement;
 import {render} from "react-dom";
 
 import {checkImageAndProps, checkUpdateFromFirebase, checkFirebaseUpdate} from "./rootUtils.js";
+import {dummyImgName} from "./searchUtils.js";
 
 let ReactRoot;
 const X = TEST_PREFIX;
@@ -23,7 +24,7 @@ describe("TW3.5 ReactRoot", function tw3_5_30() {
         return <span>{props.model.numberOfGuests}{props.model.dishes.length}</span>;
     }
     function DummyImg(props){
-        propsHistory.push(1984);
+        propsHistory.push(dummyImgName);
         return "dummyIMG";
     }
     

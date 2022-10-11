@@ -23,7 +23,7 @@ async function checkImageAndProps(doRender, propsHistory){
     finally{ window.fetch=oldFetch; }
 
     expect(propsHistory.length, "Root should initially render an image").to.gte(1);
-    expect(propsHistory[0], "Root should initially render an image").to.equal(1984);
+    expect(propsHistory[0], "Root should initially render an image").to.equal(dummyImgName);
     expect(propsHistory[1], "Root should pass a model prop to App").to.have.property("model");
     //expect(propsHistory[1].model, "App model prop should be an object from VueRoot state (proxy)").to.be.a("Proxy");
     expect(propsHistory[1].model.numberOfGuests, "model passed to App  should have the same number of guests as in firebase").to.equal(5);
