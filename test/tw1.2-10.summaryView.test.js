@@ -26,6 +26,6 @@ describe("TW1.2 SummaryView", function tw1_2_10() {
         const props = {people: 4, ingredients: []};
         const json = JSON.stringify(props);
         const rendering= SummaryView(props);
-        expect(JSON.stringify(props),"Do not change the props in the View after rendering!").to.equal(json);
+        expect(JSON.stringify(props),"SummaryView doesn't change its props during render").to.equal(json);
     });
 });

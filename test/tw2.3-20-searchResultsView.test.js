@@ -155,6 +155,6 @@ describe("TW2.3 SearchResultsView", function tw2_3_20() {
     const props = {searchResults: searchResults};
     const json = JSON.stringify(props);
     const rendering= SearchResultsView(props);
-    expect(JSON.stringify(props),"Do not change the props in the View after rendering!").to.equal(json);
+    expect(JSON.stringify(props),"SearchResultsView doesn't change its props during render").to.equal(json);
   });
 });

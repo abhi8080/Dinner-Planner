@@ -67,7 +67,7 @@ describe("TW1.3 SidebarView events", function tw1_3_10() {
         const props = {number: 4, dishes: []};
         const json = JSON.stringify(props);
         const rendering= SidebarView(props);
-        expect(JSON.stringify(props),"Do not change the props in the View after rendering!").to.equal(json);
+        expect(JSON.stringify(props),"SidebarView doesn't change its props during render").to.equal(json);
     });
         
     

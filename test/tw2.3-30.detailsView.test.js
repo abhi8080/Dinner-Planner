@@ -157,6 +157,6 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
     const props = {dishData: dishInformation, guests: guests, isDishInMenu: disabled};
     const json = JSON.stringify(props);
     const rendering= DetailsView(props);
-    expect(JSON.stringify(props),"Do not change the props in the View after rendering!").to.equal(json);
+    expect(JSON.stringify(props),"DetailsView doesn't change its props during render").to.equal(json);
   });
 });
