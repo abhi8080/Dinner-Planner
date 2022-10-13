@@ -3,6 +3,7 @@ import createUI from "./createUI.js";
 import installOwnCreateElement from "./jsxCreateElement.js";
 import {findTag,onlyAllowNativeEventNames} from "./jsxUtilities.js";
 
+
 let SearchFormView;
 const X = TEST_PREFIX;
 try {
@@ -87,7 +88,16 @@ describe("TW2.3 SearchFormView", function tw2_3_10() {
     checkArrayRendering(div2, dishTypes2);
 });
 
-it("SearchFormView uses correct native event names", function tw2_3_10_3() {
+it("SearchFormView does not change its props during rendering", function tw2_3_10_3() {
+  installOwnCreateElement();
+  const props = {dishTypeOptions:["starter", "main course", "dessert"]};
+  const json = JSON.stringify(props);
+  const rendering= SearchFormView(props);
+  console.log(rendering);
+  expect(JSON.stringify(props),"SearchFormView doesn't change its props during render").to.equal(json);
+});
+
+it("SearchFormView uses correct native event names", function tw2_3_10_4() {
     installOwnCreateElement();
     const rendering = SearchFormView({dishTypeOptions:[]});
     const selects = findTag("select", rendering);
@@ -101,5 +111,7 @@ it("SearchFormView uses correct native event names", function tw2_3_10_3() {
     }
     );
   });
+
+
 
 });

@@ -5,6 +5,7 @@ import {render} from "react-dom";
 import {dishInformation} from "./mockFetch.js";
 import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
 import {compressHistory} from "./historyUtils.js";
+import {dummyImgName} from "./searchUtils.js";
 
 let DetailsPresenter;
 let DetailsView;
@@ -35,7 +36,7 @@ describe("TW3.2 React Details  presenter (observer)", function tw_3_2_50() {
         return <span>dummy view</span>;
     }
     function DummyImg(props){
-        propsHistory.push(1984);
+        propsHistory.push(dummyImgName);
         return "dummyIMG";
     }
     const h = React.createElement;
@@ -109,7 +110,7 @@ describe("TW3.2 React Details  presenter (observer)", function tw_3_2_50() {
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));
         //expect(compressHistory(propsHistory).length, "view should not be rendered when promise is not resolved").to.equal(1);
-        expect(propsHistory.slice(-1)[0], "an image should be rendered when there is no data").to.equal(1984);
+        expect(propsHistory.slice(-1)[0], "an image should be rendered when there is no data").to.equal(dummyImgName);
 
         model.currentDishPromiseState.data= dishInformation;
         model.currentDish= dishInformation.id;
@@ -117,7 +118,7 @@ describe("TW3.2 React Details  presenter (observer)", function tw_3_2_50() {
         await new Promise(resolve => setTimeout(resolve));
         const compressed= compressHistory(propsHistory); 
         //expect(compressed.length, "view should be rendered when promise is resolved").to.equal(2);
-        expect(compressed.slice(-2)[0],  "an image should be rendered when there is no data").to.equal(1984);
+        expect(compressed.slice(-2)[0],  "an image should be rendered when there is no data").to.equal(dummyImgName);
         checkAgainstModel();
         expect(propsHistory.slice(-1)[0].isDishInMenu, "isDishInMenu expected to be falsy").to.not.be.ok;
 
@@ -157,7 +158,7 @@ describe("TW3.2 React Details  presenter (observer)", function tw_3_2_50() {
         observers.forEach(o=>o());
         await new Promise(resolve => setTimeout(resolve));
         //expect(compressHistory(propsHistory).length, "view should not be rendered when promise is not resolved").to.equal(1);
-        expect(propsHistory.slice(-1)[0],  "an image should be rendered when there is no data").to.equal(1984);
+        expect(propsHistory.slice(-1)[0],  "an image should be rendered when there is no data").to.equal(dummyImgName);
     });
 
     it("Details presenter removes observer subscriptions at teardown", async  function tw_3_2_50_3(){

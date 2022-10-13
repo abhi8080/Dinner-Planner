@@ -1,5 +1,6 @@
 import {h, render} from "vue";
 import {checkImageAndProps, checkUpdateFromFirebase, checkFirebaseUpdate} from "./rootUtils.js";
+import {dummyImgName} from "./searchUtils.js";
 
 let VueRoot;
 const X = TEST_PREFIX;
@@ -16,7 +17,7 @@ describe("TW3.5 VueRoot", function tw3_5_20() {
         return <span>{props.model.numberOfGuests}{props.model.dishes.length}</span>;
     }
     function DummyImg(props){
-        propsHistory.push(1984);
+        propsHistory.push(dummyImgName);
         return "dummyIMG";
     }
     

@@ -3,6 +3,7 @@ import createUI from "./createUI";
 import installOwnCreateElement from "./jsxCreateElement.js";
 import {findTag,onlyAllowNativeEventNames} from "./jsxUtilities.js";
 
+
 import {dishInformation} from "./mockFetch.js";
 
 let DetailsView;
@@ -154,12 +155,21 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
     expect(addToMenuButton.disabled,       "button must be disabled if the dish is already in the menu").to.equal(disabled);
   });
 
-  it("DetailsView uses correct native event names", function tw2_3_30_8() {
+  it("DetailsView does not change its props during rendering", function tw2_3_30_8() {
+    installOwnCreateElement();
+    const props = {dishData: dishInformation, guests: guests, isDishInMenu: disabled};
+    const json = JSON.stringify(props);
+    const rendering= DetailsView(props);
+    expect(JSON.stringify(props),"DetailsView doesn't change its props during render").to.equal(json);
+
+  });
+  it("DetailsView uses correct native event names", function tw2_3_30_9() {
     installOwnCreateElement();
     const rendering= DetailsView({dishData:dishInformation,guests:guests,isDishInMenu:{disabled}})
     const buttons=findTag("button", rendering);
     buttons.forEach(button => {
         onlyAllowNativeEventNames(button);
     });
-  });
+   });
+
 });
