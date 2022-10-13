@@ -43,10 +43,21 @@ describe("TW2.4 promiseNoData", function tw2_4_30() {
   });
 
   it("promiseNoData returns a div with the error text if the error in promise state is truthy", async function tw2_4_30_3() {
+    function Error(error) {
+      this.error = error;
+    }
+    Error.prototype.toString = function errorToString() {
+      return `${this.error}`;
+    };
+    
+    const error = new Error("dummy error to show");
+
     const response = promiseNoData({
       promise: "dummy",
-      error: "dummy error to show",
+      error: error,
     });
+
+    expect(response.children[0], "The error message should be displayed as a string").to.be.a("string");
 
     expect(response.tag, "Does promiseNoData return a div").to.equal("div");
     expect(
@@ -57,7 +68,6 @@ describe("TW2.4 promiseNoData", function tw2_4_30() {
       response.children[0],
       "does promiseNoData render the error sent?"
     ).to.equal("dummy error to show");
-    expect(response.children[0], "Remember that the error message should be displayed as a string!").to.be.a("string");
   });
 
   it("promiseNoData returns falsy when data in promise state is not undefined and promise is truthy", async function tw2_4_30_4() {
