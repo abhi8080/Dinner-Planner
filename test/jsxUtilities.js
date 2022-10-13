@@ -67,6 +67,24 @@ function findCustomEventName(tag){
     return propName;
 }
 
+function onlyAllowNativeEventNames(tag) {
+    if(tag.tag=="input" || tag.tag=="select"){
+        if(!Object.keys(tag.props).includes("onChange") && !Object.keys(tag.props).includes("onInput")){
+            if(Object.keys(tag.props).includes("onchange"))
+                expect.fail("onchange not accepted in the lab because it does not work with React. Please use onChange. In "+JSON.stringify(tag));
+            if(Object.keys(tag.props).includes("oninput"))
+                expect.fail("oninput not accepted in the lab because it does not work with React. Please use onInput. In "+JSON.stringify(tag));
+            expect.fail("tag expected to define onChange or onInput native event listener. In "+JSON.stringify(tag));
+        }
+    }else{ 
+        if(!Object.keys(tag.props).includes("onClick")){
+            if(Object.keys(tag.props).includes("onclick"))
+                expect.fail("onclick not accepted in the lab because it does not work with React. Please use onClick. In "+JSON.stringify(tag));
+            expect.fail("tag expected to define onClick native event listener. In "+JSON.stringify(tag));
+        }
+    }
+}
+
 function prepareViewWithCustomEvents(view, props, makeButtons, handlers){
     installOwnCreateElement();
     const rendering= view(props);
@@ -85,5 +103,6 @@ function prepareViewWithCustomEvents(view, props, makeButtons, handlers){
     return { rendering: rendering1, clickables: makeButtons(rendering1), customEventNames:propNames};
 }
 
-export {findTag, findCustomEventName, prepareViewWithCustomEvents};
+export {findTag, findCustomEventName, prepareViewWithCustomEvents, onlyAllowNativeEventNames};
 
+    

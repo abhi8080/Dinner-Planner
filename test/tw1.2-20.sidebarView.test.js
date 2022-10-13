@@ -1,7 +1,6 @@
 import dishesConst from './dishesConst.js';
 import { assert, expect, should } from 'chai';
 import createUI from "./createUI.js";
-
 let SidebarView;
 const X= TEST_PREFIX;
 try{
@@ -39,4 +38,5 @@ describe("TW1.2 SidebarView", function tw1_2_20() {
         assert.equal(div.querySelectorAll("button")[0].nextSibling.textContent, "1");
         
     });
+
 });

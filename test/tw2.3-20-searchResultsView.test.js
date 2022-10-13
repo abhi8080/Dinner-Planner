@@ -1,5 +1,6 @@
 import { assert, expect } from "chai";
 import installOwnCreateElement from "./jsxCreateElement";
+import {findTag,onlyAllowNativeEventNames} from "./jsxUtilities.js";
 
 let SearchResultsView;
 const X = TEST_PREFIX;
@@ -150,11 +151,21 @@ describe("TW2.3 SearchResultsView", function tw2_3_20() {
       ).to.equal(searchResults[i].title);
     });
   });
-  it("SearchResultsView does not change props after rendering", function  tw2_3_20_6() {
+
+  it("SearchResultsView does not change its props during rendering", function  tw2_3_20_6() {
     installOwnCreateElement();
     const props = {searchResults: searchResults};
     const json = JSON.stringify(props);
     const rendering= SearchResultsView(props);
     expect(JSON.stringify(props),"SearchResultsView doesn't change its props during render").to.equal(json);
+  });
+  
+  it("SearchResultsView uses correct native event names", function tw2_3_20_8() {
+    installOwnCreateElement();
+    const rendering= SearchResultsView({searchResults:searchResults});
+    const spans=findTag("span", rendering);
+    spans.forEach(span => {
+        onlyAllowNativeEventNames(span);
+    });
   });
 });
