@@ -1,5 +1,7 @@
 import { assert, expect } from "chai";
 import createUI from "./createUI.js";
+import installOwnCreateElement from './jsxCreateElement';
+import {findTag} from "./jsxUtilities.js";
 
 let SearchFormView;
 const X = TEST_PREFIX;
@@ -83,6 +85,15 @@ describe("TW2.3 SearchFormView", function tw2_3_10() {
     window.React = { createElement: h };
     const dishTypes2 = ["primero", "segundo", "tercero", "cuarto"];
     checkArrayRendering(div2, dishTypes2);
+});
+
+it("SearchFormView does not change props after rendering", function tw2_3_10_3() {
+  installOwnCreateElement();
+  const props = {dishTypeOptions:["starter", "main course", "dessert"]};
+  const json = JSON.stringify(props);
+  const rendering= SearchFormView(props);
+  console.log(rendering);
+  expect(JSON.stringify(props),"SearchFormView doesn't change its props during render").to.equal(json);
 });
 
 });

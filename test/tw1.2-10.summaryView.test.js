@@ -1,6 +1,7 @@
 import dishesConst from './dishesConst.js';
 import { assert, expect, should } from 'chai';
 import createUI from "./createUI.js";
+import installOwnCreateElement from './jsxCreateElement';
 
 const {render, h}= require("vue");
 
@@ -19,5 +20,12 @@ describe("TW1.2 SummaryView", function tw1_2_10() {
         window.React={createElement:h};
         render(<SummaryView people={4} ingredients={[]} />, div);
         assert.equal(div.firstElementChild.firstElementChild.firstChild.textContent, "4");
+    });
+    it("SummaryView does not change props after rendering ", function tw1_2_10_2(){
+        installOwnCreateElement();
+        const props = {people: 4, ingredients: []};
+        const json = JSON.stringify(props);
+        const rendering= SummaryView(props);
+        expect(JSON.stringify(props),"SummaryView doesn't change its props during render").to.equal(json);
     });
 });

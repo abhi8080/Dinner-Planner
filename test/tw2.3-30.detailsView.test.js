@@ -1,5 +1,6 @@
 import { assert, expect } from "chai";
 import createUI from "./createUI";
+import installOwnCreateElement from './jsxCreateElement';
 
 import {dishInformation} from "./mockFetch.js";
 
@@ -150,5 +151,12 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
     });
     expect(addToMenuButton, "add to menu button not found").to.not.be.undefined;
     expect(addToMenuButton.disabled,       "button must be disabled if the dish is already in the menu").to.equal(disabled);
+  });
+  it("DetailsView does not change props after rendering", function tw2_3_30_8() {
+    installOwnCreateElement();
+    const props = {dishData: dishInformation, guests: guests, isDishInMenu: disabled};
+    const json = JSON.stringify(props);
+    const rendering= DetailsView(props);
+    expect(JSON.stringify(props),"DetailsView doesn't change its props during render").to.equal(json);
   });
 });
