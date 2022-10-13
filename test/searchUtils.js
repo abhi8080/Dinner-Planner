@@ -34,6 +34,8 @@ function findResultsEventName(){
 }
 
 
+const dummyImgName = "promise loading image GIF";
+
 function makeRender(formProps, resultsProps, h, render, theReact, makeRoot){
     function DummyForm(props){
         formProps.push(props);
@@ -43,8 +45,9 @@ function makeRender(formProps, resultsProps, h, render, theReact, makeRoot){
         resultsProps.push(props);
         return <span>dummy results</span>;
     }
+
     function DummyImg(props){
-        resultsProps.push(1984);
+        resultsProps.push(dummyImgName);
         return "dummyIMG";
     }    
     function replaceViews(tag, props, ...children){
@@ -76,4 +79,4 @@ function makeRender(formProps, resultsProps, h, render, theReact, makeRoot){
     };
 }
 
-export {findResultsEventName, findFormEventNames, makeRender};
+export {findResultsEventName, findFormEventNames, makeRender, dummyImgName};

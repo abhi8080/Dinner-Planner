@@ -4,7 +4,7 @@ import React from "react";
 import {render} from "react-dom";
 import {withMyFetch, mySearchFetch, findCGIParam, searchResults} from "./mockFetch.js";
 import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
-import {findFormEventNames, findResultsEventName, makeRender} from "./searchUtils.js";
+import {findFormEventNames, findResultsEventName, makeRender, dummyImgName} from "./searchUtils.js";
 import {compressHistory} from "./historyUtils.js";
 
 
@@ -71,10 +71,10 @@ describe("TW3.2 React (stateful) Search presenter", function tw3_2_11() {
 
     function checkResults(div, res){
         expect(JSON.stringify(compressHistory(resultsProps).slice(-1)[0].searchResults), "search results view should be rendered after promise resolve").to.equal(JSON.stringify(res));
-        expect(compressHistory(resultsProps).slice(-2)[0], "an image should be rendered before promise resolve").to.equal(1984);
+        expect(compressHistory(resultsProps).slice(-2)[0], "an image should be rendered before promise resolve").to.equal(dummyImgName);
 
-        // TODO: at this point, all values before 1984 (image), should be the previous results (which can be a parameter to checkResults)
-        // then a number of 1984 are acceptable
+        // TODO: at this point, all values before dummyImgName (image), should be the previous results (which can be a parameter to checkResults)
+        // then a number of dummyImgName are acceptable
 
         expect(div.firstElementChild.firstElementChild.nextSibling.tagName, "the search results view expected to be rendered after promise resolve").to.equal("SPAN");
         expect(div.firstElementChild.firstElementChild.nextSibling.textContent, "the search results view expected to be rendered after promise resolve").to.equal("dummy results");
@@ -176,7 +176,7 @@ describe("TW3.2 React (stateful) Search presenter", function tw3_2_11() {
         checkResults(div, [searchResults[1]]);
         
         expect(resultsProps.find(function tw3_2_11_4_checkPropsCB(p){
-            return p!=1984 && p.searchResults.length==2;
+            return p!=dummyImgName && p.searchResults.length==2;
         }), "the first, slower search should not save in promise state").to.not.be.ok;
  });
 });

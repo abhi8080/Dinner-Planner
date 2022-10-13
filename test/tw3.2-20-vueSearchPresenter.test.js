@@ -3,7 +3,7 @@ import installOwnCreateElement from "./jsxCreateElement";
 import {h, render} from "vue";
 import {withMyFetch, mySearchFetch, findCGIParam, searchResults} from "./mockFetch.js";
 import {findTag, prepareViewWithCustomEvents} from "./jsxUtilities.js";
-import {findFormEventNames, findResultsEventName, makeRender} from "./searchUtils.js";
+import {findFormEventNames, findResultsEventName, makeRender, dummyImgName} from "./searchUtils.js";
 
 let SearchPresenter;
 
@@ -72,10 +72,10 @@ describe("TW3.2 Vue stateful Search presenter", function tw3_2_20() {
 
     function checkResults(div, res){
         expect(JSON.stringify(resultsProps.slice(-1)[0].searchResults), "search results view should be rendered after promise resolve").to.equal(JSON.stringify(res));
-        expect(resultsProps.slice(-2)[0], "an image should be rendered before promise resolve").to.equal(1984);
+        expect(resultsProps.slice(-2)[0], "an image should be rendered before promise resolve").to.equal(dummyImgName);
         
-        // TODO: at this point, all values before 1984 (image), should be the previous results (which can be a parameter to checkResults)
-        // then a number of 1984 are acceptable
+        // TODO: at this point, all values before dummyImgName (image), should be the previous results (which can be a parameter to checkResults)
+        // then a number of dummyImgName are acceptable
         
         expect(div.firstElementChild.firstElementChild.nextSibling.tagName, "the search results view expected to be rendered after promise resolve").to.equal("SPAN");
         expect(div.firstElementChild.firstElementChild.nextSibling.textContent, "the search results view expected to be rendered after promise resolve").to.equal("dummy results");
@@ -289,6 +289,6 @@ describe("TW3.2 Vue stateful Search presenter", function tw3_2_20() {
         
         checkResults(div, [searchResults[1]]);
         
-        expect(resultsProps.find(p=>p!=1984 && p.searchResults.length==2), "the first, slower search should not save in promise state").to.not.be.ok;
+        expect(resultsProps.find(p=>p!=dummyImgName && p.searchResults.length==2), "the first, slower search should not save in promise state").to.not.be.ok;
  });
 });
