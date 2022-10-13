@@ -18,21 +18,38 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         if (!firebaseModel) this.skip();
     });
 
-    // Optional Test: Only do it if the students have implemented observerRecap
-    if (firebaseModel.observerRecap && typeof firebaseModel.observerRecap === "function") {
-        it("function observerRecap should add an observer to a model that prints a payload. Check your console! You should see 4 payloads.", function tw3_5_10_1() {
+        it("function observerRecap should add an observer", function tw3_5_10_1() {
+            let observerAdded;
+            firebaseModel.observerRecap({ addObserver(o){  observerAdded=o; }});
+            expect(observerAdded, "observerRecap must add an observer").to.be.ok;
+            expect(observerAdded, "observerRecap must be a function").to.be.a("function");
+        });
+
+        it("function observerRecap should print the payload", function tw3_5_10_2() {
+            let observerAdded;
+            firebaseModel.observerRecap({ addObserver(o){  observerAdded=o; }});
+            const oldConsole= console;
+            let wasLogged;
+            const someObject= {test:"value"};
+            window.console= { log(x){ wasLogged=x; } } ;
+            try{
+                observerAdded(someObject); 
+            }finally{  window.console=oldConsole; }
+            expect(wasLogged,"observerRecap must console.log the payload").to.equal(someObject);
+        });
+
+        it("function observerRecap should add an observer to a model given as an argument", function tw3_5_10_1() {
             const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
             const model= new DinnerModel();
-
+            
             firebaseModel.observerRecap(model);
-            expect(model.observers.length, "Remember to add the observer!").to.be.gt(0);
+            expect(model.observers.length, "observerRecap should add exactly one observer to the model").to.be.equal(1);
         
             model.setNumberOfGuests(5);
             model.setCurrentDish(1);
             model.addToMenu({id: 1, title: "dish1"});
             model.removeFromMenu( {id: 1, title: "dish1"});
         });
-    }
 
     it("model saved to firebase", async function tw3_5_10_1() {
         const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
