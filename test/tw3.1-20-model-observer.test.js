@@ -6,6 +6,11 @@ describe("TW3.1 DinnerModel notifies its observers", function tw3_1_20() {
   let model;
   let observer = false;
   let payload = {};
+    
+  let fieldName;
+  let fieldValue;
+  let fieldError;
+    
   this.beforeEach(function tw3_1_20_beforeEach() {
       const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
       model = new DinnerModel();
@@ -13,6 +18,12 @@ describe("TW3.1 DinnerModel notifies its observers", function tw3_1_20() {
           observer = !observer;
           if(arg)
               payload=arg;
+          fieldError=false;
+          try{
+              // using eql for deep equality
+              expect(model[fieldName]).to.eql(fieldValue);
+              // we need to catch because otherwise the error will be swallowed by notifyObservers
+          }catch(e){fieldError=true;}
       });
   });
 
@@ -25,31 +36,32 @@ describe("TW3.1 DinnerModel notifies its observers", function tw3_1_20() {
       expect(payload[methodToPayloadNames[method]], `first argument passed to observer does not contain required payload information for ${method}`).to.equal(value);
   }
 
-  function callMethodTwiceWithValueAndTestObserver(method, value, value2=value, shouldCarryPayload=true) {
+ function callMethodTwiceWithValueAndTestObserver(method, field, value, value2=value, expectedValue1=value, expectedValue2=value2) {
     let before = observer;
     payload = {};
+    fieldName=field;
+    fieldValue= expectedValue1;
     model[method](value);
     expect(before, `observer not notified in ${method}`).to.equal(!observer);
-
+    expect(fieldError, method+ " must change "+  field+"  before it notifies the observers").to.equal(false);
+ 
     // find out payload property name for this method, and also check that payload value is correct
-    if(shouldCarryPayload) {
-      checkPayload(method, value, payload);
-    }
+    checkPayload(method, value, payload);
 
+    fieldValue= expectedValue1;
     model[method](value2);
     expect(before, `observer notified when ${method} called with same argument twice`).to.equal(!observer)
-
-    if(shouldCarryPayload) {
-      checkPayload(method, value, payload);
-    }
+    expect(fieldError, method+ " must change "+  field+"  before it notifies the observers").to.equal(false);
+     
+    checkPayload(method, value, payload);
   }
 
   it("model methods correctly call notifyObservers", function tw3_1_20_1() {
-
-    callMethodTwiceWithValueAndTestObserver("setNumberOfGuests", 99);
-    callMethodTwiceWithValueAndTestObserver("addToMenu", {id: 1}, {id: 1});
-    // dish 1 is now added to menu
-    callMethodTwiceWithValueAndTestObserver("removeFromMenu", {id: 1}, {id: 1});
+      callMethodTwiceWithValueAndTestObserver("setNumberOfGuests", "numberOfGuests", 99);
+      
+      callMethodTwiceWithValueAndTestObserver("addToMenu", "dishes", {id: 1}, {id: 1}, [{id:1}], [{id:1}, {id:1}]);
+      // dish 1 is now added to menu
+      callMethodTwiceWithValueAndTestObserver("removeFromMenu", "dishes", {id: 1}, {id: 1}, [], []);
   });
 
   it("resolvePromise notifies during promise resolution (setCurrentDish, doSearch)", async function tw3_1_20_2() {
@@ -67,10 +79,15 @@ describe("TW3.1 DinnerModel notifies its observers", function tw3_1_20() {
     try {
       // setCurrentDish
       let timesObserverNotified = 0;
-      
-      model.addObserver(function tw3_1_20_1_observer1(){timesObserverNotified++;});
+      let newValue;
+      model.addObserver(function tw3_1_20_1_observer1(){
+        if(!timesObserverNotified)newValue= model.currentDish;
+        timesObserverNotified++;
+      });        
       model.setCurrentDish(1);
+      expect(newValue, "setCurrentDish should set currentDish before notifying observers").to.equal(1);  
       expect(timesObserverNotified, "expected initially 2 notifications from setCurrentDish").to.equal(2);
+        
       checkPayload("setCurrentDish", 1, payload);
       await model.currentDishPromiseState.promise;
       expect(timesObserverNotified, "expected 3 notifications from setCurrentDish after promise is resolved").to.equal(3);
@@ -83,9 +100,9 @@ describe("TW3.1 DinnerModel notifies its observers", function tw3_1_20() {
       // doSearch
       timesObserverNotified = 0;
       model.doSearch({});
-      expect(timesObserverNotified, "expected initially 1 notifications from setCurrentDish").to.equal(1);
+      expect(timesObserverNotified, "expected 1 notifications from doSearch before the promise is resolved").to.equal(1);
       await model.searchResultsPromiseState.promise;
-      expect(timesObserverNotified, "expected 2 notifications from setCurrentDish after promise is resolved").to.equal(2);
+      expect(timesObserverNotified, "expected 2 notifications from doSearch after promise is resolved").to.equal(2);
     } finally {
       window.fetch = oldFetch;
     }
@@ -97,8 +114,13 @@ describe("TW3.1 DinnerModel notifies its observers", function tw3_1_20() {
     try {
       // setCurrentDish
       let timesObserverNotified = 0;
-      model.addObserver(function tw3_1_20_1_observer2(){timesObserverNotified++;});
+      let newValue;
+      model.addObserver(function tw3_1_20_1_observer2(){
+        if(!timesObserverNotified)newValue= model.currentDish;
+        timesObserverNotified++;
+      });
       model.setCurrentDish(2);
+      expect(newValue, "setCurrentDish should set currentDish before notifying observers").to.equal(2);  
       expect(timesObserverNotified, "expected initially 2 notifications from setCurrentDish").to.equal(2);
       try {
         await model.currentDishPromiseState.promise;
@@ -109,12 +131,12 @@ describe("TW3.1 DinnerModel notifies its observers", function tw3_1_20() {
       // doSearch
       timesObserverNotified = 0;
       model.doSearch({});
-      expect(timesObserverNotified, "expected initially 1 notifications from setCurrentDish").to.equal(1);
+      expect(timesObserverNotified, "expected initially 1 notifications from doSearch").to.equal(1);
       try {
         await model.searchResultsPromiseState.promise;
       } catch(e) {}
       await new Promise(resolve => setTimeout(resolve));
-      expect(timesObserverNotified, "expected 2 notifications from setCurrentDish after promise is rejected").to.equal(2);
+      expect(timesObserverNotified, "expected 2 notifications from doSearch after promise is rejected").to.equal(2);
     } finally {
       window.fetch = oldFetch;
     }
