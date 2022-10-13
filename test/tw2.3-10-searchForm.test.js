@@ -93,7 +93,6 @@ it("SearchFormView does not change its props during rendering", function tw2_3_1
   const props = {dishTypeOptions:["starter", "main course", "dessert"]};
   const json = JSON.stringify(props);
   const rendering= SearchFormView(props);
-  console.log(rendering);
   expect(JSON.stringify(props),"SearchFormView doesn't change its props during render").to.equal(json);
 });
 
