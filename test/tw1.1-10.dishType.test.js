@@ -16,10 +16,10 @@ describe("TW1.1 dishType", function tw1_1_10() {
     });
 
     it("knownTypeCB recognizes only starter, main course, dessert", function tw1_1_10_1(){
-        assert.equal(isKnownTypeCB("starter"), true);
-        assert.equal(isKnownTypeCB("main course"), true);
-        assert.equal(isKnownTypeCB("dessert"), true);
-        assert.equal(isKnownTypeCB("appetizer"), false);
+        assert.equal(isKnownTypeCB("starter"), true, "starter is a known type");
+        assert.equal(isKnownTypeCB("main course"), true, "main course is a known type");
+        assert.equal(isKnownTypeCB("dessert"), true, "dessert is a known type");
+        assert.equal(isKnownTypeCB("appetizer"), false, "appetizer is not a known type");
     });
     
     it("dishType returns a known dish type", function tw1_1_10_2(){ assert.equal(dishType(dishesConst[4]), "main course");});

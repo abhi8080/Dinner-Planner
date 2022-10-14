@@ -32,11 +32,11 @@ describe("TW1.1 shoppingList", function tw1_1_40() {
         const result= shoppingList(dishes);
         
         assert.equal(result.length, 3);
-        assert.equal(result.filter(function tw1_1_40_1_filter1(i){ return i.id==12;}).length, 1);
-        assert.equal(result.filter(function tw1_1_40_1_filter2(i){ return i.id==12;})[0].amount, 13.5);
-        assert.equal(result.filter(function tw1_1_40_1_filter3(i){ return i.id==13;}).length, 1);
-        assert.equal(result.filter(function tw1_1_40_1_filter4(i){ return i.id==13;})[0].amount, 63);
-        assert.equal(result.filter(function tw1_1_40_1_filter5(i){ return i.id==14;}).length, 1);
-        assert.equal(result.filter(function tw1_1_40_1_filter6(i){ return i.id==14;})[0].amount, 10);
+        assert.equal(result.filter(function tw1_1_40_1_filter1(i){ return i.id==12;}).length, 1, "should not have duplicate ingredients");
+        assert.equal(result.filter(function tw1_1_40_1_filter2(i){ return i.id==12;})[0].amount, 13.5, "should add up amounts of same ingredient");
+        assert.equal(result.filter(function tw1_1_40_1_filter3(i){ return i.id==13;}).length, 1, "should not have duplicate ingredients");
+        assert.equal(result.filter(function tw1_1_40_1_filter4(i){ return i.id==13;})[0].amount, 63, "should add up amounts of same ingredient");
+        assert.equal(result.filter(function tw1_1_40_1_filter5(i){ return i.id==14;}).length, 1, "should not have duplicate ingredients");
+        assert.equal(result.filter(function tw1_1_40_1_filter6(i){ return i.id==14;})[0].amount, 10, "should add up amounts of same ingredient");
     });
 });

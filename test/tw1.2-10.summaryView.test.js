@@ -21,7 +21,7 @@ describe("TW1.2 SummaryView", function tw1_2_10() {
         const div= createUI();
         window.React={createElement:h};
         render(<SummaryView people={4} ingredients={[]} />, div);
-        assert.equal(div.firstElementChild.firstElementChild.firstChild.textContent, "4");
+        assert.equal(div.firstElementChild.firstElementChild.firstChild.textContent, "4", "SummaryView should show its people prop, in this case, 4");
     });
 
     it("SummaryView does not change its props during rendering ", function tw1_2_10_2(){

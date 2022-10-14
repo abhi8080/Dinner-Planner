@@ -77,7 +77,7 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
         "textContent",
         ceilAndFloor(dishInformation["pricePerServing"])
       ),
-      "Did you display the price?"
+      "The price of the dish is not rendered."
     ).to.be.ok;
   });
 
@@ -88,7 +88,7 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
         "textContent",
         ceilAndFloor(dishInformation["pricePerServing"] * guests)
       ),
-      "Did you display the price per serving multipled by the number of guests?"
+      "pricePerServings is multiplied by the number of guests"
     ).to.be.ok;
   });
 
@@ -96,7 +96,7 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
       dishInformation["extendedIngredients"].forEach(function tw2_3_30_3_checkIngredientCB(ingredient) {
       expect(
         searchProperty(divChildren, "textContent", [ingredient["name"]]),
-        "Did you display the ingredient names?"
+        "ingredient names must be displayed"
       ).to.be.ok;
 
       expect(
@@ -109,7 +109,7 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
 
       expect(
         searchProperty(divChildren, "textContent", [ingredient["unit"]]),
-        "Did you display the measurement unit for the ingredient amount?"
+        "Measurement units are not showing"
       ).to.be.ok;
     });
   });

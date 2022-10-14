@@ -13,7 +13,7 @@ describe("TW2.4 Current dish Promise State", function tw_2_4_20() {
   it("Model initializes currentDishPromiseState correctly", function tw_2_4_20_1() {
     expect(
       model,
-      "Does the model have a property called currentDishPromiseState?"
+      "model must have currentDishPromiseState property"
     ).to.have.property("currentDishPromiseState");
     expect(JSON.stringify(model.currentDishPromiseState)).to.equal(
       JSON.stringify({})
@@ -27,19 +27,19 @@ describe("TW2.4 Current dish Promise State", function tw_2_4_20() {
     model.setCurrentDish(dishId);
     expect(
       model.currentDishPromiseState,
-      "Does the currentDishPromiseState have a property called promise?"
+      "currentDishPromiseState must have a property called promise"
     ).to.have.property("promise");
     expect(
       model.currentDishPromiseState.data,
-      "Does the currentDishPromiseState have a property called data which is initially null?"
+      "currentDishPromiseState must have a property called data which is initially null"
     ).to.be.null;
     expect(
       model.currentDishPromiseState.error,
-      "Does the currentDishPromiseState have a property called error which is initially null?"
+      "currentDishPromiseState must have a property called error which is initially null"
     ).to.be.null;
     expect(
       model.currentDishPromiseState.promise,
-      "Does the currentDishPromiseState have a property called promise which is initially null?"
+      "currentDishPromiseState must have a property called promise which is initially null"
     ).to.not.be.null;
     let start = new Date();
     await model.currentDishPromiseState.promise;
@@ -47,20 +47,20 @@ describe("TW2.4 Current dish Promise State", function tw_2_4_20() {
     expect(finish - start, "promise should take minimum 2 ms").to.be.above(2);
     expect(
       model.currentDishPromiseState.data,
-      "Does the current data in currentDishPromiseState have the property of id after a promise result?"
+      "current data in currentDishPromiseState must have the property of id after a promise result"
     ).to.have.property("id");
     expect(
       model.currentDishPromiseState.data,
-      "Does the current data in currentDishPromiseState have the property of title after a promise result?"
+      "current data in currentDishPromiseState must have the property of title after a promise result"
     ).to.have.property("title");
     expect(
       model.currentDishPromiseState.data.id,
-      "Does the current data in currentDishPromiseState have the correct dish id of: " +
+      "current data in currentDishPromiseState must have the correct dish id of: " +
         dishId
     ).to.equal(dishId);
     expect(
       model.currentDishPromiseState.data.title,
-      "Does the current data in currentDishPromiseState have the correct dish title of: " +
+      "current data in currentDishPromiseState must have the correct dish title of: " +
         dishName
     ).to.equal(dishName);
   });

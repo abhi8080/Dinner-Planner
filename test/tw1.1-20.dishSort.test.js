@@ -16,7 +16,7 @@ describe("TW1.1 sortDishes", function tw1_1_20() {
         const array= [dishesConst[4], dishesConst[6], dishesConst[2], dishesConst[7]];
         const arrayCopy=[...array];
         const sorted= sortDishes(array);
-        expect(sorted).to.not.equal(array);
+        expect(sorted, "sorted array should create a copy").to.not.equal(array);
         array.forEach(function tw1_1_20_1_checkDishCB(dish, index){
             expect(dish).to.equal(
                 arrayCopy[index],
@@ -28,10 +28,10 @@ describe("TW1.1 sortDishes", function tw1_1_20() {
         
         const array= [dishesConst[4], dishesConst[6], dishesConst[2], dishesConst[7]];  
         const sorted= sortDishes(array);
-        assert.equal(sorted.length, 4);
-        assert.equal(sorted[0], array[3]);
-        assert.equal(sorted[1], array[2]);
-        assert.equal(sorted[2], array[0]);
-        assert.equal(sorted[3], array[1]);
+        assert.equal(sorted.length, 4, "sorted array should have same length as array provided");
+        assert.equal(sorted[0], array[3], "no type should be first");
+        assert.equal(sorted[1], array[2], "starter should be second");
+        assert.equal(sorted[2], array[0], "main course should be third");
+        assert.equal(sorted[3], array[1], "dessert should be fourth");
     });
 });

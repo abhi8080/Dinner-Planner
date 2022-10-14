@@ -18,10 +18,10 @@ describe("TW2.4 promiseNoData", function tw2_4_30() {
   it('promiseNoData returns a DIV with "no data" content when promise in the promise state is falsy', async function tw2_4_30_1() {
     const response = promiseNoData({ promise: null });
 
-    expect(response.tag, "Does promiseNoData return a div?").to.be.equal("div");
+    expect(response.tag, "promiseNoData must return a div").to.be.equal("div");
     expect(
       response.children.length,
-      "expecting DIV to have a single (text) child, maybe you have extra spaces?"
+      "expecting DIV to have a single (text) child, must not have extra spaces"
     ).to.equal(1);
     expect(
       response.children[0].toLowerCase(),
@@ -33,12 +33,12 @@ describe("TW2.4 promiseNoData", function tw2_4_30() {
   it("promiseNoData returns an image  when promise is not yet resolved (data and error in promise state are falsy) ", async function tw2_4_30_2() {
     const response = promiseNoData({ promise: "dummy" });
 
-    expect(response.tag, "does promiseNoData have a spinner img?").to.be.equal(
+    expect(response.tag, "promiseNoData must have a spinner img").to.be.equal(
       "img"
     );
     expect(
       response.props.src,
-      "did you correctly have an img in the src?"
+      "Must correctly have an image in src"
     ).to.be.a("string");
   });
 
@@ -62,11 +62,11 @@ describe("TW2.4 promiseNoData", function tw2_4_30() {
     expect(response.tag, "Does promiseNoData return a div").to.equal("div");
     expect(
       response.children.length,
-      "expecting DIV to have a single (text) child, maybe you have extra spaces?"
+      "expecting DIV to have a single (text) child, must not have any extra spaces?"
     ).to.equal(1);
     expect(
       response.children[0],
-      "does promiseNoData render the error sent?"
+      "promiseNoData must render the error sent"
     ).to.equal("dummy error to show");
   });
 

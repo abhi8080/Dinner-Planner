@@ -41,9 +41,9 @@ describe("TW1.3 SidebarView events", function tw1_3_10() {
             window.console={ log: function(x){ plusMsg=x;}};
             div.querySelectorAll("button")[1].click();
             console=oldConsole;
-            expect(minusMsg).to.be.ok;
-            expect(plusMsg).to.be.ok;
-            expect(minusMsg).to.not.equal(plusMsg);
+            expect(minusMsg, "minus button native event is not functioning").to.be.ok;
+            expect(plusMsg, "plus button native event is not functioning").to.be.ok;
+            expect(minusMsg, "each button should console.log different messages").to.not.equal(plusMsg);
         }
     });
 

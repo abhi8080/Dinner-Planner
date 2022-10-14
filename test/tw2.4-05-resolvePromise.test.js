@@ -24,7 +24,7 @@ describe('TW2.4 resolvePromise', function tw2_4_05() {
 
     expect(function () {
       resolvePromise(null, promiseState);
-    }, "did you check whether promise is null?"
+    }, "Must check whether the promise is null"
           ).to.not.throw();
   });
 
