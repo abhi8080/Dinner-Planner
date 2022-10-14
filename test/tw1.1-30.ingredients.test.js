@@ -22,7 +22,7 @@ describe("TW1.1 sortIngredients", function tw1_1_30() {
         const sorted= sortIngredients(ingredients);
 
         assert.equal(sorted.length, ingredients.length);
-        expect(sorted).to.not.equal(ingredients);
+        expect(sorted, "sorted array should create a copy").to.not.equal(ingredients);
         ingredients.forEach(function  tw1_1_30_1_checkIngrCB(i, index){
             expect(i).to.equal(
                 ingredientsConst[index],
@@ -35,8 +35,8 @@ describe("TW1.1 sortIngredients", function tw1_1_30() {
         // Check that it sorts by aisle first and then by name
         const ingredients= [...ingredientsConst];
         const sorted= sortIngredients(ingredients);
-        assert.equal(sorted.length, ingredients.length) ;
-        assert.equal(sorted[0], ingredients[3]) ;
+        assert.equal(sorted.length, ingredients.length, "sorted array should have same length as array provided");
+        assert.equal(sorted[0], ingredients[3]);
         assert.equal(sorted[1], ingredients[1]);
         assert.equal(sorted[2], ingredients[2]);
         assert.equal(sorted[3], ingredients[0]);
