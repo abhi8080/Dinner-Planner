@@ -39,13 +39,13 @@ describe("TW1.4 Model-View-Presenter", function tw_1_4_10() {
         expect(rendering.tag).to.be.ok;
         expect(rendering.tag.name).to.equal(SummaryView.name);
         expect(rendering.props).to.be.ok;
-        expect(rendering.props.people, "2 guests passed to SummaryView").to.equal(2);
+        expect(rendering.props.people, "2 guests should be passed to SummaryView").to.equal(2);
 
         rendering=Summary({model: {numberOfGuests:3, dishes:[]}});
         expect(rendering.tag).to.be.ok;
         expect(rendering.tag.name).to.equal(SummaryView.name);
         expect(rendering.props).to.be.ok;
-        expect(rendering.props.people, "3 guests passed to SummaryView").to.equal(3);
+        expect(rendering.props.people, "3 guests should be passed to SummaryView").to.equal(3);
     });
 
     it("Vue Sidebar presenter renders SidebarView with number prop", function tw_1_4_10_2(){
@@ -55,14 +55,14 @@ describe("TW1.4 Model-View-Presenter", function tw_1_4_10() {
         expect(rendering.tag).to.be.ok;
         expect(rendering.tag.name).to.equal(SidebarView.name);
         expect(rendering.props).to.be.ok;
-        expect(rendering.props.number, "2 guests passed to SidebarView").to.equal(2);
+        expect(rendering.props.number, "2 guests should be passed to SidebarView").to.equal(2);
 
         rendering=Sidebar({model:  {numberOfGuests:5, dishes:[]}});
 
         expect(rendering.tag).to.be.ok;
         expect(rendering.tag.name).to.equal(SidebarView.name);
         expect(rendering.props).to.be.ok;
-        expect(rendering.props.number, "5 guests passed to SidebarView").to.equal(5);
+        expect(rendering.props.number, "5 guests should be passed to SidebarView").to.equal(5);
     });
 
     it("Vue Sidebar presenter renders SidebarView with correct custom event handler", function tw_1_4_10_3(){
@@ -79,9 +79,9 @@ describe("TW1.4 Model-View-Presenter", function tw_1_4_10() {
         expect(typeof rendering.props.onNumberChange).to.equal("function");
         // we can apply the callback, the model should change!
         rendering.props.onNumberChange(3);
-        expect(latestGuests, "custom event properly asks presenter to change guests").to.equal(3);
+        expect(latestGuests, "custom event should properly ask presenter to change guests").to.equal(3);
         rendering.props.onNumberChange(5);
-        expect(latestGuests, "custom event properly asks presenter to change guests").to.equal(5);
+        expect(latestGuests, "custom event should properly ask presenter to change guests").to.equal(5);
         
     });
 
