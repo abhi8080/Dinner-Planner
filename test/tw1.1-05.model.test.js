@@ -15,22 +15,22 @@ describe("TW1.1 DinnerModel", function tw1_1_05() {
     
     it("number of guests can only be set to a positive integer", function  tw1_1_05_1(){
         model.setNumberOfGuests(1);
-        expect(model.numberOfGuests).to.equal(1);
+        expect(model.numberOfGuests, "The models numberOfGuests must be set to 1 if setNumberOfGuests(1) is called").to.equal(1);
         model.setNumberOfGuests(2);
-        expect(model.numberOfGuests).to.equal(2);
+        expect(model.numberOfGuests, "The models numberOfGuests must be set to 1 if setNumberOfGuests(1) is called").to.equal(2);
         
         const msg= "number of guests not a positive integer";
         
-        expect(function tw1_1_05_1_throw1(){model.setNumberOfGuests(-1);}).to.throw(msg);
-        expect(function tw1_1_05_1_throw2(){model.setNumberOfGuests(0);}).to.throw(msg);
-        expect(function tw1_1_05_1_throw3(){model.setNumberOfGuests(3.14159265);}).to.throw(msg);
+        expect(function tw1_1_05_1_throw1(){model.setNumberOfGuests(-1);}, "The model should not allow a negative number of guests").to.throw(msg);
+        expect(function tw1_1_05_1_throw2(){model.setNumberOfGuests(0);}, "The model should not allow 0 guests").to.throw(msg);
+        expect(function tw1_1_05_1_throw3(){model.setNumberOfGuests(3.14159265);}, "The model should not allow a non-integer number of guests").to.throw(msg);
     });
 
     it("can remove dishes", function  tw1_1_05_2(){
         model.addToMenu(getDishDetails(100));
         model.addToMenu(getDishDetails(1));
         model.addToMenu(getDishDetails(200));
-        expect(model.dishes.length).to.equal(3);
+        expect(model.dishes.length, "After adding 3 dishes to the model via addToMenu, the model should have 3 dishes").to.equal(3);
         
         // dish 1 should be in the menu
         expect(model.dishes).to.include(getDishDetails(1));
@@ -39,7 +39,7 @@ describe("TW1.1 DinnerModel", function tw1_1_05() {
         
         model.removeFromMenu({id:1});
             // should now be removed
-        expect(model.dishes).to.not.include(getDishDetails(1));
+        expect(model.dishes, "The model properly removes dish when given {id:1} as an argument").to.not.include(getDishDetails(1));
         
         expect(model.dishes.length).to.equal(2);
         expect(model.dishes).to.include(getDishDetails(100));
@@ -47,7 +47,7 @@ describe("TW1.1 DinnerModel", function tw1_1_05() {
         
         // remove non-existing dish
         model.removeFromMenu({id:256});
-        expect(model.dishes.length).to.equal(2);
+        expect(model.dishes.length, "The model should not remove dishes that do not exist").to.equal(2);
         expect(model.dishes).to.include(getDishDetails(100));
         expect(model.dishes).to.include(getDishDetails(200));
     });
