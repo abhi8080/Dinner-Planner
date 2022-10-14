@@ -18,7 +18,7 @@ describe("TW1.1 menuPrice", function tw1_1_45() {
                             + dishesConst[6].pricePerServing
                             + dishesConst[2].pricePerServing
                             + dishesConst[7].pricePerServing
-                           );
+                           , "sum of all dishes' pricePerServing should be returned");
     });
 
     it("for empty menu, should return the second reduce() parameter", function tw1_1_45_2(){
