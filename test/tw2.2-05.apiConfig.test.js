@@ -31,7 +31,7 @@ describe("TW2.2 apiConfig", function tw2_2_05() {
   it("Check length of API_KEY", function tw2_2_05_3() {
     expect(
       apiConfig.API_KEY,
-      "API_KEY does not have a length of 50. Copied it correctly?"
+      "API_KEY does not have a length of 50. Verify the API_Key is correct"
     ).to.have.lengthOf(50); // API_KEY has len 50
   });
 });

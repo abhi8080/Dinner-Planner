@@ -38,7 +38,7 @@ describe("TW2.4 promiseNoData", function tw2_4_30() {
     );
     expect(
       response.props.src,
-      "did you correctly have an img in the src?"
+      "Must correctly have an image in src"
     ).to.be.a("string");
   });
 
@@ -62,11 +62,11 @@ describe("TW2.4 promiseNoData", function tw2_4_30() {
     expect(response.tag, "Does promiseNoData return a div").to.equal("div");
     expect(
       response.children.length,
-      "expecting DIV to have a single (text) child, maybe you have extra spaces?"
+      "expecting DIV to have a single (text) child, must not have any extra spaces?"
     ).to.equal(1);
     expect(
       response.children[0],
-      "does promiseNoData render the error sent?"
+      "promiseNoData must render the error sent"
     ).to.equal("dummy error to show");
   });
 

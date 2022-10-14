@@ -48,7 +48,7 @@ describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
   it("Model doSearch uses with default parameters taken from model.searchParams", async function tw2_4_10_2() {
     expect(
       model,
-      "Does your model have a searchResultsPromiseState?"
+      "Model must have a searchResultsPromiseState"
     ).to.have.property("searchResultsPromiseState");
     expect(JSON.stringify(model.searchResultsPromiseState)).to.equal(
       JSON.stringify({})
@@ -99,7 +99,7 @@ describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
       ).to.have.property("title");
       expect(
         dish,
-        "searchResultsPromiseState data contains an image?"
+        "searchResultsPromiseState data contains an image"
       ).to.have.property("image");
       expect(
         dish.title.toLowerCase(),

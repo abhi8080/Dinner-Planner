@@ -44,7 +44,7 @@ describe("TW2.5 SearchPresenter", function tw2_5_20() {
     expectSearchFormViewAndSecondChild(renderingEmpty);
     expect(
       renderingEmpty.children[1].children.length,
-      "expecting DIV to have a single (text) child, maybe you have extra spaces?"
+      "expecting DIV to have a single (text) child, must not have any extra spaces"
     ).to.equal(1);
     expect(
       renderingEmpty.children[1].children[0].toLowerCase(),

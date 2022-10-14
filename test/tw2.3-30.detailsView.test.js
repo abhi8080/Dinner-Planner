@@ -96,7 +96,7 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
       dishInformation["extendedIngredients"].forEach(function tw2_3_30_3_checkIngredientCB(ingredient) {
       expect(
         searchProperty(divChildren, "textContent", [ingredient["name"]]),
-        "Did you display the ingredient names?"
+        "ingredient names must be displayed"
       ).to.be.ok;
 
       expect(

@@ -74,7 +74,7 @@ describe("TW2.3 SearchFormView", function tw2_3_10() {
     );
     const options = div.querySelectorAll("option");
     expect(options.length, `Are there ${dishTypes.length + 1} options rendered?`).to.equal(dishTypes.length + 1);
-    expect(options[0].firstChild.textContent, "Is the first option 'Choose:'?").to.equal("Choose:");
+    expect(options[0].firstChild.textContent, "First option must be 'Choose:'").to.equal("Choose:");
     }
 
     let div = createUI();
