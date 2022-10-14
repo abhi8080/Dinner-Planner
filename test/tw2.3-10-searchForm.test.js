@@ -30,33 +30,33 @@ describe("TW2.3 SearchFormView", function tw2_3_10() {
     );
     expect(
       div.querySelectorAll("input").length,
-      "Do you have 1 textbox?"
+      "1 textbox expected"
     ).to.equal(1);
     expect(
-      div.querySelectorAll("select", "Do you have 1 select?").length
+      div.querySelectorAll("select", "Must only have 1 select").length
     ).to.equal(1);
     expect(
       div.querySelectorAll("input")[0].nextSibling.firstChild.textContent,
-      "Is 'Choose:' rendered?"
+      "Choose: is rendered"
     ).to.equal("Choose:");
     expect(
-      div.querySelectorAll("option", "Are there 4 options rendered?").length
+      div.querySelectorAll("option", "4 options must be rendered").length
     ).to.equal(4);
     expect(
       div.querySelectorAll("option")[0].firstChild.textContent,
-      "Is the first option 'Choose:'?"
+      "The first option must be Choose: "
     ).to.equal("Choose:");
     expect(
       div.querySelectorAll("option")[1].firstChild.textContent,
-      "Is the second option 'starter'?"
+      "The second option is 'starter'"
     ).to.equal("starter");
     expect(
       div.querySelectorAll("option")[2].firstChild.textContent,
-      "Is the third option 'main course'?"
+      "The third option 'main course'"
     ).to.equal("main course");
       expect(
           div.querySelectorAll("option")[3].firstChild.textContent,
-          "Is the third last option 'dessert'?"
+          "The third last option 'dessert'"
          ).to.equal(
       "dessert"
     );

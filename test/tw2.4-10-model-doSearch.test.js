@@ -14,34 +14,34 @@ describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
   it("Model sets the searchParams for search query and type", function tw2_4_10_1() {
     expect(
       model,
-      "Did you correctly add searchParams to your model?"
+      "searchParams must be added to the model"
     ).to.have.property("searchParams");
       expect(JSON.stringify(model.searchParams), "paramter expeted to be empty").to.equal(JSON.stringify({}));
     model.setSearchQuery("pizza");
     model.setSearchType("main course");
     expect(
       model.searchParams,
-      "Does searchParams have a query property?"
+      "searchParams must have the property query"
     ).to.have.property("query");
     expect(
       model.searchParams,
-      "Does searchParams have a type property?"
+      "searchParams must have the property type"
     ).to.have.property("type");
     expect(
       model.searchParams.query,
-      "Is query in searchParams a string?"
+      "searchParams must have the property query and it must be a string"
     ).to.be.a("string");
     expect(
       model.searchParams.type,
-      "Is type in searchParams a string?"
+      "searchParams must have the property type and it must be a string"
     ).to.be.a("string");
     expect(
       model.searchParams.query,
-      "Did you properly set the query property of searchParams?"
+      "searchParams query must be set to 'pizza' when setSearchQuery('pizza') is called"
     ).to.be.equal("pizza");
     expect(
       model.searchParams.type,
-      "Did you properly set the type property of searchParams?"
+      "searchParams type must be set to 'main course' when setSearchType('main course') is called"
     ).to.be.equal("main course");
   });
 
@@ -61,19 +61,19 @@ describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
 
     expect(
       model.searchResultsPromiseState,
-      "Does searchResultsPromiseState have a property of promise?"
+      "searchResultsPromiseState must have the property promise"
     ).to.have.property("promise");
     expect(
       model.searchResultsPromiseState.data,
-      "Does searchResultsPromiseState's data property initially start null?"
+      "searchResultsPromiseState data property must start as null"
     ).to.be.null;
     expect(
       model.searchResultsPromiseState.error,
-      "Does searchResultsPromiseState's error property initially start null?"
+      "searchResultsPromiseState's error property initially starts null"
     ).to.be.null;
     expect(
       model.searchResultsPromiseState.promise,
-      "Does searchResultsPromiseState's promise property initially start null?"
+      "searchResultsPromiseState's promise property initially starts null"
     ).to.not.be.null;
     let start = new Date();
     await model.searchResultsPromiseState.promise;
@@ -81,29 +81,29 @@ describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
     expect(finish - start, "promise should take minimum 2 ms").to.be.above(2);
     expect(
       model.searchResultsPromiseState.data,
-      "Did you correctly return the result of the promise and start it into the data property of searchResultsPromiseState?"
+      "Must return result of promise and store it in the data property"
     ).to.be.a("array");
     expect(
       model.searchResultsPromiseState.data.length,
-      "Did you correctly return ALL of the results of the promise, not just the first item?"
+      "All of the results must be returned, not just the first item"
     ).to.not.equal("0");
 
     model.searchResultsPromiseState.data.forEach(function tw2_4_10_2_checkDishCB(dish){
       expect(
         dish,
-        "Does the date in searchResultsPromiseState contain an id?"
+        "searchResultsPromiseState data must contains an id"
       ).to.have.property("id");
       expect(
         dish,
-        "Does the date in searchResultsPromiseState contain a title?"
+        "searchResultsPromiseState data must contains a title"
       ).to.have.property("title");
       expect(
         dish,
-        "Does the date in searchResultsPromiseState contain an image?"
+        "searchResultsPromiseState data contains an image?"
       ).to.have.property("image");
       expect(
         dish.title.toLowerCase(),
-        "Is the title of the dish equivalent to the searchQuery given?"
+        "The title of the dish must be equal to the searchQuery given"
       ).to.contain(searchQuery);
     });
   });

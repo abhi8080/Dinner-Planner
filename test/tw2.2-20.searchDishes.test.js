@@ -26,7 +26,7 @@ describe("TW2.2 searchDishes", function tw2_2_20() {
       ).to.be.above(2);
       expect(
         dishes,
-        "Did not receive an array of dishes. Did you properly check the result of the promise?"
+        "Did not receive an array of dishes. Check the result of the promise"
       ).to.be.a("array");
         expect(dishes.length, "array must not be empty").to.not.equal(0);
       dishes.forEach((dish) => {

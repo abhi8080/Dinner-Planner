@@ -132,7 +132,7 @@ describe("TW2.3 SearchResultsView", function tw2_3_20() {
         "https://spoonacular.com/recipeImages/" + searchResults[i].image
       );
       expect(image.props.height).to.be.ok;
-      expect(image.props.height, "Is your image height 100?").to.equal("100");
+      expect(image.props.height, "Image height must be 100").to.equal("100");
     });
   });
 
@@ -143,11 +143,11 @@ describe("TW2.3 SearchResultsView", function tw2_3_20() {
       expect(title.children).to.be.ok;
       expect(
         title.children.length,
-        "expecting DIV to have a single (text) child, maybe you have extra spaces?"
+        "expecting DIV to have a single (text) child, no extra spaces allowed"
       ).to.equal(1);
       expect(
         title.children[0],
-        "The title of your dish was wrong. Did you properly access the title prop?"
+        "The title of your dish was wrong. Title prop must be accessed"
       ).to.equal(searchResults[i].title);
     });
   });

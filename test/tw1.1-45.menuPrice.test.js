@@ -25,6 +25,6 @@ describe("TW1.1 menuPrice", function tw1_1_45() {
         const {menuPrice}= utilities;
         const dishes=[];
         
-        expect(menuPrice(dishes),  "did you forget the second reduce parameter?").to.equal(0);
+        expect(menuPrice(dishes),  "reduce requires a second paramater").to.equal(0);
     });
 });
