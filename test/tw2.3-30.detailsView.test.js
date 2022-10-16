@@ -1,6 +1,6 @@
 import { assert, expect } from "chai";
 import installOwnCreateElement from "./jsxCreateElement.js";
-import {findTag,onlyAllowNativeEventNames} from "./jsxUtilities.js";
+import {findTag, allChildren, searchProperty, onlyAllowNativeEventNames} from "./jsxUtilities.js";
 
 
 import {dishInformation} from "./mockFetch.js";
@@ -26,39 +26,6 @@ describe("TW2.3 DetailsView", function tw2_3_30() {
           jsxChildren = allChildren(rendering);
     }
   });
-
-    function allChildren(tree){
-        let tags= tree.children?tree.children.flat().map(
-            function child2TagsCB(t){
-                return allChildren(t);}
-        ).flat():[];
-        tags=[tree, ...tags];
-        return tags;
-    }
-
-  // Returns true if there is a node in nodes whose property property
-  // which contain a query from queries.
-    function searchProperty(nodes, property, queries, tag=null, strictEqual = false) {
-    function getVal(node){ return property=="textContent"?node.toString():node.tag==tag?node.props[property]:null; }
-        
-    if (!strictEqual)
-      return nodes.some(
-          function tw2_3_30_checkNodeCB(node){
-              const val= getVal(node);
-              return val &&
-                  queries.some(function tw2_3_30_checkQueryCB(query){
-                      return  val
-                          .toLowerCase().includes(query.toString().toLowerCase());
-                  });
-          });
-      else
-          return nodes.some(
-              function tw2_3_30_checkNodeCB2(node){
-                  const val= getVal(node); 
-                  return val &&
-                      queries.some(function tw2_3_30_checkQueryCB2(query){return val === query.toString();});
-              });
-  }
 
   function ceilAndFloor(num) {
     return [Math.floor(num), Math.ceil(num)];
