@@ -56,17 +56,6 @@ function sortDishes(dishes){
     return //TODO
 }
 
-/* Given a dish array, calculate their total price with a map-reduce callback exercise */
-function menuPrice(dishesArray){
-    // TODO callback1: given a dish, return its price. Look in /test/dishesConst.js to find out the name of the dish price property. 
-    // TODO callback2, with two parameters. Return the sum of the parameters
-    // TODO set proper names to the callbacks!
-    
-    // TODO 1) call dishesArray.map() with callback1 as argument. This will return an array of prices.
-    // TODO 2) on the array of prices, call reduce() with callback2 as first parameter, and 0 as second parameter (we compute the total starting from zero).
-    //        This will produce the total price, which you return
-}
-
 /* 
    Given a menu of dishes, generate a list of ingredients. 
    If an ingredient repeats in several dishes, it will be returned only once, with the amount added up 
@@ -112,6 +101,18 @@ function shoppingList(dishes){
 
     // now we transform the result object into an array: we drop the keys and only keep the values
     return Object.values(result);
+}
+
+
+/* Given a dish array, calculate their total price with a map-reduce callback exercise */
+function menuPrice(dishesArray){
+    // TODO callback1: given a dish, return its price. Look in /test/dishesConst.js to find out the name of the dish price property. 
+    // TODO callback2, with two parameters. Return the sum of the parameters
+    // TODO set proper names to the callbacks!
+    
+    // TODO 1) call dishesArray.map() with callback1 as argument. This will return an array of prices.
+    // TODO 2) on the array of prices, call reduce() with callback2 as first parameter, and 0 as second parameter (we compute the total starting from zero).
+    //        This will produce the total price, which you return
 }
 
 
