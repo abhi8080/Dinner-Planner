@@ -6,7 +6,7 @@ try {
   const dishSource = require("../src/" + X + "dishSource.js");
   if (dishSource.searchDishes) searchDishes = dishSource.searchDishes;
   else searchDishes = dishSource.default.searchDishes;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 describe("TW2.2 searchDishes", function tw2_2_20() {
   this.timeout(200000);

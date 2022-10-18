@@ -5,7 +5,7 @@ let SidebarView;
 const X= TEST_PREFIX;
 try{
    SidebarView= require('../src/views/'+X+'sidebarView.js').default;
-}catch(e){ console.log(e);};
+}catch(e){ };
 
 const {render, h}= require("vue");
 

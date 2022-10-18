@@ -14,7 +14,7 @@ const X = TEST_PREFIX;
 try {
     DetailsPresenter = require("../src/reactjs/" + X + "detailsPresenter.js").default;
     DetailsView = require("../src/views/" + X + "detailsView.js").default;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 
 function findDetailsEventName(){

@@ -14,7 +14,7 @@ try {
   SearchPresenter = require("../src/vuejs/" + X + "searchPresenter.js").default;
   SearchFormView = require("../src/views/" + X + "searchFormView.js").default;
   SearchResultsView = require("../src/views/" + X + "searchResultsView.js").default;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 describe("TW2.5 SearchPresenter", function tw2_5_20() {
   this.timeout(200000);

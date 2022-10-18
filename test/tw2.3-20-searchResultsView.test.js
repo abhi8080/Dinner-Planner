@@ -8,7 +8,7 @@ try {
   SearchResultsView = require("../src/views/" +
     X +
     "searchResultsView.js").default;
-} catch (e) { console.log(e);}
+} catch (e) { }
 
 describe("TW2.3 SearchResultsView", function tw2_3_20() {
   this.timeout(200000);

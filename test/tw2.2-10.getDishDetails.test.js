@@ -6,7 +6,7 @@ try {
   const dishSource = require("../src/" + X + "dishSource.js");
   if (dishSource.getDishDetails) getDishDetails = dishSource.getDishDetails;
   else getDishDetails = dishSource.default.getDishDetails;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 describe("TW2.2 getDishDetails", function tw2_2_10() {
   this.timeout(200000);

@@ -9,7 +9,7 @@ const X = TEST_PREFIX;
 
 try {
   Show = require("../src/vuejs/" + X + "show.js").default;
-} catch (e) {console.log(e);} 
+} catch (e) { } 
 
 describe("TW3.3 Vue navigation Show", function tw3_3_10() {
     this.timeout(200000);

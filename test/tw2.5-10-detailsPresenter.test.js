@@ -10,7 +10,7 @@ const X = TEST_PREFIX;
 try {
     DetailsPresenter = require("../src/vuejs/" + X + "detailsPresenter.js").default;
     DetailsView = require("../src/views/" + X + "detailsView.js").default;
-} catch(e) {console.log(e)};
+} catch(e) { };
 
 describe("TW2.5 DetailsPresenter", function tw2_5_10() {
   this.timeout(200000);

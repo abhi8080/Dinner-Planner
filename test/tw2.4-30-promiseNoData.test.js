@@ -5,7 +5,7 @@ let promiseNoData;
 const X = TEST_PREFIX;
 try {
   promiseNoData = require("/src/views/" + X + "promiseNoData.js").default;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 describe("TW2.4 promiseNoData", function tw2_4_30() {
   this.timeout(200000);

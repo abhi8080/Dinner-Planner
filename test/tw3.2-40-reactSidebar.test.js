@@ -12,7 +12,7 @@ const X = TEST_PREFIX;
 try {
     SidebarPresenter = require("../src/reactjs/" + X + "sidebarPresenter.js").default;
     SidebarView = require("../src/views/" + X + "sidebarView.js").default;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 
 function findSidebarEventNames(){

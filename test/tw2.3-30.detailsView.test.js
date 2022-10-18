@@ -10,7 +10,7 @@ let DetailsView;
 const X = TEST_PREFIX;
 try {
   DetailsView = require("../src/views/" + X + "detailsView.js").default;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 const { render, h } = require("vue");
 

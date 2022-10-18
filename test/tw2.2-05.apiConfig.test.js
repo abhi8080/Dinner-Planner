@@ -4,7 +4,7 @@ let apiConfig;
 const X = TEST_PREFIX;
 try {
   apiConfig = require("../src/" + X + "apiConfig.js");
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 describe("TW2.2 apiConfig", function tw2_2_05() {
   before(function tw2_2_05_before() {

@@ -11,7 +11,7 @@ const X = TEST_PREFIX;
 
 try {
     SearchPresenter = require("../src/vuejs/" + X + "searchPresenter.js").default;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 
 describe("TW3.2 Vue stateful Search presenter", function tw3_2_20() {
