@@ -20,7 +20,7 @@ describe("TW2.2 searchDishes", function tw2_2_20() {
       it(text, async function tw2_2_20_testPromise() {
           await withMyFetch(mySearchFetch, p);
           
-          checkFetchUrl(mySearchFetch.lastFetch, mySearchFetch.lastParam, -1027221439, searchq);
+          checkFetchUrl(mySearchFetch.lastFetch, mySearchFetch.lastParam, [-1027221439, -1197960769], searchq);
 
       }).timeout(4000);
   }

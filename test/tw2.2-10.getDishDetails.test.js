@@ -22,7 +22,7 @@ describe("TW2.2 getDishDetails", function tw2_2_10() {
             const dish= await withMyFetch(myDetailsFetch, p);
             expect(dish, "getDishDetails expected to return Promise").to.be.ok;
             expect(dish.id, "getDishDetails expected to return a dish with the given id").to.equal(expectedIdAndHash.id);
-            checkFetchUrl(myDetailsFetch.lastFetch, myDetailsFetch.lastParam, expectedIdAndHash.hash);
+            checkFetchUrl(myDetailsFetch.lastFetch, myDetailsFetch.lastParam, [expectedIdAndHash.hash]);
         }).timeout(4000);
     }
     
@@ -43,7 +43,7 @@ describe("TW2.2 getDishDetails", function tw2_2_10() {
         try{
             await withMyFetch(function myFetch(url, param){
                 try{
-                    checkFetchUrl(url, param, 1439408948);
+                    checkFetchUrl(url, param, [1439408948, ]);
                 }catch(e){
                     fetchErr=e;
                 }

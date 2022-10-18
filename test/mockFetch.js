@@ -54,7 +54,7 @@ function findCGIParam(string, param,value){
 
 function hash(s){ return s.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0); }
 
-function checkFetchUrl(url, param, hashCode, queryHash=[]){
+function checkFetchUrl(url, param, [hashCode1, hashCode2], queryHash=[]){
     expect(url, "expected to perform  a fetch").to.be.ok;
 
     expect(param.headers, "should send a header for API authentication").to.be.ok;
@@ -68,7 +68,7 @@ function checkFetchUrl(url, param, hashCode, queryHash=[]){
     const queryString= rest.indexOf("?");
     expect(endpoint, "group/NNN should followed by endpoint").to.be.gt(0);
     const endpointStr= queryString==-1?rest.substring(endpoint): rest.substring(endpoint, queryString);
-    expect(hash(endpointStr)===hashCode, "wrong endpoint "+url).to.equal(true);    
+    expect(hash(endpointStr)===hashCode1 || hashCode2 && hash(endpointStr)===hashCode2 , "wrong endpoint "+url).to.equal(true);    
     if(queryString!=-1){
         const queryParams= rest.substring(queryString+1).split("&");
         queryParams.forEach(y=> expect(queryHash.find(x=> hash(y)===x), "unexpected query string parameter-value "+y+" . It is strongly recommended to use URLSearchParams").to.be.ok);
