@@ -9,10 +9,10 @@ let Sidebar;
 let utilities;
 const X= TEST_PREFIX;
 try{
+    utilities = require("/src/"+TEST_PREFIX+"utilities.js");
     SidebarView= require('../src/views/'+X+'sidebarView.js').default;
     SummaryView= require('../src/views/'+X+'summaryView.js').default;
     Sidebar= require('../src/vuejs/'+X+'sidebarPresenter.js').default;
-    utilities = require("/src/"+TEST_PREFIX+"utilities.js")
 }catch(e){};
 
 const {render, h}= require("vue");
