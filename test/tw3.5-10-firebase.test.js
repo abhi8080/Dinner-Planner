@@ -18,14 +18,14 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
         if (!firebaseModel) this.skip();
     });
 
-        it("function observerRecap should add an observer", function tw3_5_10_1() {
+        it("observerRecap should add an observer", function tw3_5_10_1() {
             let observerAdded;
             firebaseModel.observerRecap({ addObserver(o){  observerAdded=o; }});
             expect(observerAdded, "observerRecap must add an observer").to.be.ok;
             expect(observerAdded, "observerRecap must be a function").to.be.a("function");
         });
 
-        it("function observerRecap should print the payload", function tw3_5_10_2() {
+        it("observerRecap should print the payload", function tw3_5_10_2() {
             let observerAdded;
             firebaseModel.observerRecap({ addObserver(o){  observerAdded=o; }});
             const oldConsole= console;
@@ -38,7 +38,7 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
             expect(wasLogged,"observerRecap must console.log the payload").to.equal(someObject);
         });
 
-        it("function observerRecap should add an observer to a model given as an argument", function tw3_5_10_1() {
+        it("observerRecap prints DinnerModel payloads, examine them on your Console!", async function tw3_5_10_1() {
             const DinnerModel= require('../src/'+TEST_PREFIX+'DinnerModel.js').default;
             const model= new DinnerModel();
             
@@ -46,7 +46,7 @@ describe("TW3.5 Firebase-model", function tw3_5_10() {
             expect(model.observers.length, "observerRecap should add exactly one observer to the model").to.be.equal(1);
         
             model.setNumberOfGuests(5);
-            model.setCurrentDish(1);
+            await withMyFetch(myDetailsFetch, ()=>model.setCurrentDish(1));
             model.addToMenu({id: 1, title: "dish1"});
             model.removeFromMenu( {id: 1, title: "dish1"});
         });

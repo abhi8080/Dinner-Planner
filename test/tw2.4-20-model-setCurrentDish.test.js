@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import {withMyFetch, myDetailsFetch} from "./mockFetch.js";
 
 const X = TEST_PREFIX;
 
@@ -23,8 +24,7 @@ describe("TW2.4 Current dish Promise State", function tw_2_4_20() {
   it("Model sets currentDishPromiseState on valid dish id", async function tw_2_4_20_2() {
     expect(model).to.have.property("currentDishPromiseState");
     let dishId = 601651;
-    let dishName = "Fruit Pizza";
-    model.setCurrentDish(dishId);
+    withMyFetch(myDetailsFetch, ()=>model.setCurrentDish(dishId));
     expect(
       model.currentDishPromiseState,
       "currentDishPromiseState must have a property called promise"
@@ -41,28 +41,16 @@ describe("TW2.4 Current dish Promise State", function tw_2_4_20() {
       model.currentDishPromiseState.promise,
       "currentDishPromiseState must have a property called promise which is initially null"
     ).to.not.be.null;
-    let start = new Date();
     await model.currentDishPromiseState.promise;
-    let finish = new Date();
-    expect(finish - start, "promise should take minimum 2 ms").to.be.above(2);
     expect(
       model.currentDishPromiseState.data,
       "current data in currentDishPromiseState must have the property of id after a promise result"
     ).to.have.property("id");
     expect(
-      model.currentDishPromiseState.data,
-      "current data in currentDishPromiseState must have the property of title after a promise result"
-    ).to.have.property("title");
-    expect(
       model.currentDishPromiseState.data.id,
       "current data in currentDishPromiseState must have the correct dish id of: " +
         dishId
     ).to.equal(dishId);
-    expect(
-      model.currentDishPromiseState.data.title,
-      "current data in currentDishPromiseState must have the correct dish title of: " +
-        dishName
-    ).to.equal(dishName);
   });
 
   it("Model does not initiate new promise when id is undefined", function tw_2_4_20_3() {

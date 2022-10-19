@@ -1,3 +1,5 @@
+const { assert, expect } = require("chai");
+
 function url2ExampleResults(url){
     return {results:searchResults};
 }
@@ -37,8 +39,9 @@ async function withMyFetch(theFetch, f, url2Result){
     const oldFetch= fetch;
     window.fetch= function(url, param){ return theFetch(url.toString(), param, url2Result);};
     try{
-        f();
-        await new Promise(resolve => setTimeout(resolve));  // need to wait a bit for the "fetch"        
+        const result= f();
+        await new Promise(resolve => setTimeout(resolve));  // need to wait a bit for the "fetch"
+        return result;
     }
     finally{ window.fetch=oldFetch; }
 }
@@ -48,7 +51,32 @@ function findCGIParam(string, param,value){
     return string.indexOf(cgi+"&")!=-1 || string.endsWith(cgi) || (!value && string.indexOf(cgi)==-1);
 }
 
-export {withMyFetch, myDetailsFetch, mySearchFetch, findCGIParam, searchResults, dishInformation};
+
+function hash(s){ return s.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0); }
+
+function checkFetchUrl(url, param, [hashCode1, hashCode2], queryHash=[]){
+    expect(url, "expected to perform  a fetch").to.be.ok;
+
+    expect(param.headers, "should send a header for API authentication").to.be.ok;
+    expect(Object.keys(param.headers).find(x=> hash(x)===1310335210 && hash(param.headers[x])===-182158098), "should send the correct API key as a header").to.be.ok;
+    
+    const group= url.indexOf("/group/");
+    expect(group, "group/NNN should be part of the URI").to.be.gt(0);
+    expect(url.substring(0, group), "API should be called via the indicated server").to.equal("https://brfenergi.se/iprog");
+    const rest= url.substring(group+7);
+    const endpoint= rest.indexOf("/");
+    const queryString= rest.indexOf("?");
+    expect(endpoint, "group/NNN should followed by endpoint").to.be.gt(0);
+    const endpointStr= queryString==-1?rest.substring(endpoint): rest.substring(endpoint, queryString);
+    expect(hash(endpointStr)===hashCode1 || hashCode2 && hash(endpointStr)===hashCode2 , "wrong endpoint "+url).to.equal(true);    
+    if(queryString!=-1){
+        const queryParams= rest.substring(queryString+1).split("&");
+        queryParams.forEach(y=> expect(queryHash.find(x=> hash(y)===x), "unexpected query string parameter-value "+y+" . It is strongly recommended to use URLSearchParams").to.be.ok);
+        expect(queryHash.length, "wrong number of query string parameters").to.equal(queryParams.length);
+    }
+}
+
+export {withMyFetch, checkFetchUrl, myDetailsFetch, mySearchFetch, findCGIParam, searchResults, dishInformation};
 
 
 const searchResults = [

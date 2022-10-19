@@ -1,4 +1,6 @@
 import { expect } from "chai";
+import {withMyFetch, mySearchFetch} from "./mockFetch.js";
+
 
 const X = TEST_PREFIX;
 
@@ -45,7 +47,7 @@ describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
     ).to.be.equal("main course");
   });
 
-  it("Model doSearch uses with default parameters taken from model.searchParams", async function tw2_4_10_2() {
+  it("Model doSearch uses default parameters taken from model.searchParams", async function tw2_4_10_2() {
     expect(
       model,
       "Model must have a searchResultsPromiseState"
@@ -57,7 +59,7 @@ describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
     let searchType = "main course";
     model.setSearchQuery(searchQuery);
     model.setSearchType(searchType);
-    model.doSearch(model.searchParams);
+    withMyFetch(mySearchFetch, ()=>model.doSearch(model.searchParams)); 
 
     expect(
       model.searchResultsPromiseState,
@@ -75,10 +77,7 @@ describe("TW2.4 Search dishes Promise State", function tw2_4_10() {
       model.searchResultsPromiseState.promise,
       "searchResultsPromiseState's promise property initially starts null"
     ).to.not.be.null;
-    let start = new Date();
     await model.searchResultsPromiseState.promise;
-    let finish = new Date();
-    expect(finish - start, "promise should take minimum 2 ms").to.be.above(2);
     expect(
       model.searchResultsPromiseState.data,
       "Must return result of promise and store it in the data property"
