@@ -11,7 +11,7 @@ const X= TEST_PREFIX;
 try{
     SidebarView= require('../src/views/'+X+'sidebarView.js').default;
     Sidebar= require('../src/vuejs/'+X+'sidebarPresenter.js').default;
-}catch(e){console.log(e);};
+}catch(e){};
 
 function traverseJSX({tag, props, children}){
     if(!children)

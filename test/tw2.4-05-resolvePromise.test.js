@@ -4,7 +4,7 @@ let resolvePromise;
 const X = TEST_PREFIX;
 try {
   resolvePromise = require('/src/' + X + 'resolvePromise.js').default;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 function sleep(ms) {
   return new Promise(function (resolve, reject) {

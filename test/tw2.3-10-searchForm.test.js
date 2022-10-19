@@ -8,7 +8,7 @@ let SearchFormView;
 const X = TEST_PREFIX;
 try {
   SearchFormView = require("../src/views/" + X + "searchFormView.js").default;
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 const { render, h } = require("vue");
 

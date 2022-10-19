@@ -10,7 +10,7 @@ const X = TEST_PREFIX;
 
 try {
   Show = require("../src/reactjs/" + X + "show.js").default;
-} catch (e) { console.log(e);} 
+} catch (e) { } 
 
 describe("TW3.3 React navigation Show", function  tw3_3_21() {
     this.timeout(200000);

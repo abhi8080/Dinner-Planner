@@ -13,7 +13,7 @@ try {
     SummaryPresenter = require("../src/reactjs/" + X + "summaryPresenter.js").default;
     SummaryView = require("../src/views/" + X + "summaryView.js").default;
     utilities= require('../src/'+TEST_PREFIX+'utilities.js');
-} catch (e) {console.log(e);}
+} catch (e) { }
 
 
 describe("TW3.2 React Summary presenter (observer)", function tw3_2_30() {
