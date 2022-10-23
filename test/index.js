@@ -75,7 +75,8 @@ class TestAnalyzer {
     // include username, suite mapping and completed tests
     // username from webpack DefinePlugin
     let body = {
-      username: TELEMETRY === "full" ? USERNAME : "anonymous",
+      username: TELEMETRY === "full" && USERNAME ? USERNAME : "anonymous",
+      semester: SEMESTER ? SEMESTER : "unknown",
       suiteIDMapping: IDtoSuite,
       tests: tests,
     };

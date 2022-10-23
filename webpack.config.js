@@ -9,8 +9,12 @@ const tws= fs.readdirSync("./tw").filter(function(file){return path.parse(file).
 
 const currentDirectory = path.basename(__dirname);
 const usernameRegex = new RegExp("(.*)-[vh]t[0-9]{2}-(1|2_3)", "g");
-const regexResult = usernameRegex.exec(currentDirectory);
+let regexResult = usernameRegex.exec(currentDirectory);
 const username = regexResult ? regexResult[1] : "anonymous";
+
+const semesterRegex = new RegExp("(.*)-([vh]t[0-9]{2})-(1|2_3)", "g");
+regexResult = semesterRegex.exec(currentDirectory);
+const semester = regexResult ? regexResult[2] : "unknown";
 
 const telemetryConfig = fs.readFileSync("./telemetry.config.json");
 let telemetryUserInfo;
@@ -80,6 +84,7 @@ module.exports = {
         new webpack.DefinePlugin({           // globals neeeded by Vue
             USERNAME: JSON.stringify(username),
             TELEMETRY: JSON.stringify(telemetryUserInfo),
+            SEMESTER: JSON.stringify(semester),
             __VUE_OPTIONS_API__:true,
             __VUE_PROD_DEVTOOLS__:true,
             TEST_PREFIX:"\'"+prefix+"\'",
