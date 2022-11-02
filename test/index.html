@@ -1,0 +1,23 @@
+<html lang="en">
+<head>
+    <title>Tutorial tests</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico?">
+</head>
+<body>
+<div class="container">
+    <div id="mocha"></div>
+</div>
+<body>
+  <script>
+    /* DH2642: Test do not run correctly after a hot-redeploy, leaving the page empty. When that happens, we reload. 
+       If this does not work, please reload the page manually.
+     */
+    setInterval(()=>
+        !document.getElementById("mocha").firstElementChild
+            && location.reload()
+        , 1000);
+  </script>
+  <div style="display:none"></div>
+</body>
+</html>
