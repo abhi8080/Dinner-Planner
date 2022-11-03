@@ -6,3 +6,18 @@
   .quantity {
     text-align: right;
   }
+
+  .flexParent{
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+}
+
+.sidebar {
+    width: 400px;
+}
+
+.mainContent {
+    width: 40%;
+    overflow: scroll;
+}

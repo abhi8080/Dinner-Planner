@@ -14,11 +14,9 @@ const Sidebar = require("../" + PREFIX + "/sidebarPresenter.js").default;
 
 export default function App(props) {
   return (
-    <div>
-      <Sidebar model={props.model} />
-      <div>
-        <Summary model={props.model} />
-      </div>
-    </div>
+   <div className="flexParent">
+     <div className="sidebar"><Sidebar model={props.model} /></div>
+     <div className="mainContent"><Summary model={props.model} /></div>
+   </div>
   );
 }
