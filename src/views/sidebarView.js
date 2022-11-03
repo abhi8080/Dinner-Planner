@@ -7,9 +7,37 @@ function SidebarView(props) {
   function plusButtonCB() {
     props.onNumberChange(props.number + 1);
   }
+  
+  function renderDishCB(dish){
+    function removeDishCB() {
+      props.removeDish(dish);
+    }
+
+    function setCurrentDishCB() {
+      props.currentDish(dish);
+    }
+    return (
+      <tr key={dish.id}>
+        <td>
+          <button onClick={removeDishCB}>x</button>
+        </td>
+
+        <td>
+          <a href="#" onClick={setCurrentDishCB}>
+            {dish.title}
+          </a>
+        </td>
+
+        <td>{dishType(dish)}</td>
+        <td class="quantity">
+          {(dish.pricePerServing * props.number).toFixed(2)}
+        </td>
+      </tr>
+    );
+  }
 
   return (
-    <div class="sidebarView">
+    <div class="debug">
       <button disabled={props.number == 1} onClick={minusButtonCB}>
         -
       </button>
@@ -17,40 +45,13 @@ function SidebarView(props) {
       <button onClick={plusButtonCB}>+</button>
       <table>
         <tbody>
-          {sortDishes(props.dishes).map((dish) => {
-            function removeDishCB() {
-              props.removeDish(dish);
-            }
-
-            function setCurrentDishCB() {
-              props.currentDish(dish);
-            }
-            return (
-              <tr key={dish.id}>
-                <td>
-                  <button onClick={removeDishCB}>x</button>
-                </td>
-
-                <td>
-                  <a href="#" onClick={setCurrentDishCB}>
-                    {dish.title}
-                  </a>
-                </td>
-
-                <td>{dishType(dish)}</td>
-                <td class="quantity">
-                  {(dish.pricePerServing * props.number).toFixed(2)}
-                </td>
-              </tr>
-            );
-          })}
-
+          {sortDishes(props.dishes).map(renderDishCB)}
           <tr>
             <td></td>
             <td>Total</td>
             <td></td>
             <td>
-              {menuPrice(props.dishes) * props.number}
+              {(menuPrice(props.dishes) * props.number).toFixed(2)}
             </td>
           </tr>
         </tbody>
