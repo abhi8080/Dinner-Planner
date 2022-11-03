@@ -5,7 +5,7 @@ function SearchResultsView(props) {
     }
     function searchResultCB(searchResult) {
         return <span class="searchResult" key={searchResult.id} onClick={dishClickACB}>
-                    <img src={searchResult.image} onClick={dishClickACB} height={100}/>
+                    <img src={"https://spoonacular.com/recipeImages/" + searchResult.image} onClick={dishClickACB} height='100'/>
                     <div onClick={dishClickACB}>{searchResult.title}</div>
                 </span >
     } 
