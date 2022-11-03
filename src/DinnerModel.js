@@ -1,4 +1,7 @@
 import dishesConst from "../test/dishesConst";
+import resolvePromise from "./resolvePromise";
+
+import {getDishDetails} from './dishSource.js'
 
 /* This is an example of a JavaScript class.
    The Model keeps only abstract data and has no notions of graohics or interaction
@@ -7,6 +10,9 @@ class DinnerModel {
   constructor(nrGuests = 2, dishArray = [], currentDish) {
     this.setNumberOfGuests(nrGuests);
     this.dishes = dishArray;
+    this.searchResultsPromiseState = {};
+    this.searchParams = {};
+    this.currentDishPromiseState = {};
   }
   setNumberOfGuests(nr) {
     // if() and throw exercise
@@ -47,8 +53,21 @@ class DinnerModel {
        So we store also abstract data that will influence the application status.
      */
   setCurrentDish(id) {
+    if(id !== undefined && id !== this.currentDish)
+    resolvePromise(getDishDetails(id),this.currentDishPromiseState);
     this.currentDish = id;
   }
-}
 
+  setSearchQuery(q) {
+    this.searchParams.query = q;
+  }
+
+  setSearchType(t) {
+    this.searchParams.type = t;
+  }
+
+  doSearch(params) {
+    resolvePromise(params,this.searchResultsPromiseState);
+  }
+}
 export default DinnerModel;
