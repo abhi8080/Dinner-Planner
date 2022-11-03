@@ -4,23 +4,21 @@ function SearchFormView(props) {
     }
 
     function searchClickACB(){
-        return;
+        props.onSearch();
     }
-    function selectChangeACB(){
-        return;
-    }
-
-    function textChangeACB(){
-        return;
+    function selectChangeACB(event){
+        props.onSelect(event.target.value);
     }
 
-    console.log(props);
+    function textChangeACB(event){
+        props.onTextChange(event.target.value);
+    }
 
     return <div>
         <input onChange={textChangeACB}>
         </input>
         <select onChange={selectChangeACB}>
-            <option>Choose:</option>
+            <option value="">Choose:</option>
             {props.dishTypeOptions.map(dishOptionCB)}
         </select>
         <button onClick={searchClickACB}>Search!</button>
