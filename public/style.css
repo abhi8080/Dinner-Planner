@@ -29,7 +29,7 @@ button:active {
   background-color: rgb(154, 194, 255);
 }
 button:disabled {
-  background-color: gray;
+  background-color: lightgray;
 }
 
 .flexParent{
@@ -137,4 +137,56 @@ h1 {
     margin: 0 20px;
   }
 
+}
+
+.searchResult {
+  text-align: center;
+  display:inline-block;
+  height:200px;
+  width: 200px;
+  vertical-align: text-top;
+  margin: 30px;
+}
+
+img {
+  /*height: 150px;*/
+}
+
+.dishDetailDescription {
+  text-align: left;
+  background-color: #6c7ae0;
+  color: white;
+  border-radius: 20px;
+  padding: 20px;
+
+}
+.dishDetailIngredients {
+  text-align: left;
+  background-color: gray;
+  color: white;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.detailsViewPrice {
+  font-weight: bold;
+  text-align: right;
+}
+
+.detailsView img {
+  border:6px solid gray;
+  border-radius: 20px;
+  height: 300px;
+}
+
+.detailsView {
+  text-align: center;
+}
+
+.detailsView button {
+  margin: 10px;
+}
+
+.detailsViewButtonWrapper {
+  text-align: right;
 }
