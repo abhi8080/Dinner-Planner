@@ -6,14 +6,7 @@ function DetailsView(props) {
         </div>;
     }
 
-    console.log(props.dishData);
-    console.log(props.isDishInMenu);
-    console.log(props.guests);
-
     function cancelACB() {
-        return;
-    }
-    function addToMenuACB() {
         return;
     }
 
@@ -36,7 +29,7 @@ function DetailsView(props) {
     <div class="detailsViewButtonWrapper">
         <a href={props.dishData.sourceUrl}>More Information</a>
         <button onClick={cancelACB}>Cancel</button>
-        <button onClick={addToMenuACB}disabled={props.isDishInMenu}>Add to Menu</button>
+        <button onClick={props.onAddToMenuACB}disabled={props.isDishInMenu}>Add to Menu</button>
     </div>
 </div>;
 
