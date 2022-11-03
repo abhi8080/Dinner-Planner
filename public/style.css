@@ -1,4 +1,8 @@
 /* A debug class, used to separate components graphically during development */
 .debug {
-    border-style:solid;
-}
+    border-style: solid;
+  }
+  
+  .quantity {
+    text-align: right;
+  }
