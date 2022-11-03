@@ -8,37 +8,36 @@ function SidebarView(props) {
     props.onNumberChange(props.number + 1);
   }
   
-  function renderDishCB(){
+  function renderDishCB(dish){
     function removeDishCB() {
-              props.removeDish(dish);
-            }
+      props.removeDish(dish);
+    }
 
-            function setCurrentDishCB() {
-              props.currentDish(dish);
-            }
-            return (
-              <tr key={dish.id}>
-                <td>
-                  <button onClick={removeDishCB}>x</button>
-                </td>
+    function setCurrentDishCB() {
+      props.currentDish(dish);
+    }
+    return (
+      <tr key={dish.id}>
+        <td>
+          <button onClick={removeDishCB}>x</button>
+        </td>
 
-                <td>
-                  <a href="#" onClick={setCurrentDishCB}>
-                    {dish.title}
-                  </a>
-                </td>
+        <td>
+          <a href="#" onClick={setCurrentDishCB}>
+            {dish.title}
+          </a>
+        </td>
 
-                <td>{dishType(dish)}</td>
-                <td class="quantity">
-                  {(dish.pricePerServing * props.number).toFixed(2)}
-                </td>
-              </tr>
-            );
-          })
+        <td>{dishType(dish)}</td>
+        <td class="quantity">
+          {(dish.pricePerServing * props.number).toFixed(2)}
+        </td>
+      </tr>
+    );
   }
 
   return (
-    <div class="sidebarView">
+    <div class="debug">
       <button disabled={props.number == 1} onClick={minusButtonCB}>
         -
       </button>
@@ -52,7 +51,7 @@ function SidebarView(props) {
             <td>Total</td>
             <td></td>
             <td>
-              {menuPrice(props.dishes) * props.number}
+              {(menuPrice(props.dishes) * props.number).toFixed(2)}
             </td>
           </tr>
         </tbody>
