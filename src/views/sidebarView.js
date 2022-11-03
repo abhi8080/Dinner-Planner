@@ -37,13 +37,13 @@ function SidebarView(props) {
   }
 
   return (
-    <div class="debug">
-      <button disabled={props.number == 1} onClick={minusButtonCB}>
+    <div class="sidebarChild">
+      <button disabled={props.number === 1} onClick={minusButtonCB}>
         -
       </button>
       <span>{props.number}</span>
       <button onClick={plusButtonCB}>+</button>
-      <table>
+      <table class="sidebarTable">
         <tbody>
           {sortDishes(props.dishes).map(renderDishCB)}
           <tr>

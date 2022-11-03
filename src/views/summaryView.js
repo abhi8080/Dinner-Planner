@@ -3,8 +3,8 @@ import { sortIngredients } from "../utilities.js";
 /* Functional JSX component. Name starts with capital letter */
 function SummaryView(props) {
   return (
-    <div class="debug">
-      Summary for <span title="nr guests">{props.people}</span> persons:
+    <div class="summaryViewChild">
+      Dinner for <span title="nr guests">{props.people}</span> guests:
       {
         //  <---- we are in JSX; with this curly brace, we go back to JavaScript, and can write JS code and comments.
         // Then we can come back to JSX <tags>
@@ -27,7 +27,7 @@ function renderIngredients(ingredientArray, people) {
   }
 
   return (
-    <table>
+    <table class="summaryTable">
       <thead>
         <tr>
           <th>Name</th>
