@@ -7,18 +7,9 @@ function SidebarView(props) {
   function plusButtonCB() {
     props.onNumberChange(props.number + 1);
   }
-
-  return (
-    <div class="sidebarView">
-      <button disabled={props.number == 1} onClick={minusButtonCB}>
-        -
-      </button>
-      <span>{props.number}</span>
-      <button onClick={plusButtonCB}>+</button>
-      <table>
-        <tbody>
-          {sortDishes(props.dishes).map((dish) => {
-            function removeDishCB() {
+  
+  function renderDishCB(){
+    function removeDishCB() {
               props.removeDish(dish);
             }
 
@@ -43,8 +34,19 @@ function SidebarView(props) {
                 </td>
               </tr>
             );
-          })}
+          })
+  }
 
+  return (
+    <div class="sidebarView">
+      <button disabled={props.number == 1} onClick={minusButtonCB}>
+        -
+      </button>
+      <span>{props.number}</span>
+      <button onClick={plusButtonCB}>+</button>
+      <table>
+        <tbody>
+          {sortDishes(props.dishes).map(renderDishCB)}
           <tr>
             <td></td>
             <td>Total</td>
