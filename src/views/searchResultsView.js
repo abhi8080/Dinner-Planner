@@ -1,16 +1,14 @@
 function SearchResultsView(props) {
-
-    function dishClickACB() {
-        return;
-    }
     function searchResultCB(searchResult) {
+
+        function dishClickACB() {
+            props.chosenDish(searchResult)
+        }
         return <span class="searchResult" key={searchResult.id} onClick={dishClickACB}>
-                    <img src={"https://spoonacular.com/recipeImages/" + searchResult.image} onClick={dishClickACB} height='100'/>
-                    <div onClick={dishClickACB}>{searchResult.title}</div>
+                    <img src={"https://spoonacular.com/recipeImages/" + searchResult.image} height='100'/>
+                    <div>{searchResult.title}</div>
                 </span >
-    } 
-    
-        console.log(props.searchResults);
+    }
     return <div>
         {props.searchResults.map(searchResultCB)}
     </div>;
