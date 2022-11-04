@@ -50,8 +50,7 @@ button:disabled {
 }
 .sidebarChild {
   flex-grow:1;
-  width: 100%;
-  min-width: 250px;
+  width: 250px;
 }
 
 .mainContent {
