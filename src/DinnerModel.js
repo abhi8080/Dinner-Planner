@@ -66,9 +66,17 @@ class DinnerModel {
     this.searchParams.type = t;
   }
 
-
   doSearch(params) {
-    resolvePromise(searchDishes(params["query"]+" "+params["type"]),this.searchResultsPromiseState);
+    if(params["query"] === undefined || params["type"] === undefined )
+      resolvePromise(searchDishes(" "),this.searchResultsPromiseState);
+    else
+      resolvePromise(searchDishes(params["query"]+" "+params["type"]),this.searchResultsPromiseState);
+  }
+  doSearch() {
+    if(this.searchParams.query === undefined || this.searchParams.type === undefined )
+      resolvePromise(searchDishes(" "),this.searchResultsPromiseState);
+    else
+      resolvePromise(searchDishes(this.searchParams.query+" "+this.searchParams.type),this.searchResultsPromiseState);
   }
 }
 export default DinnerModel;

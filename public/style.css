@@ -181,6 +181,9 @@ img {
 
 .detailsView {
   text-align: center;
+  font-size: 15px;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .detailsView button {
@@ -189,4 +192,8 @@ img {
 
 .detailsViewButtonWrapper {
   text-align: right;
+}
+
+.searchResultsView {
+  font-size: 15px;
 }

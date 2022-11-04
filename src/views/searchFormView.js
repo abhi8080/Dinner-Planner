@@ -4,14 +4,14 @@ function SearchFormView(props) {
     }
 
     function searchClickACB(){
-        props.onSearch();
+        props.onSearchNow();
     }
     function selectChangeACB(event){
-        props.onSelect(event.target.value);
+        props.onSetSearchType(event.target.value);
     }
 
     function textChangeACB(event){
-        props.onTextChange(event.target.value);
+        props.onSetSearchText(event.target.value);
     }
 
     return <div>
