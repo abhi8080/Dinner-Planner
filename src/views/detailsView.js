@@ -21,11 +21,11 @@ function DetailsView(props) {
         {props.dishData.extendedIngredients.map(ingredientRowCB)}
     </div>
     <h2>Instruction</h2>
-    <div class="dishDetailDescription">
+    <div class="dishDetailInstruction">
         {props.dishData.instructions}
     </div>
     <div class="detailsViewPrice">Price: {props.dishData.pricePerServing}</div>
-    <div class="detailsViewPrice">for {props.guests} guests: {props.guests*props.dishData.pricePerServing}</div>
+    <div class="detailsViewPrice">for {props.guests} guests: {(props.guests*props.dishData.pricePerServing).toFixed(2)}</div>
     <div class="detailsViewButtonWrapper">
         <a href={props.dishData.sourceUrl}>More Information</a>
         <button onClick={cancelACB}>Cancel</button>

@@ -38,6 +38,7 @@ function SidebarView(props) {
 
   return (
     <div class="sidebarChild">
+      Number of guests: 
       <button disabled={props.number === 1} onClick={minusButtonCB}>
         -
       </button>
@@ -46,7 +47,7 @@ function SidebarView(props) {
       <table class="sidebarTable">
         <tbody>
           {sortDishes(props.dishes).map(renderDishCB)}
-          <tr>
+          <tr class="sidebarMenuTotal">
             <td></td>
             <td>Total</td>
             <td></td>
