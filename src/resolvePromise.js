@@ -8,13 +8,14 @@ function resolvePromise(promise, promiseState, notifyObservers){
         if(promiseState.promise !== promise) return;
         /* TODO save result in promiseState, as before */
         promiseState.data = result;
-        notifyObservers();
+        if(notifyObservers) notifyObservers();
     } 
     function saveErrorACB(err)  { 
         /* TODO same check as above */
         if(promiseState.promise !== promise) return;
         promiseState.error = err;
-        notifyObservers();
+
+        if(notifyObservers)  notifyObservers();
         /* TODO save err in promiseState, as before */
     }
     if(promise == null) return;

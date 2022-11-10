@@ -68,16 +68,12 @@ class DinnerModel {
        So we store also abstract data that will influence the application status.
      */
   setCurrentDish(id) {
-
-    if(id !== undefined && id !== this.currentDish)
-    resolvePromise(getDishDetails(id),this.currentDishPromiseState, this.notifyObservers.bind(this));
-
-    if(this.currentDish !== id) {
+    if(id !== undefined && id !== this.currentDish) {
       this.currentDish = id;
-      this.notifyObservers({currDish: id})
-    }
-
+      this.notifyObservers({currDish: id});
+      resolvePromise(getDishDetails(id),this.currentDishPromiseState, this.notifyObservers.bind(this));
   }
+}
   setSearchQuery(q) {
     this.searchParams.query = q;
   }
