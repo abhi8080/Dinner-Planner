@@ -18,7 +18,7 @@ describe("TW2.2 searchDishes", function tw2_2_20() {
 
   function testPromise(text, p, searchq) {
       it(text, async function tw2_2_20_testPromise() {
-          await withMyFetch(mySearchFetch, p);
+          expect(await withMyFetch(mySearchFetch, p), "searchDishes must return a promise to an array of search results").to.be.an('array');
           
           checkFetchUrl(mySearchFetch.lastFetch, mySearchFetch.lastParam, [-1027221439, -1197960769], searchq);
 
