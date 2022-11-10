@@ -2,33 +2,52 @@ import SearchFormView from "../views/searchFormView.js";
 import resolvePromise from "../resolvePromise";
 import SearchResultsView from "../views/searchResultsView.js";
 import promiseNoData from "../views/promiseNoData.js";
+import {getDishDetails, searchDishes} from '../dishSource.js'
 
 function SearchPresenter(props) {
     const [searchText, setSearchText] = React.useState("");
     const [dishType, setDishType] = React.useState("");
-    const [promiseState] = React.useState({});
+    const [resultsPromiseState ] = React.useState({});
     const [error, setError] = React.useState({});
     const [data, setData] = React.useState({});
-    const[, reRender]=  React.useState();
+    const [, reRender] =  React.useState();
 
-    function resolve(promise){
-        resolvePromise(promise, promiseState, 
-      function promiseStateChangedACB(){ reRender(new Object()); }  );
-  }
+    function resolve(thePromise) {
+        function promiseStateChangedACB() {
+            setError(resultsPromiseState["error"]);
+            setData(resultsPromiseState["data"]);
+        } 
+        resolvePromise(thePromise, resultsPromiseState, promiseStateChangedACB );
+    }
 
-  React.useEffect(function createdACB(){ resolve(props.model.doSearch({}))}, []);
+    function wasCreatedACB() {
+        resolve(searchDishes({query:"test", type:""}));
+    }
+
+    function searchNowACB() {
+        resolve(searchDishes({query:searchText, type:dishType}));
+    }
+    function handleSearchTextACB(searchText) {
+        setSearchText(searchText);
+    }
+    function handleSearchDishTypeACB(dishType) {
+        setDishType(dishType);
+    }
 
     function selectChosenACB(dish) {
         props.model.setCurrentDish(dish.id);
     }
+
+    React.useEffect(wasCreatedACB, []);
+    
     return(
         <div>
-            <SearchFormView onSetSearchText = {function handleSearchTextACB(searchText){setSearchText(searchText)}} 
-            onSetSearchType = {function handleSearchDishTypeACB(dishType){ setDishType(dishType)}}
-            onSearchNow = {function handleSearchNow(){ resolve(props.model.doSearch({query:searchText, type:dishType}));} }
+            <SearchFormView onSetSearchText = {handleSearchTextACB} 
+            onSetSearchType = {handleSearchDishTypeACB}
+            onSearchNow = {searchNowACB}
             dishTypeOptions={["starter","main course","dessert"]}
             />
-            {promiseNoData(promiseState) || (
+            {promiseNoData(resultsPromiseState) || (
                 <SearchResultsView
                 searchResults={data}
                 onSelectChosen={selectChosenACB}
