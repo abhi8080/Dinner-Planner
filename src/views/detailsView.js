@@ -7,11 +7,12 @@ function DetailsView(props) {
     }
 
     function cancelACB() {
-        return;
+        window.location.hash="search";
     }
 
     function addToMenuACB() {
         props.onAddToMenuACB();
+        window.location.hash="search";
     }
 
     return <div class="detailsView">

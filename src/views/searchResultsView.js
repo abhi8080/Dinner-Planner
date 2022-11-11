@@ -2,7 +2,8 @@ function SearchResultsView(props) {
     function searchResultCB(searchResult) {
 
         function dishClickACB() {
-            props.onSelectChosen(searchResult)
+            props.onSelectChosen(searchResult);
+            window.location.hash="details";
         }
         //this statement is a small bug fix for making the test pass while having a functioning application.
         if( searchResult["openLicense"] !== undefined )

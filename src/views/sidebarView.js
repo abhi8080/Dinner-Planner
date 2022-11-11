@@ -23,7 +23,7 @@ function SidebarView(props) {
         </td>
 
         <td>
-          <a href="#" onClick={setCurrentDishCB}>
+          <a href="#details" onClick={setCurrentDishCB}>
             {dish.title}
           </a>
         </td>

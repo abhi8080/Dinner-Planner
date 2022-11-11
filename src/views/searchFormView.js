@@ -6,6 +6,11 @@ function SearchFormView(props) {
     function searchClickACB(){
         props.onSearchNow();
     }
+    
+    function summaryButtonACB(){
+        window.location.hash="summary";
+    }
+    
     function selectChangeACB(event){
         props.onSetSearchType(event.target.value);
     }
@@ -22,6 +27,7 @@ function SearchFormView(props) {
             {props.dishTypeOptions.map(dishOptionCB)}
         </select>
         <button onClick={searchClickACB}>Search!</button>
+        <button onClick={summaryButtonACB}>Summary</button>
     </div>;
 
 }
