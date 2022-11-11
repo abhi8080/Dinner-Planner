@@ -11,7 +11,7 @@ function DetailsView(props) {
     }
 
     function addToMenuACB() {
-        props.onAddToMenuACB;
+        props.onAddToMenuACB();
     }
 
     return <div class="detailsView">
