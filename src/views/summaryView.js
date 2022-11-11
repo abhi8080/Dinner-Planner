@@ -7,16 +7,16 @@ function SummaryView(props) {
   function renderIngredients(ingredientArray, people) {
     function ingredientTableRowCB(ingr) {
       return (
-        <tr key={/* TODO what's a key? */ ingr.id}>
+        <tr key={ingr.id}>
         <td>{ingr.name}</td> <td>{ingr.aisle}</td>
-        <td class="quantity">{(ingr.amount * people).toFixed(2)}</td>
+        <td className="quantity">{(ingr.amount * people).toFixed(2)}</td>
         <td>{ingr.unit}</td>
         </tr>
       );
     }
 
     return (
-      <table class="summaryTable">
+      <table className="summaryTable">
         <thead>
           <tr>
             <th>Name</th>
@@ -41,7 +41,7 @@ function SummaryView(props) {
   }
 
   return (
-    <div class="summaryViewChild">
+    <div className="summaryViewChild">
       Dinner for <span title="nr guests">{props.people}</span> guests:
       <button onClick={backToSearchACB}>Back to Search</button>
       {

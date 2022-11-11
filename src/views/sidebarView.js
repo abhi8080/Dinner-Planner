@@ -29,7 +29,7 @@ function SidebarView(props) {
         </td>
 
         <td>{dishType(dish)}</td>
-        <td class="quantity">
+        <td className="quantity">
           {(dish.pricePerServing * props.number).toFixed(2)}
         </td>
       </tr>
@@ -37,17 +37,17 @@ function SidebarView(props) {
   }
 
   return (
-    <div class="sidebarChild">
+    <div className="sidebarChild">
       Number of guests: 
       <button disabled={props.number === 1} onClick={minusButtonCB}>
         -
       </button>
       <span>{props.number}</span>
       <button onClick={plusButtonCB}>+</button>
-      <table class="sidebarTable">
+      <table className="sidebarTable">
         <tbody>
           {sortDishes(props.dishes).map(renderDishCB)}
-          <tr class="sidebarMenuTotal">
+          <tr className="sidebarMenuTotal">
             <td></td>
             <td>Total</td>
             <td></td>

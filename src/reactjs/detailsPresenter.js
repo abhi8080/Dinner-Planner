@@ -2,17 +2,15 @@ import DetailsView from "../views/detailsView.js";
 import promiseNoData from "../views/promiseNoData.js";
 
 export default function Details(props) {
-const [numberOfGuests, setNumberOfGuests] = React.useState(props.model.numberOfGuests);
-const [dishes, setDishes] = React.useState(props.model.dishes);
-const [currentDishPromiseState,setCurrentDishPromiseState]=React.useState(props.model.currentDishPromiseState);
+const [, setNumberOfGuests] = React.useState();
+const [, setDishes] = React.useState();
 const [,setPromise]=React.useState();
-const [data, setData]=React.useState(props.model.currentDishPromiseState.data);
+const [, setData]=React.useState();
 const [, setError]=React.useState();
 
 function observerACB(){ 
     setNumberOfGuests(props.model.numberOfGuests);
     setDishes(props.model.dishes);
-    setCurrentDishPromiseState(props.model.currentDishPromiseState);
     setPromise(props.model.currentDishPromiseState.promise);
     setData(props.model.currentDishPromiseState.data); 
     setError(props.model.currentDishPromiseState.error); 
@@ -26,18 +24,17 @@ function wasCreatedACB(){
 React.useEffect(wasCreatedACB, []);
 
   function addToMenuACB() {
-    props.model.addToMenu(data);
+    props.model.addToMenu(props.model.currentDishPromiseState.data);
   }
   function currentDishCB(dish) {
-    if( dish.id === data.id )
+    if(dish.id === props.model.currentDishPromiseState.data.id)
         return true;
     return false;
   }
-
   return (
-    promiseNoData(currentDishPromiseState) || <DetailsView  dishData={data}
-                                                                        isDishInMenu={dishes.filter(currentDishCB)[0] !== undefined }
-                                                                        guests={numberOfGuests}
+    promiseNoData(props.model.currentDishPromiseState) || <DetailsView  dishData={props.model.currentDishPromiseState.data}
+                                                                        isDishInMenu={props.model.dishes.filter(currentDishCB)[0] !== undefined }
+                                                                        guests={props.model.numberOfGuests}
                                                                       onAddToMenuACB={addToMenuACB} />
   );
 }
