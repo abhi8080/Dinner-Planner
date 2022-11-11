@@ -10,6 +10,10 @@ function DetailsView(props) {
         return;
     }
 
+    function addToMenuACB() {
+        props.onAddToMenuACB;
+    }
+
     return <div class="detailsView">
     <h1>{props.dishData.title}</h1>
     <img src={props.dishData.image}/>
@@ -29,7 +33,7 @@ function DetailsView(props) {
     <div class="detailsViewButtonWrapper">
         <a href={props.dishData.sourceUrl}>More Information</a>
         <button onClick={cancelACB}>Cancel</button>
-        <button onClick={props.onAddToMenuACB}disabled={props.isDishInMenu}>Add to Menu</button>
+        <button onClick={addToMenuACB} disabled={props.isDishInMenu}>Add to Menu</button>
     </div>
 </div>;
 

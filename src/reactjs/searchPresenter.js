@@ -2,7 +2,7 @@ import SearchFormView from "../views/searchFormView.js";
 import resolvePromise from "../resolvePromise";
 import SearchResultsView from "../views/searchResultsView.js";
 import promiseNoData from "../views/promiseNoData.js";
-import {getDishDetails, searchDishes} from '../dishSource.js'
+import {searchDishes} from '../dishSource.js'
 
 function SearchPresenter(props) {
     const [searchText, setSearchText] = React.useState("");
@@ -10,7 +10,6 @@ function SearchPresenter(props) {
     const [resultsPromiseState ] = React.useState({});
     const [error, setError] = React.useState({});
     const [data, setData] = React.useState({});
-    const [, reRender] =  React.useState();
 
     function resolve(thePromise) {
         function promiseStateChangedACB() {
