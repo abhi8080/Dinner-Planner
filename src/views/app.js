@@ -18,13 +18,16 @@ const Show = require("../" + PREFIX + "/show.js").default;
 
 export default function App(props) {
   return (
-   <div className="flexParent">
-     <div className="sidebar"><Sidebar model={props.model} /></div>
-     <div className="mainContent">
+  <div class="app">
+    <header><h1>Dinner Planner</h1><p>Making dinner has never been this easy...</p></header>
+    <div class="flexParent">
+      <div class="sidebar"><Sidebar model={props.model} /></div>
+      <div class="mainContent">
         <Show hash="#summary"><Summary model={props.model} /></Show>
         <Show hash="#search"><Search model={props.model} /></Show>
         <Show hash="#details"><Details model={props.model} /></Show>
       </div>
-   </div>
+    </div>
+  </div>
   );
 }

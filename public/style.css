@@ -58,22 +58,72 @@ input, select, button, .sidebar {
 /*                            */
 /*          app.js            */
 /*                            */
-
-.flexParent{
-  margin: auto;
-  display: flex;
+.app {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.flexParent{
+  display: flex;
+
   align-items: stretch;
+  
+  flex-grow: 1;
+  align-items: stretch;
+}
+
+header {
+  max-height: 100px;
+  width: 100%;
+  background-color: rgb(46, 46, 46);
+  
+  padding: 10px;
+}
+header h1 {
+  display:inline;
+  color: white;
+  font-size: 40px;
+}
+header p {
+  display: inline-block;
+  font-size: 15px;
+  margin-left: 20px;
+  color: white;
 }
 
 .mainContent {
   font-size: 40px;
-
-  flex-grow:1;
+  
   border-style: none;
-  padding: 10px;
   overflow-y: auto;
+  flex-grow: 4;
 }
+
+
+.sidebar {
+  border-style: none;
+  padding: 0px;
+  min-width: 300px;
+
+
+  background-color: rgb(255, 255, 255);
+  border-right: 4px solid rgb(164, 164, 164);
+}
+
+@media (max-width: 850px ) { 
+  .flexParent{
+    flex-direction: column;
+  }
+
+  .mainContent {
+    font-size: 30px;
+  }
+
+  header p {
+    margin-top: 0px;
+  }
+}
+
 
 /*                            */
 /*       SummaryView.js       */
@@ -139,15 +189,6 @@ input, select, button, .sidebar {
 /*      SidebarView.sj        */
 /*                            */
 
-.sidebar {
-  display:flex;
-  border-style: none;
-  padding: 0px;
-
-  background-color: rgb(255, 255, 255);
-  border-right: 4px solid rgb(164, 164, 164);
-}
-
 .sidebarView {
   flex-grow:1;
   width: 300px;
@@ -180,7 +221,7 @@ input, select, button, .sidebar {
 }
 
 @media (max-width: 850px ) { 
-  .sidebarView table {
+  .sidebarView {
     width: 100%;
   }
 }
@@ -246,14 +287,6 @@ input, select, button, .sidebar {
 }
 
 @media (max-width: 850px ) { 
-  .flexParent{
-    flex-direction: column;
-  }
-
-  .mainContent {
-    font-size: 30px;
-  }
-
 
   .searchResultsView {
     margin: 0;
