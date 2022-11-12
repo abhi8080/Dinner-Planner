@@ -20,7 +20,7 @@ function SearchPresenter(props) {
     }
 
     function wasCreatedACB() {
-        resolve(searchDishes({query:"test", type:""}));
+        resolve(searchDishes({query:"", type:""}));
     }
 
     function searchNowACB() {

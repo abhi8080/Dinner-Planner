@@ -16,7 +16,7 @@ function SummaryView(props) {
     }
 
     return (
-      <table className="summaryTable">
+      <table>
         <thead>
           <tr>
             <th>Name</th>
@@ -41,14 +41,14 @@ function SummaryView(props) {
   }
 
   return (
-    <div className="summaryViewChild">
+    <div class="summaryView">
       Dinner for <span title="nr guests">{props.people}</span> guests:
-      <button onClick={backToSearchACB}>Back to Search</button>
       {
         //  <---- we are in JSX; with this curly brace, we go back to JavaScript, and can write JS code and comments.
         // Then we can come back to JSX <tags>
         renderIngredients(props.ingredients, props.people)
       }
+      <button onClick={backToSearchACB}>Back to Search</button>
     </div>
   );
 }

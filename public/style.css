@@ -14,11 +14,15 @@ html, body, #root{
   margin: 0;
 }
 
+h1 {
+  margin-left: 20px;
+}
+
 button {
   background-color: #6c7ae0;
   color: #fff;
   font-weight: bold;
-  border-radius: 8px;
+  border-radius: 7px;
   border: none;
   padding: 6px 12px;
 }
@@ -35,43 +39,47 @@ button:disabled {
   background-color: lightgray;
 }
 
+input {
+  padding: 6px;
+  border-radius: 7px;
+  border: none;
+}
+
+select {
+  border: none;
+  padding: 6px;
+  border-radius: 7px;
+}
+
+input, select, button, .sidebar {
+  /*box-shadow: 1px 10px 44px -5px rgba(0,0,0,0.10);*/
+}
+
+/*                            */
+/*          app.js            */
+/*                            */
+
 .flexParent{
-  margin:auto;
+  margin: auto;
   display: flex;
-  gap:10px;
-
-  height: calc(100% - 20px);
-  padding: 10px;
-
+  height: 100%;
   align-items: stretch;
-}
-
-.sidebar {
-  display:flex;
-  border-style: solid;
-  padding: 10px;
-}
-
-.sidebarChild {
-  flex-grow:1;
-  width: 250px;
 }
 
 .mainContent {
   font-size: 40px;
 
   flex-grow:1;
-  border-style: solid;
+  border-style: none;
   padding: 10px;
   overflow-y: auto;
-
 }
 
-h1 {
-  margin-left: 20px;
-}
-/*TABLE DESIGN*/
-.summaryTable {
+/*                            */
+/*       SummaryView.js       */
+/*                            */
+
+.summaryView table {
   margin-top: 20px;
   margin-left: 20px;
   border-collapse:collapse; 
@@ -79,7 +87,7 @@ h1 {
   border: 4px solid #6c7ae0;
 }
 
-.summaryTable th {
+.summaryView table th {
   color: #fff;
   font-size:18px;
   color:#fff;
@@ -88,37 +96,134 @@ h1 {
   background-color:#6c7ae0
 }
 
-.summaryTable td {
+.summaryView table td {
   font-size:15px;
   color:rgb(90, 89, 89);
   line-height:1.4;
   padding: 7px;
 }
 
-.summaryTable tr {
+.summaryView table tr {
   font-size:15px;
   color:gray;
   background-color: #fff;
 }
 
-.summaryTable tr:nth-child(even) {
+.summaryView table tr:nth-child(even) {
   background-color:#f8f6ff
 }
+.summaryView button {
+  margin-left: 20px;
+}
 
-.sidebarTable {
-  margin-top: 20px;
+@media (max-width: 850px ) { 
+  .summaryView table {
+    width: 100%;
+    margin-left: 0px;
+  }
+
+  .summaryView table th {
+    padding: 3px;
+  }
+
+  .summaryView table td {
+    padding: 4px;
+  }
+
+  .summaryView button {
+    margin-left: 0px;
+  }
+}
+
+/*                            */
+/*      SidebarView.sj        */
+/*                            */
+
+.sidebar {
+  display:flex;
+  border-style: none;
+  padding: 0px;
+
+  background-color: rgb(255, 255, 255);
+  border-right: 4px solid rgb(164, 164, 164);
+}
+
+.sidebarView {
+  flex-grow:1;
+  width: 300px;
+  padding-top: 20px;
+}
+
+.sidebarView table {
+  margin-top: 10px;
   width: 100%;
   color:rgb(90, 89, 89);
   
   border-collapse: collapse;
+
+  background-color: white;
+  border-color: #6c7ae0;
+  border-style: solid;
+  border-width: 4px 0 4px 0;
 }
 
-.sidebarTable tr:nth-child(even) {
+.sidebarView table tr:nth-child(even) {
   background-color:#f8f6ff
 }
 
-.sidebarMenuTotal {
+.sidebarView table tr total {
   font-weight: bold;
+}
+
+.sidebarView button {
+  margin: 10px;
+}
+
+@media (max-width: 850px ) { 
+  .sidebarView table {
+    width: 100%;
+  }
+}
+
+/*                            */
+/*    searchFormView.js       */
+/*                            */
+
+.searchFormView {
+  background-color:#bac1fa;
+  border-radius: 20px 20px 0 0;
+  padding: 0px 0px 15px 20px;
+  margin: 20px 20px 0 20px;
+}
+
+.searchFormView button {
+  margin-left: 10px;
+}
+
+.searchFormView select {
+  margin-left: 10px;
+}
+
+@media (max-width: 850px ) { 
+  .searchFormView {
+    margin: 50px 0 0 0;
+  }
+}
+
+/*                            */
+/*   SearchResultsView.js     */
+/*                            */
+
+.searchResultsView {
+  margin: 0 20px 20px 20px;
+  padding-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: #6c7ae0;
+  color: white;
+  border-radius: 0 0 20px 20px;
+  font-size: 15px;
 }
 
 .searchResult {
@@ -128,70 +233,16 @@ h1 {
   width: 150px;
   vertical-align: text-top;
   margin: 10px;
+
+  /*For limiting search results items to two lines of text*/
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
 }
 
 .searchResult img {
   border-radius: 10px;
-}
-
-.dishDetailInstruction {
-  text-align: left;
-  background-color: #6c7ae0;
-  color: white;
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 8px;
-
-}
-
-.dishDetailIngredients {
-  text-align: left;
-  background-color: gray;
-  color: white;
-  border-radius: 20px;
-  padding: 20px;
-}
-
-.detailsViewPrice {
-  font-weight: bold;
-  text-align: right;
-}
-
-.detailsView img {
-  border:6px solid gray;
-  border-radius: 20px;
-  height: 300px;
-}
-
-.detailsView {
-  text-align: center;
-  font-size: 15px;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.detailsView button {
-  margin: 10px 0 10px 10px;
-}
-
-.detailsViewButtonWrapper {
-  text-align: right;
-}
-
-.searchResultsView {
-  padding-top: 10px;
-  margin: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  background-color: #6c7ae0;
-  color: white;
-  border-radius: 20px;
-  font-size: 15px;
-}
-
-.hidden {
-  display: none;
 }
 
 @media (max-width: 850px ) { 
@@ -203,25 +254,66 @@ h1 {
     font-size: 30px;
   }
 
-  .summaryTable, sidebarTable {
-    width: 100%;
-    margin-left: 0px;
-  }
-
-  .summartyTable th {
-    padding: 3px;
-  }
-
-  .summaryTable td {
-    padding: 4px;
-  }
-
-  .sidebarTable {
-    width: calc(90%);
-    margin-left: 20px;
-  }
 
   .searchResultsView {
-    margin: 20px 0 0 0;
+    margin: 0;
   }
+}
+
+/*                            */
+/*      detailsView.js        */
+/*                            */
+
+.detailsView {
+  text-align: center;
+  font-size: 15px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.detailsView .instruction {
+  text-align: left;
+  background-color: #6c7ae0;
+  color: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 8px;
+
+}
+
+.detailsView .ingredients {
+  text-align: left;
+  background-color: gray;
+  color: white;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.detailsView .price {
+  font-weight: bold;
+  text-align: right;
+}
+
+.detailsView img {
+  border:6px solid gray;
+  border-radius: 20px;
+  height: 300px;
+}
+
+
+.detailsView button {
+  margin: 10px 0 10px 10px;
+}
+
+.detailsView .buttonWrapper {
+  text-align: right;
+}
+
+
+/*                            */
+/*           show.js          */
+/*                            */
+
+.hidden {
+  display: none;
 }

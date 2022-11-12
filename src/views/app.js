@@ -1,4 +1,5 @@
-import SidebarView from "./sidebarView";
+//import SidebarView from "./sidebarView";
+//import Show from ".../reactjs/show.js";
 
 /* 
    This component uses Vue-specific and React-specific presenters: Sidebar, Summary, Search, Details, Show 
@@ -13,15 +14,16 @@ const Summary = require("../" + PREFIX + "/summaryPresenter.js").default;
 const Sidebar = require("../" + PREFIX + "/sidebarPresenter.js").default;
 const Search = require("../" + PREFIX + "/searchPresenter.js").default;
 const Details = require("../" + PREFIX + "/detailsPresenter.js").default;
+const Show = require("../" + PREFIX + "/show.js").default;
 
 export default function App(props) {
   return (
    <div className="flexParent">
      <div className="sidebar"><Sidebar model={props.model} /></div>
      <div className="mainContent">
-        <Summary model={props.model} />
-        <Search model={props.model} />
-        <Details model={props.model} />
+        <Show hash="#summary"><Summary model={props.model} /></Show>
+        <Show hash="#search"><Search model={props.model} /></Show>
+        <Show hash="#details"><Details model={props.model} /></Show>
       </div>
    </div>
   );

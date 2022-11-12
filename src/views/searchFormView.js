@@ -19,8 +19,8 @@ function SearchFormView(props) {
         props.onSetSearchText(event.target.value);
     }
 
-    return <div>
-        <input onChange={textChangeACB}>
+    return <div class="searchFormView">
+        <input placeholder="Search..." onChange={textChangeACB}>
         </input>
         <select onChange={selectChangeACB}>
             <option value="">Choose:</option>

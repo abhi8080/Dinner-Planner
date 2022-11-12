@@ -22,17 +22,17 @@ function DetailsView(props) {
         
     </span>
     <h2>Ingredients</h2>
-    <div className="dishDetailIngredients">
+    <div className="ingredients">
         {props.dishData.extendedIngredients.map(ingredientRowCB)}
     </div>
     <h2>Instruction</h2>
-    <div className="dishDetailInstruction">
+    <div className="instruction">
         {props.dishData.instructions}
     </div>
-    <div className="detailsViewPrice">Price: {props.dishData.pricePerServing}</div>
-    <div className="detailsViewPrice">for {props.guests} guests: {(props.guests*props.dishData.pricePerServing).toFixed(2)}</div>
-    <div className="detailsViewButtonWrapper">
-        <a href={props.dishData.sourceUrl}>More Information</a>
+    <div className="price">Price: {props.dishData.pricePerServing}</div>
+    <div className="price">for {props.guests} guests: {(props.guests*props.dishData.pricePerServing).toFixed(2)}</div>
+    <div className="buttonWrapper">
+        <a target="_blank" href={props.dishData.sourceUrl}>More Information</a>
         <button onClick={cancelACB}>Cancel</button>
         <button onClick={addToMenuACB} disabled={props.isDishInMenu}>Add to Menu</button>
     </div>
