@@ -7,6 +7,7 @@ import {
 import resolvePromise from "../resolvePromise.js";
 import promiseNoData from "../views/promiseNoData.js";
 import App from "../views/app.js";
+
 // Define the ReactRoot component
 function ReactRoot() {
   const [promiseState] = React.useState({});
@@ -26,6 +27,7 @@ function ReactRoot() {
     }
     resolvePromise(thePromise, promiseState, promiseStateChangedACB);
   }
+  require("../views/navigation.js");
   React.useEffect(wasCreatedACB, []);
   return promiseNoData(promiseState) || <App model={promiseState.data} />;
 }
