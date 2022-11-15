@@ -1,7 +1,7 @@
 /* A debug class, used to separate components graphically during development */
 .debug {
-    border-style: solid;
-  }
+  border-style: solid;
+}
   
 .quantity {
   text-align: right;
@@ -14,61 +14,122 @@ html, body, #root{
   margin: 0;
 }
 
+h1 {
+  margin-left: 20px;
+}
+
 button {
   background-color: #6c7ae0;
   color: #fff;
   font-weight: bold;
-  border-radius: 8px;
+  border-radius: 7px;
   border: none;
   padding: 6px 12px;
 }
+
 button:hover {
   background-color: rgb(183, 212, 255);
 }
+
 button:active {
   background-color: rgb(154, 194, 255);
 }
+
 button:disabled {
   background-color: lightgray;
 }
 
-.flexParent{
-  margin:auto;
+input {
+  padding: 6px;
+  border-radius: 7px;
+  border: none;
+}
+
+select {
+  border: none;
+  padding: 6px;
+  border-radius: 7px;
+}
+
+input, select, button, .sidebar {
+  /*box-shadow: 1px 10px 44px -5px rgba(0,0,0,0.10);*/
+}
+
+/*                            */
+/*          app.js            */
+/*                            */
+.app {
+  height: 100%;
   display: flex;
-  gap:10px;
+  flex-direction: column;
+}
+.flexParent{
+  display: flex;
 
-  height: calc(100% - 20px);
-  padding: 10px;
-
+  align-items: stretch;
+  
+  flex-grow: 1;
   align-items: stretch;
 }
 
-.sidebar {
-  display:flex;
-  border-style: solid;
+header {
+  max-height: 100px;
+  width: 100%;
+  background-color: rgb(46, 46, 46);
+  
   padding: 10px;
 }
-.sidebarChild {
-  flex-grow:1;
-  width: 250px;
+header h1 {
+  display:inline;
+  color: white;
+  font-size: 40px;
+}
+header p {
+  display: inline-block;
+  font-size: 15px;
+  margin-left: 20px;
+  color: white;
 }
 
 .mainContent {
   font-size: 40px;
-
-  flex-grow:1;
-  border-style: solid;
-  padding: 10px;
+  
+  border-style: none;
   overflow-y: auto;
+  flex-grow: 4;
+}
 
+
+.sidebar {
+  border-style: none;
+  padding: 0px;
+  min-width: 300px;
+
+
+  background-color: rgb(255, 255, 255);
+  border-right: 4px solid rgb(164, 164, 164);
 }
-.mainContentChild {
+
+@media (max-width: 850px ) { 
+  .flexParent{
+    flex-direction: column;
+  }
+
+  .mainContent {
+    font-size: 30px;
+  }
+
+  header p {
+    margin-top: 0px;
+  }
 }
-h1 {
-  margin-left: 20px;
-}
-/*TABLE DESIGN*/
-.summaryTable {
+
+
+/*                            */
+/*       SummaryView.js       */
+/*                            */
+
+.summaryView table {
   margin-top: 20px;
   margin-left: 20px;
   border-collapse:collapse; 
@@ -76,7 +137,7 @@ h1 {
   border: 4px solid #6c7ae0;
 }
 
-.summaryTable th {
+.summaryView table th {
   color: #fff;
   font-size:18px;
   color:#fff;
@@ -85,40 +146,126 @@ h1 {
   background-color:#6c7ae0
 }
 
-.summaryTable td {
+.summaryView table td {
   font-size:15px;
   color:rgb(90, 89, 89);
   line-height:1.4;
   padding: 7px;
 }
 
-.summaryTable tr {
+.summaryView table tr {
   font-size:15px;
   color:gray;
   background-color: #fff;
 }
 
-.summaryTable tr:nth-child(even) {
+.summaryView table tr:nth-child(even) {
   background-color:#f8f6ff
 }
+.summaryView button {
+  margin-left: 20px;
+}
 
-.sidebarTable {
-  margin-top: 20px;
+@media (max-width: 850px ) { 
+  .summaryView table {
+    width: 100%;
+    margin-left: 0px;
+  }
+
+  .summaryView table th {
+    padding: 3px;
+  }
+
+  .summaryView table td {
+    padding: 4px;
+  }
+
+  .summaryView button {
+    margin-left: 0px;
+  }
+}
+
+/*                            */
+/*      SidebarView.sj        */
+/*                            */
+
+.sidebarView {
+  flex-grow:1;
+  width: 300px;
+  padding-top: 20px;
+}
+
+.sidebarView table {
+  margin-top: 10px;
   width: 100%;
   color:rgb(90, 89, 89);
   
   border-collapse: collapse;
+
+  background-color: white;
+  border-color: #6c7ae0;
+  border-style: solid;
+  border-width: 4px 0 4px 0;
 }
 
-.sidebarTable tr:nth-child(even) {
+.sidebarView table tr:nth-child(even) {
   background-color:#f8f6ff
 }
 
-.sidebarMenuTotal {
+.sidebarView table tr total {
   font-weight: bold;
 }
 
+.sidebarView button {
+  margin: 10px;
+}
 
+@media (max-width: 850px ) { 
+  .sidebarView {
+    width: 100%;
+  }
+}
+
+/*                            */
+/*    searchFormView.js       */
+/*                            */
+
+.searchFormView {
+  background-color:#bac1fa;
+  border-radius: 20px 20px 0 0;
+  padding: 0px 0px 15px 20px;
+  margin: 20px 20px 0 20px;
+}
+
+.searchFormView button {
+  margin-left: 10px;
+}
+
+.searchFormView select {
+  margin-left: 10px;
+}
+
+@media (max-width: 850px ) { 
+  .searchFormView {
+    margin: 50px 0 0 0;
+  }
+}
+
+/*                            */
+/*   SearchResultsView.js     */
+/*                            */
+
+.searchResultsView {
+  margin: 0 20px 20px 20px;
+  padding-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: #6c7ae0;
+  color: white;
+  border-radius: 0 0 20px 20px;
+  font-size: 15px;
+}
 
 .searchResult {
   text-align: center;
@@ -127,13 +274,37 @@ h1 {
   width: 150px;
   vertical-align: text-top;
   margin: 10px;
+
+  /*For limiting search results items to two lines of text*/
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
 }
 
 .searchResult img {
   border-radius: 10px;
 }
 
-.dishDetailInstruction {
+@media (max-width: 850px ) { 
+
+  .searchResultsView {
+    margin: 0;
+  }
+}
+
+/*                            */
+/*      detailsView.js        */
+/*                            */
+
+.detailsView {
+  text-align: center;
+  font-size: 15px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.detailsView .instruction {
   text-align: left;
   background-color: #6c7ae0;
   color: white;
@@ -142,7 +313,8 @@ h1 {
   margin-bottom: 8px;
 
 }
-.dishDetailIngredients {
+
+.detailsView .ingredients {
   text-align: left;
   background-color: gray;
   color: white;
@@ -150,7 +322,7 @@ h1 {
   padding: 20px;
 }
 
-.detailsViewPrice {
+.detailsView .price {
   font-weight: bold;
   text-align: right;
 }
@@ -161,57 +333,20 @@ h1 {
   height: 300px;
 }
 
-.detailsView {
-  text-align: center;
-  font-size: 15px;
-  max-width: 500px;
-  margin: 0 auto;
-}
 
 .detailsView button {
   margin: 10px 0 10px 10px;
 }
 
-.detailsViewButtonWrapper {
+.detailsView .buttonWrapper {
   text-align: right;
 }
 
-.searchResultsView {
-  padding-top: 10px;
-  margin: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  background-color: #6c7ae0;
-  color: white;
-  border-radius: 20px;
-  font-size: 15px;
-}
-@media (max-width: 850px ){ 
-  .flexParent{
-    flex-direction: column;
-  }
-  .mainContent {
-    font-size: 30px;
-  }
-  .summaryTable, sidebarTable {
-    width: 100%;
-    margin-left: 0px;
-  }
-  .summartyTable th {
-    padding: 3px;
-  }
-  .summaryTable td {
-    padding: 4px;
-  }
 
-  .sidebarTable {
-    width: calc(90%);
-    margin-left: 20px;
-  }
+/*                            */
+/*           show.js          */
+/*                            */
 
-  .searchResultsView {
-    margin: 20px 0 0 0;
-  }
-
+.hidden {
+  display: none;
 }

@@ -23,7 +23,7 @@ function SidebarView(props) {
         </td>
 
         <td>
-          <a href="#" onClick={setCurrentDishCB}>
+          <a href="#details" onClick={setCurrentDishCB}>
             {dish.title}
           </a>
         </td>
@@ -37,17 +37,17 @@ function SidebarView(props) {
   }
 
   return (
-    <div class="sidebarChild">
+    <div className="sidebarView">
       Number of guests: 
       <button disabled={props.number === 1} onClick={minusButtonCB}>
         -
       </button>
       <span>{props.number}</span>
       <button onClick={plusButtonCB}>+</button>
-      <table class="sidebarTable">
+      <table>
         <tbody>
           {sortDishes(props.dishes).map(renderDishCB)}
-          <tr class="sidebarMenuTotal">
+          <tr class="total">
             <td></td>
             <td>Total</td>
             <td></td>

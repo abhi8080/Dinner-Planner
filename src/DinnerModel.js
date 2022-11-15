@@ -1,13 +1,14 @@
 import dishesConst from "../test/dishesConst";
 import resolvePromise from "./resolvePromise";
 
-import {getDishDetails, searchDishes} from './dishSource.js'
+import { getDishDetails, searchDishes } from "./dishSource.js";
 
 /* This is an example of a JavaScript class.
    The Model keeps only abstract data and has no notions of graohics or interaction
 */
 class DinnerModel {
   constructor(nrGuests = 2, dishArray = [], currentDish) {
+    this.observers = [];
     this.setNumberOfGuests(nrGuests);
     this.dishes = dishArray;
     this.searchResultsPromiseState = {};
@@ -20,7 +21,10 @@ class DinnerModel {
     if (nr < 1 || !Number.isInteger(nr))
       throw "number of guests not a positive integer";
 
-    this.numberOfGuests = nr;
+    if (nr !== this.numberOfGuests) {
+      this.numberOfGuests = nr;
+      this.notifyObservers({ nrOfGuests: nr });
+    }
     // the error message must be exactly "number of guests not a positive integer"
     // to check for integer: test at the console Number.isInteger(3.14)
     // TODO if the argument is a valid number of guests, store it in this.numberOfGuests
@@ -30,11 +34,17 @@ class DinnerModel {
   addToMenu(dishToAdd) {
     // array spread syntax example. Make sure you understand the code below.
     // It sets this.dishes to a new array [   ] where we spread (...) the previous value
+    function isDishInMenuCB(dish) {
+      return dish.id === dishToAdd.id;
+    }
+
+    if (this.dishes.some(isDishInMenuCB)) return;
+
     this.dishes = [...this.dishes, dishToAdd];
+    this.notifyObservers({ addDish: dishToAdd });
   }
 
   removeFromMenu(dishToRemove) {
-    // callback exercise! Also return keyword exercise
     function hasSameIdCB(dish) {
       if (dish.id != dishToRemove.id) return true;
 
@@ -43,8 +53,14 @@ class DinnerModel {
       // This will keep the dish when we filter below.
       // That is, we will not keep the dish that has the same id as dishToRemove (if any)
     }
+
+    function isDishInMenuCB(dish) {
+      return dish.id === dishToRemove.id;
+    }
+    if (!this.dishes.some(isDishInMenuCB)) return;
+
     this.dishes = this.dishes.filter(hasSameIdCB);
-    // the test "can remove dishes" should pass
+    this.notifyObservers({ removeDish: dishToRemove });
   }
   /* 
        ID of dish currently checked by the user.
@@ -53,11 +69,16 @@ class DinnerModel {
        So we store also abstract data that will influence the application status.
      */
   setCurrentDish(id) {
-    if(id !== undefined && id !== this.currentDish)
-      resolvePromise(getDishDetails(id),this.currentDishPromiseState);
-    this.currentDish = id;
+    if (id !== undefined && id !== this.currentDish) {
+      this.currentDish = id;
+      this.notifyObservers({ currDish: id });
+      resolvePromise(
+        getDishDetails(id),
+        this.currentDishPromiseState,
+        this.notifyObservers.bind(this)
+      );
+    }
   }
-
   setSearchQuery(q) {
     this.searchParams.query = q;
   }
@@ -65,13 +86,31 @@ class DinnerModel {
   setSearchType(t) {
     this.searchParams.type = t;
   }
-
   doSearch(params) {
-
-      resolvePromise(searchDishes(params),this.searchResultsPromiseState);
+    resolvePromise(
+      searchDishes(params),
+      this.searchResultsPromiseState,
+      this.notifyObservers.bind(this)
+    );
   }
-  doSearch() {
-      resolvePromise(searchDishes(this.searchParams),this.searchResultsPromiseState);
+  addObserver(callback) {
+    this.observers = [...this.observers, callback];
+  }
+  removeObserver(callback) {
+    function removeObserverFromObserversArray(observer) {
+      return observer !== callback;
+    }
+    this.observers = this.observers.filter(removeObserverFromObserversArray);
+  }
+
+  notifyObservers(payload) {
+    try {
+      this.observers.forEach(function invokeObserverCB(obs) {
+        obs(payload);
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
 export default DinnerModel;
