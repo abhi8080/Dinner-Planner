@@ -6,9 +6,9 @@
    Therefore it needs to import from alternative paths, depending on the framework. 
    To achieve that, we use require() with a prefix, instead of import.
 */
-const PREFIX = window.location.toString().includes("react")
-  ? "reactjs"
-  : "vuejs";
+const PREFIX = window.location.toString().includes("vue")
+  ? "vuejs"
+  : "reactjs";
 
 const Summary = require("../" + PREFIX + "/summaryPresenter.js").default;
 const Sidebar = require("../" + PREFIX + "/sidebarPresenter.js").default;
