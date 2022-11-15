@@ -1,7 +1,7 @@
 import dishesConst from "../test/dishesConst";
 import resolvePromise from "./resolvePromise";
 
-import {getDishDetails, searchDishes} from './dishSource.js'
+import { getDishDetails, searchDishes } from "./dishSource.js";
 
 /* This is an example of a JavaScript class.
    The Model keeps only abstract data and has no notions of graohics or interaction
@@ -21,9 +21,9 @@ class DinnerModel {
     if (nr < 1 || !Number.isInteger(nr))
       throw "number of guests not a positive integer";
 
-    if(nr !== this.numberOfGuests) {
+    if (nr !== this.numberOfGuests) {
       this.numberOfGuests = nr;
-      this.notifyObservers({nrOfGuests: nr})
+      this.notifyObservers({ nrOfGuests: nr });
     }
     // the error message must be exactly "number of guests not a positive integer"
     // to check for integer: test at the console Number.isInteger(3.14)
@@ -34,12 +34,14 @@ class DinnerModel {
   addToMenu(dishToAdd) {
     // array spread syntax example. Make sure you understand the code below.
     // It sets this.dishes to a new array [   ] where we spread (...) the previous value
-    for(let i = 0; i < this.dishes.length; i++) {
-      if(this.dishes[i].id === dishToAdd.id)
-         return;
+    function isDishInMenuCB(dish) {
+      return dish.id === dishToAdd.id;
     }
+
+    if (this.dishes.some(isDishInMenuCB)) return;
+
     this.dishes = [...this.dishes, dishToAdd];
-    this.notifyObservers({addDish: dishToAdd});
+    this.notifyObservers({ addDish: dishToAdd });
   }
 
   removeFromMenu(dishToRemove) {
@@ -51,15 +53,14 @@ class DinnerModel {
       // This will keep the dish when we filter below.
       // That is, we will not keep the dish that has the same id as dishToRemove (if any)
     }
-    let isDishInMenu = false;
-    for(let i = 0; i < this.dishes.length; i++) {
-        if(this.dishes[i].id === dishToRemove.id)
-              isDishInMenu = true;
+
+    function isDishInMenuCB(dish) {
+      return dish.id === dishToRemove.id;
     }
-    if(!isDishInMenu)
-       return;
+    if (!this.dishes.some(isDishInMenuCB)) return;
+
     this.dishes = this.dishes.filter(hasSameIdCB);
-    this.notifyObservers({removeDish: dishToRemove});
+    this.notifyObservers({ removeDish: dishToRemove });
   }
   /* 
        ID of dish currently checked by the user.
@@ -68,12 +69,16 @@ class DinnerModel {
        So we store also abstract data that will influence the application status.
      */
   setCurrentDish(id) {
-    if(id !== undefined && id !== this.currentDish) {
+    if (id !== undefined && id !== this.currentDish) {
       this.currentDish = id;
-      this.notifyObservers({currDish: id});
-      resolvePromise(getDishDetails(id),this.currentDishPromiseState, this.notifyObservers.bind(this));
+      this.notifyObservers({ currDish: id });
+      resolvePromise(
+        getDishDetails(id),
+        this.currentDishPromiseState,
+        this.notifyObservers.bind(this)
+      );
+    }
   }
-}
   setSearchQuery(q) {
     this.searchParams.query = q;
   }
@@ -82,21 +87,30 @@ class DinnerModel {
     this.searchParams.type = t;
   }
   doSearch(params) {
-      resolvePromise(searchDishes(params),this.searchResultsPromiseState, this.notifyObservers.bind(this));
+    resolvePromise(
+      searchDishes(params),
+      this.searchResultsPromiseState,
+      this.notifyObservers.bind(this)
+    );
   }
   addObserver(callback) {
     this.observers = [...this.observers, callback];
   }
   removeObserver(callback) {
     function removeObserverFromObserversArray(observer) {
-      return observer !== callback
+      return observer !== callback;
     }
-    this.observers = this.observers.filter(removeObserverFromObserversArray)
+    this.observers = this.observers.filter(removeObserverFromObserversArray);
   }
 
   notifyObservers(payload) {
-    try{this.observers.forEach(function invokeObserverCB(obs){obs(payload);})}catch(err){console.error(err); } 
+    try {
+      this.observers.forEach(function invokeObserverCB(obs) {
+        obs(payload);
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }
-
 }
 export default DinnerModel;
