@@ -1,4 +1,4 @@
-#Dinner Planner
+# Dinner Planner
 This tutorial lab is part of the course DH2642 Interaction Programming and the Dynamic Web given at KTH.
 
 Website: https://dinnermodel-65f60.web.app/react/index.html
